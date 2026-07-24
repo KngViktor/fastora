@@ -6,6 +6,7 @@ import type { HeroData } from '@/heros/types'
 
 import { CMSLink } from '@/components/Link'
 import RichText from '@/components/RichText'
+import { cn } from '@/utilities/ui'
 import { HeroScrollVideo } from './HeroScrollVideo'
 
 const DESKTOP_QUERY = '(min-width: 768px)'
@@ -16,11 +17,21 @@ const DESKTOP_QUERY = '(min-width: 768px)'
  * wordmark anchor the section, mirroring the reference layout.
  * With a hero video: the video plays as a raw background layer directly
  * behind the headline/CTAs (no scrim, no wordmark) and is scrubbed by
- * scroll position rather than autoplaying — the section is stretched
- * tall and the content pinned via `sticky` so there's scroll room for it
- * to play through (see HeroScrollVideo). Desktop-only: on mobile the
- * <video> is never mounted (no fetch, no scroll listener), and the hero
- * falls back to the plain glow/wordmark treatment instead.
+ * scroll position rather than autoplaying (see HeroScrollVideo).
+ * Desktop-only: on mobile the <video> is never mounted (no fetch, no
+ * scroll listener), and the hero falls back to the plain glow/wordmark
+ * treatment instead.
+ *
+ * Important: this renders a single, structurally stable tree — the
+ * text/CTA block (`content`) always sits in the same DOM position,
+ * only the decorative background (video vs glow) swaps inside it. An
+ * earlier version used two separate `return` branches for the video vs
+ * non-video cases, which are different top-level trees; switching
+ * between them (e.g. once the desktop media query resolves after
+ * mount) made React unmount and remount `content` entirely. The
+ * scroll-reveal fade-in only observes elements once on initial mount,
+ * so the remounted text/buttons never got observed and stayed stuck at
+ * opacity: 0 forever. Keeping one tree avoids that.
  */
 export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) => {
   const trackRef = useRef<HTMLElement>(null)
@@ -90,41 +101,41 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
     </>
   )
 
-  if (hasVideo && media && typeof media === 'object') {
-    return (
-      <section
-        ref={trackRef}
-        className="relative h-[140vh] overflow-hidden bg-primary text-primary-foreground"
-      >
-        <div className="sticky top-0 h-screen overflow-hidden">
+  return (
+    <section
+      ref={trackRef}
+      className={cn(
+        'relative overflow-hidden bg-primary text-primary-foreground',
+        hasVideo && 'h-[120vh]',
+      )}
+    >
+      <div className={cn(hasVideo && 'sticky top-0 h-screen overflow-hidden')}>
+        {hasVideo && media && typeof media === 'object' ? (
           <HeroScrollVideo
             resource={media}
             trackRef={trackRef}
             className="absolute inset-0 h-full w-full object-cover"
           />
-          {content}
-        </div>
-      </section>
-    )
-  }
-
-  return (
-    <section className="relative overflow-hidden bg-primary text-primary-foreground">
-      {/* ambient accent glow */}
-      <div
-        className="animate-float pointer-events-none absolute -top-24 right-[-10%] h-[38rem] w-[38rem] rounded-full opacity-70 blur-3xl"
-        style={{
-          background: 'radial-gradient(circle at center, rgba(198,161,91,0.28), transparent 62%)',
-        }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage: 'radial-gradient(rgba(255,255,255,0.9) 1px, transparent 1px)',
-          backgroundSize: '22px 22px',
-        }}
-      />
-      {content}
+        ) : (
+          <>
+            {/* ambient accent glow */}
+            <div
+              className="animate-float pointer-events-none absolute -top-24 right-[-10%] h-[38rem] w-[38rem] rounded-full opacity-70 blur-3xl"
+              style={{
+                background: 'radial-gradient(circle at center, rgba(198,161,91,0.28), transparent 62%)',
+              }}
+            />
+            <div
+              className="pointer-events-none absolute inset-0 opacity-[0.04]"
+              style={{
+                backgroundImage: 'radial-gradient(rgba(255,255,255,0.9) 1px, transparent 1px)',
+                backgroundSize: '22px 22px',
+              }}
+            />
+          </>
+        )}
+        {content}
+      </div>
     </section>
   )
 }
