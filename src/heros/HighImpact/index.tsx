@@ -25,7 +25,7 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
   const content = (
     <>
       <div
-        className="container relative z-10 -ml-[0.4375rem] pt-32 pb-16 md:-ml-[0.875rem] md:pt-44 md:pb-24"
+        className="relative z-10 w-full pl-8 pr-6 pt-32 pb-16 md:pl-12 md:pr-10 md:pt-44 md:pb-24"
         data-reveal-group="120"
       >
         <div className="flex flex-col gap-6">
