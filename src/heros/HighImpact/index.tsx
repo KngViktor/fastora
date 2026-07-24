@@ -1,12 +1,14 @@
 'use client'
 
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import type { HeroData } from '@/heros/types'
 
 import { CMSLink } from '@/components/Link'
 import RichText from '@/components/RichText'
 import { HeroScrollVideo } from './HeroScrollVideo'
+
+const DESKTOP_QUERY = '(min-width: 768px)'
 
 /**
  * High-impact hero — dark navy, editorial.
@@ -16,11 +18,24 @@ import { HeroScrollVideo } from './HeroScrollVideo'
  * behind the headline/CTAs (no scrim, no wordmark) and is scrubbed by
  * scroll position rather than autoplaying — the section is stretched
  * tall and the content pinned via `sticky` so there's scroll room for it
- * to play through (see HeroScrollVideo).
+ * to play through (see HeroScrollVideo). Desktop-only: on mobile the
+ * <video> is never mounted (no fetch, no scroll listener), and the hero
+ * falls back to the plain glow/wordmark treatment instead.
  */
 export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) => {
   const trackRef = useRef<HTMLElement>(null)
-  const hasVideo = Boolean(media && typeof media === 'object' && media.mimeType?.includes('video'))
+  const [isDesktop, setIsDesktop] = useState(false)
+
+  useEffect(() => {
+    const mql = window.matchMedia(DESKTOP_QUERY)
+    setIsDesktop(mql.matches)
+    const onChange = (e: MediaQueryListEvent) => setIsDesktop(e.matches)
+    mql.addEventListener('change', onChange)
+    return () => mql.removeEventListener('change', onChange)
+  }, [])
+
+  const hasVideo =
+    isDesktop && Boolean(media && typeof media === 'object' && media.mimeType?.includes('video'))
 
   const content = (
     <>
