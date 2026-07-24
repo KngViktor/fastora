@@ -25,7 +25,7 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
   const content = (
     <>
       <div
-        className="container relative z-10 pt-32 pb-16 md:pt-44 md:pb-24"
+        className="container relative z-10 -ml-[0.4375rem] pt-32 pb-16 md:-ml-[0.875rem] md:pt-44 md:pb-24"
         data-reveal-group="120"
       >
         <div className="flex flex-col gap-6">
@@ -79,7 +79,7 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
     return (
       <section
         ref={trackRef}
-        className="relative h-[220vh] overflow-hidden bg-primary text-primary-foreground"
+        className="relative h-[140vh] overflow-hidden bg-primary text-primary-foreground"
       >
         <div className="sticky top-0 h-screen overflow-hidden">
           <HeroScrollVideo

@@ -16,9 +16,10 @@ type Props = {
  * Bare scroll-scrubbed `<video>` — no wrapper markup of its own, so the
  * parent can position it as a plain background layer. `trackRef` points at
  * whatever tall ancestor defines the scroll range: as that element scrolls
- * past, the video's currentTime is driven directly by scroll position
- * (playing forward on the way down, reversing on the way back up) instead
- * of autoplaying on a timer.
+ * past, the video's currentTime is eased toward a scroll-driven target
+ * every frame (playing forward on the way down, reversing on the way up)
+ * instead of autoplaying on a timer or snapping directly to the scroll
+ * position, which reads as smoother/less jittery.
  */
 export const HeroScrollVideo: React.FC<Props> = ({ resource, trackRef, className }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -31,7 +32,8 @@ export const HeroScrollVideo: React.FC<Props> = ({ resource, trackRef, className
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     let duration = 0
-    let ticking = false
+    let targetTime = 0
+    let rafId = 0
 
     const onLoadedMetadata = () => {
       duration = video.duration || 0
@@ -47,35 +49,35 @@ export const HeroScrollVideo: React.FC<Props> = ({ resource, trackRef, className
       return () => video.removeEventListener('loadedmetadata', onLoadedMetadata)
     }
 
-    const updateFromScroll = () => {
-      ticking = false
+    const computeTarget = () => {
       if (!duration) return
-
       const rect = track.getBoundingClientRect()
       const scrollableDistance = rect.height - window.innerHeight
       if (scrollableDistance <= 0) return
-
       const progress = Math.min(Math.max(-rect.top / scrollableDistance, 0), 1)
-      const targetTime = progress * duration
-
-      if (Number.isFinite(targetTime) && Math.abs(video.currentTime - targetTime) > 0.01) {
-        video.currentTime = targetTime
-      }
+      targetTime = progress * duration
     }
 
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true
-        requestAnimationFrame(updateFromScroll)
+    // Eases currentTime toward targetTime every frame instead of snapping
+    // to it on scroll, which is what makes the scrub feel smooth.
+    const tick = () => {
+      const delta = targetTime - video.currentTime
+      if (Math.abs(delta) > 0.005) {
+        video.currentTime += delta * 0.18
       }
+      rafId = requestAnimationFrame(tick)
     }
+
+    const onScroll = () => computeTarget()
 
     window.addEventListener('scroll', onScroll, { passive: true })
-    updateFromScroll()
+    computeTarget()
+    rafId = requestAnimationFrame(tick)
 
     return () => {
       video.removeEventListener('loadedmetadata', onLoadedMetadata)
       window.removeEventListener('scroll', onScroll)
+      cancelAnimationFrame(rafId)
     }
   }, [trackRef])
 

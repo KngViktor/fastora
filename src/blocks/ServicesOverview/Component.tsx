@@ -27,7 +27,7 @@ export const ServicesOverviewBlock: React.FC<ServicesOverviewBlockProps> = async
 
   return (
     <section className="bg-primary text-primary-foreground">
-      <div className="container py-20 md:py-28">
+      <div className="container pt-4 pb-20 md:pt-[1.4rem] md:pb-28">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div data-reveal="up">
             {eyebrow && (
