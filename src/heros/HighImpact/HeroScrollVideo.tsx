@@ -8,16 +8,19 @@ import { getMediaUrl } from '@/utilities/getMediaUrl'
 
 type Props = {
   resource: MediaType
+  trackRef: React.RefObject<HTMLElement | null>
+  className?: string
 }
 
 /**
- * Scroll-scrubbed hero video: instead of autoplaying, the video's
- * currentTime is driven directly by scroll position while its sticky
- * wrapper is pinned in view, so scrolling down plays it forward (and
- * scrolling back up reverses it) rather than on a timer.
+ * Bare scroll-scrubbed `<video>` — no wrapper markup of its own, so the
+ * parent can position it as a plain background layer. `trackRef` points at
+ * whatever tall ancestor defines the scroll range: as that element scrolls
+ * past, the video's currentTime is driven directly by scroll position
+ * (playing forward on the way down, reversing on the way back up) instead
+ * of autoplaying on a timer.
  */
-export const HeroScrollVideo: React.FC<Props> = ({ resource }) => {
-  const trackRef = useRef<HTMLDivElement>(null)
+export const HeroScrollVideo: React.FC<Props> = ({ resource, trackRef, className }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
@@ -74,22 +77,18 @@ export const HeroScrollVideo: React.FC<Props> = ({ resource }) => {
       video.removeEventListener('loadedmetadata', onLoadedMetadata)
       window.removeEventListener('scroll', onScroll)
     }
-  }, [])
+  }, [trackRef])
 
   return (
-    <div ref={trackRef} className="relative h-[200vh]" data-reveal="up">
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
-        <video
-          ref={videoRef}
-          className="h-full w-full object-cover"
-          muted
-          playsInline
-          preload="auto"
-          aria-label={resource.alt || 'Fastora product preview'}
-        >
-          <source src={getMediaUrl(resource.url, resource.updatedAt)} type={resource.mimeType || 'video/mp4'} />
-        </video>
-      </div>
-    </div>
+    <video
+      ref={videoRef}
+      className={className}
+      muted
+      playsInline
+      preload="auto"
+      aria-label={resource.alt || 'Fastora product preview'}
+    >
+      <source src={getMediaUrl(resource.url, resource.updatedAt)} type={resource.mimeType || 'video/mp4'} />
+    </video>
   )
 }

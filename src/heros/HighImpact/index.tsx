@@ -1,4 +1,6 @@
-import React from 'react'
+'use client'
+
+import React, { useRef } from 'react'
 
 import type { HeroData } from '@/heros/types'
 
@@ -7,34 +9,21 @@ import RichText from '@/components/RichText'
 import { HeroScrollVideo } from './HeroScrollVideo'
 
 /**
- * High-impact hero — dark navy, editorial, no imagery.
- * A soft gold glow sits behind the headline and an oversized
- * "FASTORA" wordmark anchors the section, mirroring the reference layout.
- * When a video is set on the hero, it renders full-bleed (edge to edge)
- * directly below the headline/CTAs — the first visual after the hero
- * text — and is scrubbed by scroll position rather than autoplaying
- * (see HeroScrollVideo).
+ * High-impact hero — dark navy, editorial.
+ * Without a hero video: a soft gold glow and an oversized "FASTORA"
+ * wordmark anchor the section, mirroring the reference layout.
+ * With a hero video: the video plays as a raw background layer directly
+ * behind the headline/CTAs (no scrim, no wordmark) and is scrubbed by
+ * scroll position rather than autoplaying — the section is stretched
+ * tall and the content pinned via `sticky` so there's scroll room for it
+ * to play through (see HeroScrollVideo).
  */
 export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) => {
-  return (
-    <section className="relative overflow-hidden bg-primary text-primary-foreground">
-      {/* ambient accent glow */}
-      <div
-        className="animate-float pointer-events-none absolute -top-24 right-[-10%] h-[38rem] w-[38rem] rounded-full opacity-70 blur-3xl"
-        style={{
-          background:
-            'radial-gradient(circle at center, rgba(198,161,91,0.28), transparent 62%)',
-        }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage:
-            'radial-gradient(rgba(255,255,255,0.9) 1px, transparent 1px)',
-          backgroundSize: '22px 22px',
-        }}
-      />
+  const trackRef = useRef<HTMLElement>(null)
+  const hasVideo = Boolean(media && typeof media === 'object' && media.mimeType?.includes('video'))
 
+  const content = (
+    <>
       <div
         className="container relative z-10 pt-32 pb-16 md:pt-44 md:pb-24"
         data-reveal-group="120"
@@ -71,9 +60,7 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
         </div>
       </div>
 
-      {media && typeof media === 'object' && media.mimeType?.includes('video') ? (
-        <HeroScrollVideo resource={media} />
-      ) : (
+      {!hasVideo && (
         /* oversized wordmark — only shown when there's no hero video */
         <div
           data-reveal="mask"
@@ -85,6 +72,44 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
           </span>
         </div>
       )}
+    </>
+  )
+
+  if (hasVideo && media && typeof media === 'object') {
+    return (
+      <section
+        ref={trackRef}
+        className="relative h-[220vh] overflow-hidden bg-primary text-primary-foreground"
+      >
+        <div className="sticky top-0 h-screen overflow-hidden">
+          <HeroScrollVideo
+            resource={media}
+            trackRef={trackRef}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          {content}
+        </div>
+      </section>
+    )
+  }
+
+  return (
+    <section className="relative overflow-hidden bg-primary text-primary-foreground">
+      {/* ambient accent glow */}
+      <div
+        className="animate-float pointer-events-none absolute -top-24 right-[-10%] h-[38rem] w-[38rem] rounded-full opacity-70 blur-3xl"
+        style={{
+          background: 'radial-gradient(circle at center, rgba(198,161,91,0.28), transparent 62%)',
+        }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage: 'radial-gradient(rgba(255,255,255,0.9) 1px, transparent 1px)',
+          backgroundSize: '22px 22px',
+        }}
+      />
+      {content}
     </section>
   )
 }
