@@ -1,13 +1,15 @@
 import type { Metadata } from 'next'
 import { Poppins, Inter, Geist_Mono } from 'next/font/google'
 import React from 'react'
-import { draftMode } from 'next/headers'
+import { cookies, draftMode, headers } from 'next/headers'
 
 import { cn } from '@/utilities/ui'
 import { AdminBar } from '@/components/AdminBar'
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
 import { ScrollReveal } from '@/components/ScrollReveal'
+import { CurrencyProvider } from '@/providers/Currency'
+import { CURRENCY_COOKIE, CURRENCY_HEADER, DEFAULT_CURRENCY } from '@/config/currencies'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { getServerSideURL } from '@/utilities/getURL'
 import { getCachedGlobal } from '@/utilities/getGlobals'
@@ -41,6 +43,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const brandStyle = buildBrandStyle(siteSettings)
   const url = getServerSideURL()
 
+  // Currency resolved by the proxy (geo or manual choice), forwarded via header;
+  // fall back to the cookie, then the default, so the first paint is correct.
+  const [headerList, cookieStore] = await Promise.all([headers(), cookies()])
+  const initialCurrency =
+    headerList.get(CURRENCY_HEADER) ||
+    cookieStore.get(CURRENCY_COOKIE)?.value ||
+    DEFAULT_CURRENCY
+
   const organizationJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
@@ -72,15 +82,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </noscript>
       </head>
       <body className="min-h-full flex flex-col">
-        <AdminBar
-          adminBarProps={{
-            preview: isEnabled,
-          }}
-        />
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <ScrollReveal />
+        <CurrencyProvider initialCurrency={initialCurrency}>
+          <AdminBar
+            adminBarProps={{
+              preview: isEnabled,
+            }}
+          />
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <ScrollReveal />
+        </CurrencyProvider>
       </body>
     </html>
   )

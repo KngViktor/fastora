@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import type { Header as HeaderType } from '@/payload-types'
 
 import { CMSLink } from '@/components/Link'
+import { CurrencySwitcher } from '@/components/CurrencySwitcher'
 
 export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
   const navItems = data?.navItems || []
@@ -32,6 +33,8 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
           </li>
         ))}
       </ul>
+
+      <CurrencySwitcher className="hidden md:block" />
 
       <CMSLink
         type="custom"
@@ -78,6 +81,10 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
                 />
               </li>
             ))}
+            <li className="mt-2 flex items-center justify-between gap-3 px-4">
+              <span className="text-sm text-muted-foreground">Currency</span>
+              <CurrencySwitcher />
+            </li>
             <li className="mt-2 px-1">
               <CMSLink
                 type="custom"
