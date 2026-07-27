@@ -48,14 +48,18 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
   const hasVideo =
     isDesktop && Boolean(media && typeof media === 'object' && media.mimeType?.includes('video'))
 
+  const richTextClassName = hasVideo
+    ? 'max-w-sm [&_h1]:text-4xl [&_h1]:font-semibold [&_h1]:leading-[1.05] [&_h1]:text-primary-foreground md:[&_h1]:text-5xl [&_p]:mt-5 [&_p]:max-w-sm [&_p]:text-base [&_p]:text-primary-foreground/70'
+    : 'max-w-4xl [&_h1]:text-5xl [&_h1]:font-semibold [&_h1]:leading-[1.02] [&_h1]:text-primary-foreground md:[&_h1]:text-7xl [&_p]:mt-6 [&_p]:max-w-xl [&_p]:text-lg [&_p]:text-primary-foreground/70'
+
   const content = (
     <>
       <div
         className={cn(
-          'relative z-10 w-full pl-8 pr-6 md:pl-12 md:pr-10',
+          'relative z-10 pl-8 pr-6 md:pl-12 md:pr-10',
           hasVideo
-            ? 'flex h-full max-w-xl flex-col justify-center py-16 md:max-w-2xl md:py-20'
-            : 'pt-32 pb-16 md:pt-44 md:pb-24',
+            ? 'absolute inset-y-0 left-0 flex w-full max-w-sm flex-col justify-center md:max-w-md'
+            : 'w-full pt-32 pb-16 md:pt-44 md:pb-24',
         )}
         data-reveal-group="120"
       >
@@ -71,11 +75,7 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
 
           {richText && (
             <div data-reveal="up" className="md:-ml-[0.9rem]">
-              <RichText
-                className="max-w-4xl [&_h1]:text-5xl [&_h1]:font-semibold [&_h1]:leading-[1.02] [&_h1]:text-primary-foreground md:[&_h1]:text-7xl [&_p]:mt-6 [&_p]:max-w-xl [&_p]:text-lg [&_p]:text-primary-foreground/70"
-                data={richText}
-                enableGutter={false}
-              />
+              <RichText className={richTextClassName} data={richText} enableGutter={false} />
             </div>
           )}
 
@@ -114,7 +114,7 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
         hasVideo && 'h-[120vh]',
       )}
     >
-      <div className={cn(hasVideo && 'sticky top-0 flex h-screen flex-col overflow-hidden')}>
+      <div className={cn(hasVideo && 'sticky top-0 h-screen overflow-hidden')}>
         {hasVideo && media && typeof media === 'object' ? (
           <HeroScrollVideo
             resource={media}
