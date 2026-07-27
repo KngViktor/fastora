@@ -51,7 +51,12 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
   const content = (
     <>
       <div
-        className="relative z-10 w-full pl-8 pr-6 pt-32 pb-16 md:pl-12 md:pr-10 md:pt-44 md:pb-24"
+        className={cn(
+          'relative z-10 w-full pl-8 pr-6 md:pl-12 md:pr-10',
+          hasVideo
+            ? 'flex h-full max-w-xl flex-col justify-center py-16 md:max-w-2xl md:py-20'
+            : 'pt-32 pb-16 md:pt-44 md:pb-24',
+        )}
         data-reveal-group="120"
       >
         <div className="flex flex-col gap-6">
@@ -109,7 +114,7 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
         hasVideo && 'h-[120vh]',
       )}
     >
-      <div className={cn(hasVideo && 'sticky top-0 h-screen overflow-hidden')}>
+      <div className={cn(hasVideo && 'sticky top-0 flex h-screen flex-col overflow-hidden')}>
         {hasVideo && media && typeof media === 'object' ? (
           <HeroScrollVideo
             resource={media}
