@@ -65,7 +65,7 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
           </div>
 
           {richText && (
-            <div data-reveal="up">
+            <div data-reveal="up" className="-ml-[0.6rem] md:-ml-[0.9rem]">
               <RichText
                 className="max-w-4xl [&_h1]:text-5xl [&_h1]:font-semibold [&_h1]:leading-[1.02] [&_h1]:text-primary-foreground md:[&_h1]:text-7xl [&_p]:mt-6 [&_p]:max-w-xl [&_p]:text-lg [&_p]:text-primary-foreground/70"
                 data={richText}
