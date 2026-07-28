@@ -13,21 +13,24 @@ import RichText from '@/components/RichText'
  * gradient/wordmark background (bundled asset, not CMS content — brand
  * chrome, same idea as a favicon) plus an optional diagonally-cropped team
  * photo layered on top, swappable via the page's hero media in the admin.
- * The photo is hidden on mobile (no room for it once the text stack takes
- * over), where only the background gradient shows behind the text.
+ * Both the background and the photo are landscape-composed and only make
+ * sense as a horizontal split, so on mobile they're dropped entirely in
+ * favour of a plain navy background — keeping the hero a normal vertical
+ * stack (eyebrow, heading, subtext, buttons) instead of a cropped, squeezed
+ * version of the desktop layout.
  */
 export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) => {
   const hasPhoto = Boolean(media && typeof media === 'object')
 
   return (
     <section className="relative overflow-hidden bg-primary text-primary-foreground">
-      <div className="relative min-h-[36rem] w-full md:min-h-[42rem] lg:min-h-[48rem]">
+      <div className="relative w-full md:min-h-[42rem] lg:min-h-[48rem]">
         <Image
           src="/hero/hero-bg.png"
           alt=""
           fill
           priority
-          className="object-cover"
+          className="hidden object-cover md:block"
           aria-hidden="true"
         />
 
@@ -37,7 +40,7 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
           </div>
         )}
 
-        <div className="relative z-10 flex min-h-[36rem] w-full items-center md:min-h-[42rem] lg:min-h-[48rem]">
+        <div className="relative z-10 flex w-full md:min-h-[42rem] md:items-center lg:min-h-[48rem]">
           <div
             className="w-full max-w-xl pt-32 pb-16 pl-8 pr-6 md:max-w-lg md:pt-0 md:pb-0 md:pl-12 lg:max-w-2xl lg:pl-16"
             data-reveal-group="120"
