@@ -1,5 +1,4 @@
 import React from 'react'
-import Image from 'next/image'
 
 import type { HeroData } from '@/heros/types'
 
@@ -9,32 +8,22 @@ import RichText from '@/components/RichText'
 
 /**
  * High-impact hero — dark navy, editorial.
- * Static two-layer composite matching the brand reference: a fixed
- * gradient/wordmark background (bundled asset, not CMS content — brand
- * chrome, same idea as a favicon) plus an optional diagonally-cropped team
- * photo layered on top, swappable via the page's hero media in the admin.
- * Both the background and the photo are landscape-composed and only make
- * sense as a horizontal split, so on mobile they're dropped entirely in
- * favour of a plain navy background — keeping the hero a normal vertical
- * stack (eyebrow, heading, subtext, buttons) instead of a cropped, squeezed
- * version of the desktop layout.
+ * The gradient background, ghosted "FASTORA" wordmark, and diagonally-cut
+ * team photo are one single pre-composited image (the page's hero media,
+ * swappable in the admin) rather than two separately-cropped layers —
+ * that avoids any seam/alignment drift between the background and the
+ * photo at different viewport widths. It's a landscape composition, so on
+ * mobile it's dropped entirely in favour of a plain navy background,
+ * keeping the hero a normal vertical stack (eyebrow, heading, subtext,
+ * buttons) instead of a cropped, squeezed version of the desktop layout.
  */
 export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) => {
-  const hasPhoto = Boolean(media && typeof media === 'object')
+  const hasImage = Boolean(media && typeof media === 'object')
 
   return (
     <section className="relative overflow-hidden bg-primary text-primary-foreground">
       <div className="relative w-full md:min-h-[42rem] lg:min-h-[48rem]">
-        <Image
-          src="/hero/hero-bg.png"
-          alt=""
-          fill
-          priority
-          className="hidden object-cover md:block"
-          aria-hidden="true"
-        />
-
-        {hasPhoto && (
+        {hasImage && (
           <div className="absolute inset-0 hidden md:block">
             <Media resource={media} fill imgClassName="object-cover" priority />
           </div>

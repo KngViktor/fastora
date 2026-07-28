@@ -3,37 +3,37 @@ import { getPayload } from 'payload'
 import fs from 'fs'
 import path from 'path'
 
-/** Uploads the diagonal-cut team photo and sets it as the Home page's hero media, replacing the scroll video. */
-const PHOTO_FILENAME = 'hs-pro-333.png'
-const PHOTO_ALT = 'Fastora team reviewing brand strategy together'
-const OLD_ALT = 'Fastora product preview'
+/** Uploads the pre-composited hero background+photo image and sets it as the Home page's hero media. */
+const IMAGE_FILENAME = 'fastora-hero-section.png'
+const IMAGE_ALT = 'Fastora team reviewing brand strategy together'
+const OLD_ALTS = ['Fastora product preview', 'Fastora team reviewing brand strategy together']
 
 async function run() {
   const payload = await getPayload({ config: configPromise })
 
-  const filePath = path.join(process.cwd(), 'image', PHOTO_FILENAME)
+  const filePath = path.join(process.cwd(), 'image', IMAGE_FILENAME)
   const data = fs.readFileSync(filePath)
 
   const existing = await payload.find({
     collection: 'media',
-    where: { alt: { equals: PHOTO_ALT } },
-    limit: 1,
+    where: { alt: { equals: IMAGE_ALT } },
+    limit: 10,
   })
   for (const doc of existing.docs) {
     await payload.delete({ collection: 'media', id: doc.id })
   }
 
-  const photo = await payload.create({
+  const image = await payload.create({
     collection: 'media',
-    data: { alt: PHOTO_ALT },
+    data: { alt: IMAGE_ALT },
     file: {
       data,
       mimetype: 'image/png',
-      name: PHOTO_FILENAME,
+      name: IMAGE_FILENAME,
       size: data.length,
     },
   })
-  payload.logger.info(`Uploaded hero photo (media id ${photo.id})`)
+  payload.logger.info(`Uploaded hero composite image (media id ${image.id})`)
 
   const home = await payload.find({
     collection: 'pages',
@@ -44,20 +44,23 @@ async function run() {
     await payload.update({
       collection: 'pages',
       id: home.docs[0].id,
-      data: { heroMedia: photo.id },
+      data: { heroMedia: image.id },
     })
-    payload.logger.info('Set Home page hero photo')
+    payload.logger.info('Set Home page hero image')
   }
 
-  const old = await payload.find({
-    collection: 'media',
-    where: { alt: { equals: OLD_ALT } },
-    limit: 1,
-  })
-  for (const doc of old.docs) {
-    await payload.delete({ collection: 'media', id: doc.id })
+  for (const alt of OLD_ALTS) {
+    if (alt === IMAGE_ALT) continue
+    const old = await payload.find({
+      collection: 'media',
+      where: { alt: { equals: alt } },
+      limit: 10,
+    })
+    for (const doc of old.docs) {
+      await payload.delete({ collection: 'media', id: doc.id })
+    }
+    if (old.docs.length) payload.logger.info(`Removed old media doc (alt: ${alt})`)
   }
-  if (old.docs.length) payload.logger.info('Removed old hero video media doc')
 }
 
 await run()
