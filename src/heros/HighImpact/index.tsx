@@ -5,6 +5,7 @@ import type { HeroData } from '@/heros/types'
 import { CMSLink } from '@/components/Link'
 import { Media } from '@/components/Media'
 import RichText from '@/components/RichText'
+import { cn } from '@/utilities/ui'
 
 /**
  * High-impact hero — dark navy, editorial.
@@ -65,7 +66,16 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
                 <ul data-reveal="up" className="mt-4 flex flex-wrap gap-4">
                   {links.map(({ link }, i) => (
                     <li key={i}>
-                      <CMSLink {...link} size="lg" />
+                      <CMSLink
+                        {...link}
+                        size="lg"
+                        className={cn(
+                          'rounded-full px-8 text-base font-semibold',
+                          link.appearance === 'outline'
+                            ? 'border-2 border-secondary bg-transparent text-primary-foreground hover:bg-secondary/10'
+                            : 'bg-secondary text-secondary-foreground hover:bg-secondary/90',
+                        )}
+                      />
                     </li>
                   ))}
                 </ul>
