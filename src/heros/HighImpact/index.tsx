@@ -72,7 +72,7 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
                         className={cn(
                           'rounded-full px-8 text-base font-semibold',
                           link.appearance === 'outline'
-                            ? 'border-2 border-secondary bg-transparent text-primary-foreground hover:bg-secondary/10'
+                            ? 'border-2 border-secondary bg-transparent text-primary-foreground hover:bg-secondary/10 hover:text-secondary'
                             : 'bg-secondary text-secondary-foreground hover:bg-secondary/90',
                         )}
                       />
