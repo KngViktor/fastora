@@ -37,8 +37,7 @@ async function run() {
     const blockType = block.blockType as string
     if (CLEAR_EYEBROW_ON.has(blockType) && block.eyebrow) {
       changed++
-      const { eyebrow: _eyebrow, ...rest } = block
-      return rest
+      return { ...block, eyebrow: null }
     }
     return block
   })
