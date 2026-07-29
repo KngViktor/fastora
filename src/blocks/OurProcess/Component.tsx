@@ -23,18 +23,14 @@ export const OurProcessBlock: React.FC<OurProcessBlockProps> = ({
         {description && <p className="mt-4 text-muted-foreground">{description}</p>}
       </div>
 
-      <ol className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4" data-reveal-group="110">
+      <ol className="mt-14 grid gap-10 md:grid-cols-2 md:gap-x-8 md:gap-y-14 lg:grid-cols-4" data-reveal-group="110">
         {steps.map((step, i) => (
-          <li
-            key={i}
-            data-reveal="up"
-            className="relative rounded-3xl border border-border bg-card p-8"
-          >
-            <span className="font-display text-4xl font-semibold text-border">
+          <li key={i} data-reveal="up" className="relative flex flex-col gap-3 border-t-2 border-secondary/30 pt-6">
+            <span className="font-display text-3xl font-semibold text-secondary/50">
               {String(i + 1).padStart(2, '0')}
             </span>
-            <h3 className="mt-5 text-lg font-semibold">{step.title}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{step.description}</p>
+            <h3 className="text-lg font-semibold">{step.title}</h3>
+            <p className="text-sm text-muted-foreground">{step.description}</p>
           </li>
         ))}
       </ol>

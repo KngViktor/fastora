@@ -125,7 +125,7 @@ async function run() {
       order: 1,
       featuredOnHome: true,
       problem:
-        'Many businesses communicate in fragments — one message on the website, another in a pitch, another on social media — leaving audiences confused about what the business actually stands for.',
+        'Many businesses communicate in fragments, one message on the website, another in a pitch, another on social media, leaving audiences confused about what the business actually stands for.',
       approach:
         'We start by understanding your business, audience, and objectives, then build a communications strategy that gives every message a clear purpose and keeps your story consistent across every platform and touchpoint.',
       deliverables: [
@@ -138,12 +138,12 @@ async function run() {
         {
           question: 'What is strategic communications, exactly?',
           answer:
-            'It is the discipline of deciding what your business needs to say, to whom, and why — before any content, campaign, or website copy gets written. It is the foundation every other service builds on.',
+            'It is the discipline of deciding what your business needs to say, to whom, and why, before any content, campaign, or website copy gets written. It is the foundation every other service builds on.',
         },
         {
           question: 'Do we need this if we already have a marketing team?',
           answer:
-            'Often, yes. Strategic communications sits above day-to-day marketing execution — it is the thinking that keeps every campaign, post, and conversation pointed at the same goal.',
+            'Often, yes. Strategic communications sits above day-to-day marketing execution, it is the thinking that keeps every campaign, post, and conversation pointed at the same goal.',
         },
       ],
     },
@@ -154,7 +154,7 @@ async function run() {
       order: 2,
       featuredOnHome: true,
       problem:
-        "Inconsistent visuals, mixed messaging, and an unclear position in the market make it harder for people to understand — and trust — what a business stands for.",
+        "Inconsistent visuals, mixed messaging, and an unclear position in the market make it harder for people to understand, and trust, what a business stands for.",
       approach:
         'We work with you to define your positioning, personality, and value proposition, then translate that thinking into practical guidance your team can apply consistently across every touchpoint.',
       deliverables: [
@@ -167,7 +167,7 @@ async function run() {
         {
           question: 'Do you design logos and visual identities?',
           answer:
-            'Our focus is on brand thinking — positioning, personality, voice, and messaging. Where visual identity work is needed, we scope it as part of the engagement or work alongside your design team.',
+            'Our focus is on brand thinking, positioning, personality, voice, and messaging. Where visual identity work is needed, we scope it as part of the engagement or work alongside your design team.',
         },
         {
           question: 'How long does a brand consulting engagement take?',
@@ -196,7 +196,7 @@ async function run() {
         {
           question: 'Do you also write and produce the content?',
           answer:
-            'Yes — content strategy is often paired with our Copywriting service, so the plan and the execution stay connected.',
+            'Yes, content strategy is often paired with our Copywriting service, so the plan and the execution stay connected.',
         },
       ],
     },
@@ -207,9 +207,9 @@ async function run() {
       order: 4,
       featuredOnHome: false,
       problem:
-        'A single unclear message, unanswered review, or poorly handled moment can undo years of credibility — and most businesses only think about reputation once something has already gone wrong.',
+        'A single unclear message, unanswered review, or poorly handled moment can undo years of credibility, and most businesses only think about reputation once something has already gone wrong.',
       approach:
-        'We help you build a proactive reputation strategy — consistent messaging, monitoring, and response protocols — so your business is prepared before an issue arises, not scrambling after.',
+        'We help you build a proactive reputation strategy, consistent messaging, monitoring, and response protocols, so your business is prepared before an issue arises, not scrambling after.',
       deliverables: [
         'Reputation audit',
         'Monitoring & response protocols',
@@ -220,7 +220,7 @@ async function run() {
         {
           question: 'Is this only for businesses already in a crisis?',
           answer:
-            'No. Most of our reputation work is proactive — building the messaging, monitoring, and protocols that prevent a small issue from becoming a large one.',
+            'No. Most of our reputation work is proactive, building the messaging, monitoring, and protocols that prevent a small issue from becoming a large one.',
         },
       ],
     },
@@ -233,7 +233,7 @@ async function run() {
       problem:
         "Founders are often their business's most valuable communicator, yet many struggle to show up consistently across platforms, interviews, and public moments.",
       approach:
-        'We help founders clarify their voice and message, then build a practical plan for showing up — on LinkedIn, in interviews, at events — in a way that strengthens both their personal credibility and the business behind them.',
+        'We help founders clarify their voice and message, then build a practical plan for showing up, on LinkedIn, in interviews, at events, in a way that strengthens both their personal credibility and the business behind them.',
       deliverables: [
         'Personal brand positioning',
         'Content & talking-point development',
@@ -244,7 +244,7 @@ async function run() {
         {
           question: 'Is founder branding the same as personal social media management?',
           answer:
-            'It includes it, but starts earlier — with positioning and message clarity — so that whatever you post or say is working toward a consistent, credible personal brand.',
+            'It includes it, but starts earlier, with positioning and message clarity, so that whatever you post or say is working toward a consistent, credible personal brand.',
         },
       ],
     },
@@ -268,7 +268,7 @@ async function run() {
         {
           question: 'Which platforms do you manage?',
           answer:
-            'Instagram, LinkedIn, TikTok, X, Facebook, and YouTube — we recommend a focused mix based on where your audience actually spends time, not every platform at once.',
+            'Instagram, LinkedIn, TikTok, X, Facebook, and YouTube, we recommend a focused mix based on where your audience actually spends time, not every platform at once.',
         },
       ],
     },
@@ -281,7 +281,7 @@ async function run() {
       problem:
         'Generic or unclear copy makes even strong businesses sound like every other option, and readers move on before they understand the value being offered.',
       approach:
-        'We write with intent — every page, email, and caption is built around a clear objective and a voice that sounds distinctly like your business, not a template.',
+        'We write with intent, every page, email, and caption is built around a clear objective and a voice that sounds distinctly like your business, not a template.',
       deliverables: [
         'Website & landing page copy',
         'Campaign & email copy',
@@ -292,7 +292,7 @@ async function run() {
         {
           question: 'Can you write in our existing brand voice?',
           answer:
-            'Yes — we start by studying how your business already communicates, then write in a voice that is recognisably yours, refined rather than replaced.',
+            'Yes, we start by studying how your business already communicates, then write in a voice that is recognisably yours, refined rather than replaced.',
         },
       ],
     },
@@ -302,7 +302,7 @@ async function run() {
       order: 8,
       featuredOnHome: true,
       problem:
-        'Digital spend gets wasted chasing impressions and reach instead of outcomes that matter to the business — enquiries, sign-ups, and sales.',
+        'Digital spend gets wasted chasing impressions and reach instead of outcomes that matter to the business, enquiries, sign-ups, and sales.',
       approach:
         'We plan and manage campaigns against a single primary objective, with consistent iteration based on real performance data rather than guesswork.',
       deliverables: [
@@ -315,7 +315,7 @@ async function run() {
         {
           question: 'Do you handle paid ads or only organic?',
           answer:
-            'Both — the right mix depends on your goals and audience, which we validate early rather than assuming upfront.',
+            'Both, the right mix depends on your goals and audience, which we validate early rather than assuming upfront.',
         },
       ],
     },
@@ -326,7 +326,7 @@ async function run() {
       order: 9,
       featuredOnHome: false,
       problem:
-        'Without a clear strategy, marketing activity becomes reactive — a mix of tactics with no shared direction or way to measure what is actually working.',
+        'Without a clear strategy, marketing activity becomes reactive, a mix of tactics with no shared direction or way to measure what is actually working.',
       approach:
         'We build a marketing strategy grounded in your business goals, audience, and competitive position, then translate it into a practical plan your team can execute and measure.',
       deliverables: [
@@ -350,7 +350,7 @@ async function run() {
       order: 10,
       featuredOnHome: true,
       problem:
-        'Important communication decisions — a public statement, a sensitive announcement, a new positioning — often need an outside, experienced perspective, but many businesses have no one to turn to.',
+        'Important communication decisions, a public statement, a sensitive announcement, a new positioning, often need an outside, experienced perspective, but many businesses have no one to turn to.',
       approach:
         'We act as an ongoing advisory partner, available to review messaging, guide sensitive communications, and provide an outside perspective when it matters most.',
       deliverables: [
@@ -363,7 +363,7 @@ async function run() {
         {
           question: 'Is this a retainer service?',
           answer:
-            'Yes — Communication Advisory is typically an ongoing retainer, so you have a trusted partner available when communication decisions need to move quickly.',
+            'Yes, Communication Advisory is typically an ongoing retainer, so you have a trusted partner available when communication decisions need to move quickly.',
         },
       ],
     },
@@ -394,7 +394,7 @@ async function run() {
     collection: 'testimonials',
     data: {
       quote:
-        'Fastora rebuilt our entire social presence in six weeks. We went from posting sporadically to a real content strategy — and our engagement tripled.',
+        'Fastora rebuilt our entire social presence in six weeks. We went from posting sporadically to a real content strategy, and our engagement tripled.',
       clientName: 'Amaka Chukwu',
       role: 'Founder',
       company: 'Lumen Skincare',
@@ -407,7 +407,7 @@ async function run() {
     collection: 'testimonials',
     data: {
       quote:
-        'Fastora helped us explain what Northbound actually does — clearly and consistently. Our qualified quote requests are up 40%, and prospects understand our value before they even call.',
+        'Fastora helped us explain what Northbound actually does, clearly and consistently. Our qualified quote requests are up 40%, and prospects understand our value before they even call.',
       clientName: 'Daniel Osei',
       role: 'CEO',
       company: 'Northbound Logistics',
@@ -431,10 +431,10 @@ async function run() {
       featuredOnHome: true,
       relatedService: createdServices['Social Media Management']?.id,
       challenge: richTextFromParagraphs([
-        'Lumen Skincare had beautiful products but an inconsistent social presence — irregular posting, no clear content strategy, and flat engagement across Instagram and TikTok.',
+        'Lumen Skincare had beautiful products but an inconsistent social presence, irregular posting, no clear content strategy, and flat engagement across Instagram and TikTok.',
       ]),
       approach: richTextFromParagraphs([
-        'We built a platform-specific content strategy and editorial calendar, then took over day-to-day social media management — consistent publishing, community engagement, and monthly reporting tied to real growth metrics.',
+        'We built a platform-specific content strategy and editorial calendar, then took over day-to-day social media management, consistent publishing, community engagement, and monthly reporting tied to real growth metrics.',
       ]),
       results: [
         { metric: '+212%', label: 'engagement rate in 90 days' },
@@ -459,7 +459,7 @@ async function run() {
       featuredOnHome: true,
       relatedService: createdServices['Marketing Strategy']?.id,
       challenge: richTextFromParagraphs([
-        "Northbound's messaging was inconsistent across their website, proposals, and social presence, and their marketing had no clear strategy connecting it to business goals — so qualified leads were slipping through before a conversation ever started.",
+        "Northbound's messaging was inconsistent across their website, proposals, and social presence, and their marketing had no clear strategy connecting it to business goals, so qualified leads were slipping through before a conversation ever started.",
       ]),
       approach: richTextFromParagraphs([
         "We developed a marketing strategy grounded in Northbound's actual competitive position, rewrote their core messaging for clarity and trust, and rebuilt their lead-generating campaigns around a single measurable goal: qualified quote requests.",
@@ -511,13 +511,13 @@ async function run() {
       meta: {
         title: "Why Being Good at What You Do Isn't Enough | Fastora",
         description:
-          "Quality alone doesn't guarantee attention. Here's why communication decides whether good businesses get noticed — and how to close the gap.",
+          "Quality alone doesn't guarantee attention. Here's why communication decides whether good businesses get noticed, and how to close the gap.",
       },
       content: richTextHeadingAndParagraphs("Why Being Good at What You Do Isn't Enough", [
-        'Every day, good businesses miss opportunities — not because they lack quality, not because they don\'t work hard, and not because there isn\'t a market for what they offer. They miss opportunities because people don\'t fully understand who they are, what they do, or why they matter.',
-        'Businesses are judged long before a conversation begins. A website, a social media profile, a single post can decide whether someone chooses to engage or move on. Too often, businesses communicate in ways that create confusion instead of confidence — and the gap between the quality of the work and the way that work is perceived quietly costs them growth.',
-        'Communication is not simply about sharing information — it is about helping people make confident decisions. When a business communicates well, people understand its value more quickly, trust grows more easily, and better opportunities follow.',
-        'The fix is rarely more content. It is clearer thinking: a strategy that connects what you say to what you actually do, delivered consistently across every place someone might encounter your business. Good businesses shouldn\'t be overlooked because they struggle to communicate their value — the goal is to become easier to understand, easier to trust, and harder to ignore.',
+        'Every day, good businesses miss opportunities, not because they lack quality, not because they don\'t work hard, and not because there isn\'t a market for what they offer. They miss opportunities because people don\'t fully understand who they are, what they do, or why they matter.',
+        'Businesses are judged long before a conversation begins. A website, a social media profile, a single post can decide whether someone chooses to engage or move on. Too often, businesses communicate in ways that create confusion instead of confidence, and the gap between the quality of the work and the way that work is perceived quietly costs them growth.',
+        'Communication is not simply about sharing information, it is about helping people make confident decisions. When a business communicates well, people understand its value more quickly, trust grows more easily, and better opportunities follow.',
+        'The fix is rarely more content. It is clearer thinking: a strategy that connects what you say to what you actually do, delivered consistently across every place someone might encounter your business. Good businesses shouldn\'t be overlooked because they struggle to communicate their value, the goal is to become easier to understand, easier to trust, and harder to ignore.',
       ]),
     },
   })
@@ -551,14 +551,13 @@ async function run() {
       },
       {
         blockType: 'whyFastora' as const,
-        eyebrow: 'Why Fastora',
         heading: 'A strategic partner, not just another vendor',
         points: [
           {
             stat: '10+',
             title: 'Integrated services',
             description:
-              'From strategy to execution, communications and digital work live under one accountable team — not scattered across vendors.',
+              'From strategy to execution, communications and digital work live under one accountable team, not scattered across vendors.',
           },
           {
             stat: 'Strategy-first',
@@ -576,14 +575,13 @@ async function run() {
       },
       {
         blockType: 'ourProcess' as const,
-        eyebrow: 'Our process',
         heading: 'How we work with you',
-        description: 'A consistent, thoughtful approach — from the first conversation to long-term partnership.',
+        description: 'A consistent, thoughtful approach, from the first conversation to long-term partnership.',
         steps: [
           {
             title: 'Listen & understand',
             description:
-              'We start every engagement by understanding your business, audience, and communication challenge — before recommending anything.',
+              'We start every engagement by understanding your business, audience, and communication challenge, before recommending anything.',
           },
           {
             title: 'Strategise',
@@ -593,7 +591,7 @@ async function run() {
           {
             title: 'Create & execute',
             description:
-              'We bring the strategy to life — content, campaigns, messaging, and digital execution — with the same care at every step.',
+              'We bring the strategy to life, content, campaigns, messaging, and digital execution, with the same care at every step.',
           },
           {
             title: 'Review & grow',
@@ -604,13 +602,11 @@ async function run() {
       },
       {
         blockType: 'selectedWork' as const,
-        eyebrow: 'Selected case studies',
         heading: 'Results, not just deliverables',
         limit: 3,
       },
       {
         blockType: 'testimonialsBlock' as const,
-        eyebrow: 'Client results',
         heading: 'Businesses that communicate with more confidence',
         limit: 3,
       },
@@ -622,12 +618,12 @@ async function run() {
           {
             question: 'What does Fastora do?',
             answer:
-              'Fastora is a communications and digital strategy company. We help businesses communicate more effectively through strategic communications, brand consulting, content strategy, reputation management, founder branding, social media management, copywriting, digital marketing, marketing strategy, and communication advisory — all working toward one goal: helping you become easier to understand, easier to trust, and harder to ignore.',
+              'Fastora is a communications and digital strategy company. We help businesses communicate more effectively through strategic communications, brand consulting, content strategy, reputation management, founder branding, social media management, copywriting, digital marketing, marketing strategy, and communication advisory, all working toward one goal: helping you become easier to understand, easier to trust, and harder to ignore.',
           },
           {
             question: 'How is Fastora different from a typical marketing agency?',
             answer:
-              'We start with strategy, not content production. Before we write a caption or launch a campaign, we take time to understand your business, audience, and communication challenge — then build a plan execution can actually follow.',
+              'We start with strategy, not content production. Before we write a caption or launch a campaign, we take time to understand your business, audience, and communication challenge, then build a plan execution can actually follow.',
           },
           {
             question: 'How quickly can we start working together?',
@@ -643,7 +639,6 @@ async function run() {
       },
       {
         blockType: 'latestInsights' as const,
-        eyebrow: 'Insights',
         heading: 'Thinking on communication and brand strategy',
         limit: 3,
       },

@@ -5,6 +5,7 @@ import { getPayload } from 'payload'
 
 import type { SelectedWorkBlock as SelectedWorkBlockProps } from '@/payload-types'
 import { Media } from '@/components/Media'
+import { cn } from '@/utilities/ui'
 
 export const SelectedWorkBlock: React.FC<SelectedWorkBlockProps> = async ({
   eyebrow,
@@ -49,32 +50,45 @@ export const SelectedWorkBlock: React.FC<SelectedWorkBlockProps> = async ({
         </Link>
       </div>
 
-      <div className="mt-12 grid gap-8 lg:grid-cols-3" data-reveal-group="120">
-        {caseStudies.map((study) => (
-          <Link
-            key={study.id}
-            href={`/case-studies/${study.slug}`}
-            data-reveal="up"
-            className="group overflow-hidden rounded-3xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-secondary/60"
-          >
-            <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-              {study.coverImage && typeof study.coverImage === 'object' && (
-                <Media
-                  resource={study.coverImage}
-                  fill
-                  imgClassName="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+      <div className="mt-12 grid gap-8 lg:grid-cols-2" data-reveal-group="120">
+        {caseStudies.map((study, i) => {
+          const featured = i === 0
+          return (
+            <Link
+              key={study.id}
+              href={`/case-studies/${study.slug}`}
+              data-reveal="up"
+              className={cn(
+                'group overflow-hidden rounded-3xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-secondary/60',
+                featured && 'lg:col-span-2 lg:flex lg:flex-row-reverse',
               )}
-            </div>
-            <div className="p-6">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                {study.industry || study.clientName}
-              </p>
-              <h3 className="mt-2 text-lg font-semibold">{study.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{study.summary}</p>
-            </div>
-          </Link>
-        ))}
+            >
+              <div
+                className={cn(
+                  'relative aspect-[4/3] overflow-hidden bg-muted',
+                  featured && 'lg:aspect-auto lg:w-1/2',
+                )}
+              >
+                {study.coverImage && typeof study.coverImage === 'object' && (
+                  <Media
+                    resource={study.coverImage}
+                    fill
+                    imgClassName="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                )}
+              </div>
+              <div className={cn('p-6', featured && 'lg:flex lg:w-1/2 lg:flex-col lg:justify-center lg:p-10')}>
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  {study.industry || study.clientName}
+                </p>
+                <h3 className={cn('mt-2 text-lg font-semibold', featured && 'lg:text-2xl')}>
+                  {study.title}
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">{study.summary}</p>
+              </div>
+            </Link>
+          )
+        })}
       </div>
     </section>
   )
