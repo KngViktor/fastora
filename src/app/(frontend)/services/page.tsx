@@ -15,12 +15,12 @@ const SERVICES_FAQS = [
   {
     question: 'How do I know which service is right for us?',
     answer:
-      "Book a consultation and we'll help you figure out the right starting point — most engagements begin with Strategic Communications or Brand Consulting before moving into execution.",
+      "Book a consultation and we'll help you figure out the right starting point, most engagements begin with Strategic Communications or Brand Consulting before moving into execution.",
   },
   {
     question: 'Can we combine multiple services?',
     answer:
-      'Yes. Most clients combine two or three services — strategy, content, and digital marketing are a common pairing — delivered as one connected engagement.',
+      'Yes. Most clients combine two or three services, strategy, content, and digital marketing are a common pairing, delivered as one connected engagement.',
   },
   {
     question: 'Do you offer one-off projects or only retainers?',

@@ -28,7 +28,7 @@ export default async function InsightsPage() {
       <PageHeader
         eyebrow="Insights"
         title="Thinking on communication and brand strategy"
-        description="Practical ideas on communications, branding, and digital strategy — for businesses that want to be understood, not just seen."
+        description="Practical ideas on communications, branding, and digital strategy, for businesses that want to be understood, not just seen."
       />
 
       <section className="container pb-24 pt-16">

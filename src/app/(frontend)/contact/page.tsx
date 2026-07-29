@@ -18,7 +18,7 @@ const CONTACT_FAQS = [
   {
     question: 'Is the first consultation free?',
     answer:
-      "Yes. The first consultation is a conversation about your business and communication goals — there's no obligation.",
+      "Yes. The first consultation is a conversation about your business and communication goals, there's no obligation.",
   },
   {
     question: 'What information should I include in my message?',
@@ -30,7 +30,7 @@ const CONTACT_FAQS = [
 const FALLBACK = {
   eyebrow: 'Contact',
   heading: "Let's start your project",
-  description: "Tell us where you want to go. We'll come back with how to get there — fast.",
+  description: "Tell us where you want to go. We'll come back with how to get there, fast.",
 }
 
 export async function generateMetadata(): Promise<Metadata> {
