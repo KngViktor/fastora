@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
       {
         pathname: '/api/media/file/**',
       },
+      // Static brand assets (logo/icon/favicon) served straight from /public.
+      {
+        pathname: '/brand/**',
+      },
     ],
     remotePatterns: [
       {
