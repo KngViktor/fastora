@@ -94,6 +94,10 @@
   h6 {
     font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
     letter-spacing: -0.02em;
+    /* Safety net: a single word longer than its container (e.g. a big display
+       heading on a narrow phone) breaks to the next line instead of being
+       clipped by a section's overflow:hidden. */
+    overflow-wrap: break-word;
   }
 
   .prose {

@@ -55,7 +55,7 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
               {richText && (
                 <div data-reveal="up">
                   <RichText
-                    className="max-w-2xl [&_h1]:text-5xl [&_h1]:font-semibold [&_h1]:leading-[1.05] [&_h1]:text-primary-foreground md:[&_h1]:text-6xl lg:[&_h1]:text-7xl [&_p]:mt-6 [&_p]:max-w-md [&_p]:text-lg [&_p]:text-primary-foreground/70"
+                    className="max-w-2xl [&_h1]:text-4xl [&_h1]:font-semibold [&_h1]:leading-[1.05] [&_h1]:break-words [&_h1]:text-primary-foreground sm:[&_h1]:text-5xl md:[&_h1]:text-6xl lg:[&_h1]:text-7xl [&_p]:mt-6 [&_p]:max-w-md [&_p]:text-lg [&_p]:text-primary-foreground/70"
                     data={richText}
                     enableGutter={false}
                   />
