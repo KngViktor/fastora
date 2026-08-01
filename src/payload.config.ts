@@ -1,5 +1,6 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { s3Storage } from '@payloadcms/storage-s3'
+import { resendAdapter } from '@payloadcms/email-resend'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import type { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import sharp from 'sharp'
@@ -61,7 +62,19 @@ if (process.env.SUPABASE_S3_ENDPOINT && process.env.SUPABASE_S3_ACCESS_KEY_ID) {
   )
 }
 
+// Email transport for password resets and notifications. Configured only when
+// a Resend API key is present; otherwise Payload falls back to its built-in
+// console adapter (which logs the reset link to the server terminal in dev).
+const emailAdapter = process.env.RESEND_API_KEY
+  ? resendAdapter({
+      defaultFromAddress: process.env.RESEND_FROM_ADDRESS || 'onboarding@resend.dev',
+      defaultFromName: process.env.RESEND_FROM_NAME || 'Fastora',
+      apiKey: process.env.RESEND_API_KEY,
+    })
+  : undefined
+
 export default buildConfig({
+  email: emailAdapter,
   admin: {
     components: {
       beforeLogin: ['@/components/BeforeLogin'],
