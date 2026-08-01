@@ -2,8 +2,6 @@ import React from 'react'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 
-import { DemoAccessCard } from './DemoAccessCard'
-
 const BeforeLogin: React.FC = async () => {
   const payload = await getPayload({ config: configPromise })
   const siteSettings = await payload.findGlobal({ slug: 'site-settings' })
@@ -21,10 +19,9 @@ const BeforeLogin: React.FC = async () => {
         }}
       />
       <div className="fastora-login-intro">
-        <h1>Welcome back.</h1>
-        <p>Sign in to manage Fastora&apos;s pages, content, and brand settings.</p>
+        <h1>Welcome home</h1>
+        <p>Please enter your details.</p>
       </div>
-      <DemoAccessCard />
     </>
   )
 }
