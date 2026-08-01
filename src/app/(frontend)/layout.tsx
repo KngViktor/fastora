@@ -71,7 +71,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       suppressHydrationWarning
     >
       <head>
-        <link href="/favicon.ico" rel="icon" sizes="32x32" />
+        <link href="/favicon.png" rel="icon" type="image/png" sizes="32x32" />
+        <link href="/favicon.png" rel="apple-touch-icon" />
         {brandStyle && <style id="fastora-brand-tokens">{brandStyle}</style>}
         <script
           type="application/ld+json"

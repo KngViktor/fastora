@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import Image from 'next/image'
 import React from 'react'
 
 import type { Media as MediaType } from '@/payload-types'
@@ -11,7 +12,9 @@ interface Props {
   priority?: 'auto' | 'high' | 'low'
   media?: MediaType | number | null
   siteName?: string | null
-  /** Text color of the fallback wordmark, used before a logo is uploaded in /admin. */
+  /** Which built-in brand asset to fall back to before a logo is uploaded in /admin:
+   *  "light" = full color logo + wordmark (for light backgrounds),
+   *  "dark" = white icon only (for dark backgrounds, e.g. the footer). */
   variant?: 'light' | 'dark'
 }
 
@@ -35,15 +38,20 @@ export const Logo: React.FC<Props> = ({
     )
   }
 
+  // Real cropped-asset dimensions (402x440), used only so Next/Image can
+  // compute the correct intrinsic aspect ratio — actual display size is
+  // controlled by the "h-8 w-auto" className below.
+  const fallbackSrc = variant === 'dark' ? '/brand/icon-white.png' : '/brand/logo-color.png'
+
   return (
-    <span
-      className={clsx(
-        'font-display text-xl font-semibold tracking-tight',
-        variant === 'dark' ? 'text-white' : 'text-foreground',
-        className,
-      )}
-    >
-      {siteName || 'Fastora'}
-    </span>
+    <Image
+      src={fallbackSrc}
+      alt={siteName || 'Fastora'}
+      width={402}
+      height={440}
+      priority={priority === 'high'}
+      loading={priority === 'high' ? undefined : loading}
+      className={clsx('h-8 w-auto object-contain', className)}
+    />
   )
 }

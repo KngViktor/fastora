@@ -2,43 +2,12 @@ import React from 'react'
 
 /**
  * Admin logo — replaces the Payload logo on the login screen and nav header.
- * The wordmark uses `currentColor` so it stays legible in both the light and
- * dark admin themes; the mark keeps the Fastora Sky Blue accent.
+ * Renders the real Fastora brand mark + wordmark (public/brand/logo-color.png).
  */
 const Logo: React.FC = () => {
   return (
-    <div
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '14px',
-        color: 'currentColor',
-      }}
-      aria-label="Fastora"
-    >
-      <svg
-        width="40"
-        height="40"
-        viewBox="0 0 28 28"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-      >
-        <rect width="28" height="28" rx="7" fill="#2B7FD6" />
-        <path d="M9 7.5h10v3.2h-6.5v3.1H18v3.1h-5.5V21H9V7.5Z" fill="#0B2545" />
-      </svg>
-      <span
-        style={{
-          fontSize: '30px',
-          fontWeight: 700,
-          letterSpacing: '-0.02em',
-          fontFamily:
-            "'Space Grotesk', ui-sans-serif, system-ui, -apple-system, sans-serif",
-        }}
-      >
-        Fastora
-      </span>
-    </div>
+    // eslint-disable-next-line @next/next/no-img-element -- the Payload admin shell isn't a Next.js page, so next/image isn't available here.
+    <img src="/brand/logo-color.png" alt="Fastora" height={40} style={{ height: 40, width: 'auto' }} />
   )
 }
 

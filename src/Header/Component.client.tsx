@@ -20,7 +20,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, siteSettings }
           <Logo
             loading="eager"
             priority="high"
-            media={siteSettings?.logoDark}
+            media={siteSettings?.logoLight}
             siteName={siteSettings?.siteName}
             variant="light"
           />
