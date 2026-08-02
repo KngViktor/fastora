@@ -1,11 +1,14 @@
 import React from 'react'
 
-import type { CallToActionBlock as CTABlockProps } from '@/payload-types'
-
 import RichText from '@/components/RichText'
 import { CMSLink } from '@/components/Link'
 
-export const CallToActionBlock: React.FC<CTABlockProps> = ({ links, richText }) => {
+type Props = {
+  richText?: string | null
+  links?: { label: string; url: string; appearance?: string }[]
+}
+
+export const CallToActionBlock: React.FC<Props> = ({ links, richText }) => {
   return (
     <div className="container py-16 md:py-24">
       <div
@@ -25,8 +28,16 @@ export const CallToActionBlock: React.FC<CTABlockProps> = ({ links, richText }) 
             {richText && <RichText className="mb-0" data={richText} enableGutter={false} />}
           </div>
           <div className="flex shrink-0 flex-col gap-4 sm:flex-row md:flex-col">
-            {(links || []).map(({ link }, i) => {
-              return <CMSLink key={i} size="lg" {...link} />
+            {(links || []).map((link, i) => {
+              return (
+                <CMSLink
+                  key={i}
+                  size="lg"
+                  label={link.label}
+                  url={link.url}
+                  appearance={link.appearance as 'default' | 'outline' | undefined}
+                />
+              )
             })}
           </div>
         </div>

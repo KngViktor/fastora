@@ -1,14 +1,11 @@
 import type { Metadata } from 'next'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
-import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
 import React, { cache } from 'react'
 
+import { getPageBySlug, getPageSlugs } from '@/lib/api'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
-import { LivePreviewListener } from '@/components/LivePreviewListener'
 
 // Slugs owned by dedicated route files (app/(frontend)/<slug>/page.tsx),
 // which need real logic — live collection queries, a form — that the
@@ -17,19 +14,9 @@ import { LivePreviewListener } from '@/components/LivePreviewListener'
 const RESERVED_SLUGS = ['home', 'services', 'case-studies', 'contact', 'insights', 'login']
 
 export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const pages = await payload.find({
-    collection: 'pages',
-    draft: false,
-    limit: 1000,
-    overrideAccess: false,
-    pagination: false,
-    select: { slug: true },
-  })
+  const slugs = await getPageSlugs()
 
-  return (pages.docs || [])
-    .filter((doc) => Boolean(doc.slug) && !RESERVED_SLUGS.includes(String(doc.slug)))
-    .map(({ slug }) => ({ slug: String(slug) }))
+  return slugs.filter((slug) => Boolean(slug) && !RESERVED_SLUGS.includes(slug)).map((slug) => ({ slug }))
 }
 
 type Args = {
@@ -37,7 +24,6 @@ type Args = {
 }
 
 export default async function Page({ params }: Args) {
-  const { isEnabled: draft } = await draftMode()
   const { slug = 'home' } = await params
 
   // Reserved slugs are served by their own dedicated route files.
@@ -47,12 +33,11 @@ export default async function Page({ params }: Args) {
 
   if (!page) notFound()
 
-  const { heroType, heroRichText, heroLinks, heroMedia, layout } = page
+  const { hero, layout } = page
 
   return (
     <article>
-      {draft && <LivePreviewListener />}
-      <RenderHero type={heroType} richText={heroRichText} links={heroLinks} media={heroMedia} />
+      <RenderHero type={hero.type} richText={hero.richText} links={hero.links} media={hero.media} />
       <RenderBlocks blocks={layout} />
     </article>
   )
@@ -64,20 +49,4 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   return generateMeta({ doc: page })
 }
 
-const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {
-  const { isEnabled: draft } = await draftMode()
-  const payload = await getPayload({ config: configPromise })
-
-  const result = await payload.find({
-    collection: 'pages',
-    draft,
-    limit: 1,
-    pagination: false,
-    overrideAccess: draft,
-    where: {
-      slug: { equals: slug },
-    },
-  })
-
-  return result.docs?.[0] || null
-})
+const queryPageBySlug = cache(async ({ slug }: { slug: string }) => getPageBySlug(slug))

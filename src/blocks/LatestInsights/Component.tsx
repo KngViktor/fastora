@@ -1,28 +1,18 @@
 import Link from 'next/link'
 import React from 'react'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 
-import type { LatestInsightsBlock as LatestInsightsBlockProps } from '@/payload-types'
+import { getPosts } from '@/lib/api'
 import { Media } from '@/components/Media'
 import { formatDateTime } from '@/utilities/formatDateTime'
 
-export const LatestInsightsBlockComponent: React.FC<LatestInsightsBlockProps> = async ({
-  eyebrow,
-  heading,
-  limit,
-}) => {
-  const payload = await getPayload({ config: configPromise })
+type Props = {
+  eyebrow?: string | null
+  heading?: string | null
+  limit?: number | null
+}
 
-  const { docs: posts } = await payload.find({
-    collection: 'posts',
-    depth: 1,
-    limit: limit || 3,
-    sort: '-publishedAt',
-    where: {
-      _status: { equals: 'published' },
-    },
-  })
+export const LatestInsightsBlockComponent: React.FC<Props> = async ({ eyebrow, heading, limit }) => {
+  const posts = await getPosts({ limit: limit || 3 })
 
   if (!posts?.length) return null
 

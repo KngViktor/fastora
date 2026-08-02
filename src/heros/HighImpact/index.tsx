@@ -64,10 +64,12 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
 
               {Array.isArray(links) && links.length > 0 && (
                 <ul data-reveal="up" className="mt-4 flex flex-wrap gap-4">
-                  {links.map(({ link }, i) => (
+                  {links.map((link, i) => (
                     <li key={i}>
                       <CMSLink
-                        {...link}
+                        label={link.label}
+                        url={link.url}
+                        appearance={link.appearance as 'default' | 'outline' | undefined}
                         size="lg"
                         className={cn(
                           'rounded-full px-8 text-base font-semibold',

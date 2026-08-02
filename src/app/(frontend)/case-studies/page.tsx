@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 import React from 'react'
 
+import { getCaseStudies } from '@/lib/api'
 import { Media } from '@/components/Media'
 import { PageHeader } from '@/components/PageHeader'
 import { generateMeta } from '@/utilities/generateMeta'
@@ -19,22 +18,15 @@ export async function generateMetadata(): Promise<Metadata> {
   const page = await queryUtilityPage('case-studies')
   return generateMeta({
     doc: page || {
-      meta: { title: 'Case Studies', description: FALLBACK.description },
+      meta: { title: 'Case Studies', description: FALLBACK.description, image: null },
     },
   })
 }
 
 export default async function CaseStudiesPage() {
-  const payload = await getPayload({ config: configPromise })
-  const [page, { docs: caseStudies }] = await Promise.all([
+  const [page, caseStudies] = await Promise.all([
     queryUtilityPage('case-studies'),
-    payload.find({
-      collection: 'case-studies',
-      depth: 1,
-      limit: 100,
-      sort: 'order',
-      where: { _status: { equals: 'published' } },
-    }),
+    getCaseStudies({ limit: 100 }),
   ])
   const header = {
     eyebrow: page?.pageHeaderEyebrow || FALLBACK.eyebrow,

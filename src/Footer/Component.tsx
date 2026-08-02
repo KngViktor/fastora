@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 
-import { getCachedGlobal } from '@/utilities/getGlobals'
+import { getFooter, getSiteSettings } from '@/lib/api'
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
 
@@ -16,8 +16,8 @@ const socialLabels: Record<string, string> = {
 }
 
 export async function Footer() {
-  const footerData = await getCachedGlobal('footer', 1)()
-  const siteSettings = await getCachedGlobal('site-settings', 1)()
+  const footerData = await getFooter()
+  const siteSettings = await getSiteSettings()
 
   const navItems = footerData?.navItems || []
   const socialLinks = siteSettings?.socialLinks || []
@@ -51,10 +51,11 @@ export async function Footer() {
         <div>
           <p className="text-sm font-medium text-primary-foreground/50">Navigate</p>
           <nav className="mt-4 flex flex-col gap-3">
-            {navItems.map(({ link }, i) => (
+            {navItems.map((item, i) => (
               <CMSLink
                 key={i}
-                {...link}
+                label={item.label}
+                url={item.url}
                 appearance="inline"
                 className="text-sm text-primary-foreground/80 hover:text-primary-foreground transition-colors"
               />

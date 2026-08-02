@@ -2,14 +2,14 @@
 import Link from 'next/link'
 import React from 'react'
 
-import type { Header, SiteSetting } from '@/payload-types'
+import type { Nav, SiteSettings } from '@/lib/api'
 
 import { Logo } from '@/components/Logo/Logo'
 import { HeaderNav } from './Nav'
 
 interface HeaderClientProps {
-  data: Header
-  siteSettings: SiteSetting
+  data: Nav
+  siteSettings: SiteSettings
 }
 
 export const HeaderClient: React.FC<HeaderClientProps> = ({ data, siteSettings }) => {

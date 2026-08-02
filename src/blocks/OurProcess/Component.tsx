@@ -1,13 +1,12 @@
 import React from 'react'
 
-import type { OurProcessBlock as OurProcessBlockProps } from '@/payload-types'
+type Props = {
+  eyebrow?: string | null
+  heading?: string | null
+  steps?: { title: string; description: string }[]
+}
 
-export const OurProcessBlock: React.FC<OurProcessBlockProps> = ({
-  eyebrow,
-  heading,
-  description,
-  steps,
-}) => {
+export const OurProcessBlock: React.FC<Props> = ({ eyebrow, heading, steps }) => {
   if (!steps?.length) return null
 
   return (
@@ -20,7 +19,6 @@ export const OurProcessBlock: React.FC<OurProcessBlockProps> = ({
           </span>
         )}
         {heading && <h2 className="mt-3 text-3xl font-semibold md:text-5xl">{heading}</h2>}
-        {description && <p className="mt-4 text-muted-foreground">{description}</p>}
       </div>
 
       <ol className="mt-14 grid gap-10 md:grid-cols-2 md:gap-x-8 md:gap-y-14 lg:grid-cols-4" data-reveal-group="110">

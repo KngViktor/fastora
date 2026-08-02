@@ -1,9 +1,9 @@
-import type { Page } from '@/payload-types'
+import type { Media, Page } from '@/lib/api'
 
-/** Shared shape passed to hero variant components, assembled from Pages' flat heroType/heroRichText/heroLinks/heroMedia fields by RenderHero. */
+/** Shared shape passed to hero variant components, assembled from a Page's `hero` object by RenderHero. */
 export type HeroData = {
-  links?: Page['heroLinks']
-  media?: Page['heroMedia']
-  richText?: Page['heroRichText']
-  type?: Page['heroType']
+  links?: Page['hero']['links']
+  media?: Media | null
+  richText?: string | null
+  type?: string
 }

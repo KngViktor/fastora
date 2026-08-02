@@ -13,11 +13,9 @@ const heroes = {
 }
 
 export const RenderHero: React.FC<HeroData> = ({ type, richText, links, media }) => {
-  if (!type || type === 'none') return null
+  if (!type || type === 'none' || !(type in heroes)) return null
 
-  const HeroToRender = heroes[type]
-
-  if (!HeroToRender) return null
+  const HeroToRender = heroes[type as keyof typeof heroes]
 
   return <HeroToRender links={links} media={media} richText={richText} type={type} />
 }

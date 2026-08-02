@@ -1,27 +1,17 @@
 import Link from 'next/link'
 import React from 'react'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 
-import type { ServicesOverviewBlock as ServicesOverviewBlockProps } from '@/payload-types'
+import { getServices } from '@/lib/api'
 import { Media } from '@/components/Media'
 
-export const ServicesOverviewBlock: React.FC<ServicesOverviewBlockProps> = async ({
-  eyebrow,
-  heading,
-  limit,
-}) => {
-  const payload = await getPayload({ config: configPromise })
+type Props = {
+  eyebrow?: string | null
+  heading?: string | null
+  limit?: number | null
+}
 
-  const { docs: services } = await payload.find({
-    collection: 'services',
-    depth: 1,
-    limit: limit || 6,
-    sort: 'order',
-    where: {
-      featuredOnHome: { equals: true },
-    },
-  })
+export const ServicesOverviewBlock: React.FC<Props> = async ({ eyebrow, heading, limit }) => {
+  const services = await getServices({ featuredOnHome: true, limit: limit || 6 })
 
   if (!services?.length) return null
 

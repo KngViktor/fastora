@@ -1,28 +1,18 @@
 import Link from 'next/link'
 import React from 'react'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 
-import type { SelectedWorkBlock as SelectedWorkBlockProps } from '@/payload-types'
+import { getCaseStudies } from '@/lib/api'
 import { Media } from '@/components/Media'
 import { cn } from '@/utilities/ui'
 
-export const SelectedWorkBlock: React.FC<SelectedWorkBlockProps> = async ({
-  eyebrow,
-  heading,
-  limit,
-}) => {
-  const payload = await getPayload({ config: configPromise })
+type Props = {
+  eyebrow?: string | null
+  heading?: string | null
+  limit?: number | null
+}
 
-  const { docs: caseStudies } = await payload.find({
-    collection: 'case-studies',
-    depth: 1,
-    limit: limit || 3,
-    sort: 'order',
-    where: {
-      featuredOnHome: { equals: true },
-    },
-  })
+export const SelectedWorkBlock: React.FC<Props> = async ({ eyebrow, heading, limit }) => {
+  const caseStudies = await getCaseStudies({ featuredOnHome: true, limit: limit || 3 })
 
   if (!caseStudies?.length) return null
 

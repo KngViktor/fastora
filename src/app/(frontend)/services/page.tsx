@@ -1,10 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
-import { draftMode } from 'next/headers'
 import React from 'react'
 
+import { getServices } from '@/lib/api'
 import { Media } from '@/components/Media'
 import { PageHeader } from '@/components/PageHeader'
 import { FAQBlockComponent } from '@/blocks/FAQ/Component'
@@ -40,22 +38,15 @@ export async function generateMetadata(): Promise<Metadata> {
   const page = await queryUtilityPage('services')
   return generateMeta({
     doc: page || {
-      meta: { title: 'Services', description: FALLBACK.description },
+      meta: { title: 'Services', description: FALLBACK.description, image: null },
     },
   })
 }
 
 export default async function ServicesPage() {
-  const payload = await getPayload({ config: configPromise })
-  const [page, { docs: services }] = await Promise.all([
+  const [page, services] = await Promise.all([
     queryUtilityPage('services'),
-    payload.find({
-      collection: 'services',
-      depth: 1,
-      limit: 100,
-      sort: 'order',
-      where: { _status: { equals: 'published' } },
-    }),
+    getServices({ limit: 100 }),
   ])
   const header = {
     eyebrow: page?.pageHeaderEyebrow || FALLBACK.eyebrow,
@@ -104,12 +95,7 @@ export default async function ServicesPage() {
         )}
       </section>
 
-      <FAQBlockComponent
-        blockType="faq"
-        eyebrow="FAQ"
-        heading="Questions about our services"
-        items={SERVICES_FAQS}
-      />
+      <FAQBlockComponent eyebrow="FAQ" heading="Questions about our services" items={SERVICES_FAQS} />
     </div>
   )
 }

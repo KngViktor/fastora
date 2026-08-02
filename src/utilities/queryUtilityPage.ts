@@ -1,29 +1,11 @@
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
-import { draftMode } from 'next/headers'
 import { cache } from 'react'
 
-import type { Page } from '@/payload-types'
+import type { Page } from '@/lib/api'
+import { getPageBySlug } from '@/lib/api'
 
 /**
  * Fetches a Pages document by slug for routes that render their own
  * logic (Services, Case Studies, Contact) rather than the generic [slug] catch-all
  * — used only to pull the CMS-editable `pageHeader` copy and SEO meta.
  */
-export const queryUtilityPage = cache(async (slug: string): Promise<Page | null> => {
-  const { isEnabled: draft } = await draftMode()
-  const payload = await getPayload({ config: configPromise })
-
-  const result = await payload.find({
-    collection: 'pages',
-    draft,
-    limit: 1,
-    pagination: false,
-    overrideAccess: draft,
-    where: {
-      slug: { equals: slug },
-    },
-  })
-
-  return result.docs?.[0] || null
-})
+export const queryUtilityPage = cache(async (slug: string): Promise<Page | null> => getPageBySlug(slug))

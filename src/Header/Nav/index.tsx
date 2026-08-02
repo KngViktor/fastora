@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react'
 
-import type { Header as HeaderType } from '@/payload-types'
+import type { Nav } from '@/lib/api'
 
 import { CMSLink } from '@/components/Link'
 
-export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
+export const HeaderNav: React.FC<{ data: Nav }> = ({ data }) => {
   const navItems = data?.navItems || []
   const [open, setOpen] = useState(false)
 
@@ -22,10 +22,11 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
     <nav className="flex items-center gap-6">
       {/* Desktop nav */}
       <ul className="hidden items-center gap-6 md:flex">
-        {navItems.map(({ link }, i) => (
+        {navItems.map((item, i) => (
           <li key={i}>
             <CMSLink
-              {...link}
+              label={item.label}
+              url={item.url}
               appearance="inline"
               className="text-sm font-medium text-foreground/80 transition-colors hover:text-foreground"
             />
@@ -68,10 +69,11 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
           className="absolute inset-x-0 top-full z-40 border-b border-border bg-background/95 shadow-xl backdrop-blur-xl md:hidden"
         >
           <ul className="container-page flex flex-col gap-1 py-4">
-            {navItems.map(({ link }, i) => (
+            {navItems.map((item, i) => (
               <li key={i}>
                 <CMSLink
-                  {...link}
+                  label={item.label}
+                  url={item.url}
                   appearance="inline"
                   onClick={() => setOpen(false)}
                   className="block rounded-xl px-4 py-3 text-base font-medium text-foreground/90 transition-colors hover:bg-muted"

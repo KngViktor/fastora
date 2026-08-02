@@ -1,42 +1,16 @@
 import type { MetadataRoute } from 'next'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 
+import { getCaseStudies, getPages, getPosts, getServices } from '@/lib/api'
 import { getServerSideURL } from '@/utilities/getURL'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const payload = await getPayload({ config: configPromise })
   const url = getServerSideURL()
 
   const [pages, posts, services, caseStudies] = await Promise.all([
-    payload.find({
-      collection: 'pages',
-      limit: 1000,
-      pagination: false,
-      where: { _status: { equals: 'published' } },
-      select: { slug: true, updatedAt: true },
-    }),
-    payload.find({
-      collection: 'posts',
-      limit: 1000,
-      pagination: false,
-      where: { _status: { equals: 'published' } },
-      select: { slug: true, updatedAt: true },
-    }),
-    payload.find({
-      collection: 'services',
-      limit: 1000,
-      pagination: false,
-      where: { _status: { equals: 'published' } },
-      select: { slug: true, updatedAt: true },
-    }),
-    payload.find({
-      collection: 'case-studies',
-      limit: 1000,
-      pagination: false,
-      where: { _status: { equals: 'published' } },
-      select: { slug: true, updatedAt: true },
-    }),
+    getPages(),
+    getPosts(),
+    getServices(),
+    getCaseStudies(),
   ])
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -48,32 +22,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${url}/contact`, changeFrequency: 'monthly', priority: 0.7 },
   ]
 
-  const pageRoutes: MetadataRoute.Sitemap = pages.docs
+  const pageRoutes: MetadataRoute.Sitemap = pages
     .filter((page) => !['home'].includes(page.slug || ''))
     .map((page) => ({
       url: `${url}/${page.slug}`,
-      lastModified: page.updatedAt,
+      lastModified: page.updatedAt ?? undefined,
       changeFrequency: 'monthly',
       priority: 0.6,
     }))
 
-  const postRoutes: MetadataRoute.Sitemap = posts.docs.map((post) => ({
+  const postRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${url}/insights/${post.slug}`,
-    lastModified: post.updatedAt,
+    lastModified: post.updatedAt ?? undefined,
     changeFrequency: 'monthly',
     priority: 0.7,
   }))
 
-  const serviceRoutes: MetadataRoute.Sitemap = services.docs.map((service) => ({
+  const serviceRoutes: MetadataRoute.Sitemap = services.map((service) => ({
     url: `${url}/services/${service.slug}`,
-    lastModified: service.updatedAt,
+    lastModified: service.updatedAt ?? undefined,
     changeFrequency: 'monthly',
     priority: 0.8,
   }))
 
-  const caseStudyRoutes: MetadataRoute.Sitemap = caseStudies.docs.map((study) => ({
+  const caseStudyRoutes: MetadataRoute.Sitemap = caseStudies.map((study) => ({
     url: `${url}/case-studies/${study.slug}`,
-    lastModified: study.updatedAt,
+    lastModified: study.updatedAt ?? undefined,
     changeFrequency: 'monthly',
     priority: 0.7,
   }))

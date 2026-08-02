@@ -1,6 +1,10 @@
 import React from 'react'
 
-import type { WhyFastoraBlock as WhyFastoraBlockProps } from '@/payload-types'
+type Props = {
+  eyebrow?: string | null
+  heading?: string | null
+  points?: { stat: string; title: string; description: string }[]
+}
 
 /** Parse "89%" / "150+" into { value, suffix } for the count-up animation. */
 function parseStat(stat: string): { value: number; suffix: string } | null {
@@ -9,7 +13,7 @@ function parseStat(stat: string): { value: number; suffix: string } | null {
   return { value: Number(match[1]), suffix: match[2] }
 }
 
-export const WhyFastoraBlock: React.FC<WhyFastoraBlockProps> = ({ eyebrow, heading, points }) => {
+export const WhyFastoraBlock: React.FC<Props> = ({ eyebrow, heading, points }) => {
   if (!points?.length) return null
 
   return (

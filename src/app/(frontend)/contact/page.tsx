@@ -1,11 +1,9 @@
 import type { Metadata } from 'next'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 import React from 'react'
 
+import { getServices, getSiteSettings } from '@/lib/api'
 import { PageHeader } from '@/components/PageHeader'
 import { FAQBlockComponent } from '@/blocks/FAQ/Component'
-import { getCachedGlobal } from '@/utilities/getGlobals'
 import { generateMeta } from '@/utilities/generateMeta'
 import { queryUtilityPage } from '@/utilities/queryUtilityPage'
 import { ContactForm } from './ContactForm'
@@ -37,24 +35,16 @@ export async function generateMetadata(): Promise<Metadata> {
   const page = await queryUtilityPage('contact')
   return generateMeta({
     doc: page || {
-      meta: { title: 'Contact', description: FALLBACK.description },
+      meta: { title: 'Contact', description: FALLBACK.description, image: null },
     },
   })
 }
 
 export default async function ContactPage() {
-  const payload = await getPayload({ config: configPromise })
-  const [page, { docs: services }, siteSettings] = await Promise.all([
+  const [page, services, siteSettings] = await Promise.all([
     queryUtilityPage('contact'),
-    payload.find({
-      collection: 'services',
-      depth: 0,
-      limit: 100,
-      sort: 'order',
-      where: { _status: { equals: 'published' } },
-      select: { title: true },
-    }),
-    getCachedGlobal('site-settings', 0)(),
+    getServices({ limit: 100 }),
+    getSiteSettings(),
   ])
   const header = {
     eyebrow: page?.pageHeaderEyebrow || FALLBACK.eyebrow,
@@ -109,12 +99,7 @@ export default async function ContactPage() {
         </aside>
       </section>
 
-      <FAQBlockComponent
-        blockType="faq"
-        eyebrow="FAQ"
-        heading="Questions before you reach out"
-        items={CONTACT_FAQS}
-      />
+      <FAQBlockComponent eyebrow="FAQ" heading="Questions before you reach out" items={CONTACT_FAQS} />
     </div>
   )
 }

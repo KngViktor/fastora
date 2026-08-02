@@ -1,34 +1,14 @@
 import type { Metadata } from 'next'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
-import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 
+import { getPageBySlug } from '@/lib/api'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
-import { LivePreviewListener } from '@/components/LivePreviewListener'
 
-const queryHomePage = cache(async () => {
-  const { isEnabled: draft } = await draftMode()
-  const payload = await getPayload({ config: configPromise })
-
-  const result = await payload.find({
-    collection: 'pages',
-    draft,
-    limit: 1,
-    pagination: false,
-    overrideAccess: draft,
-    where: {
-      slug: { equals: 'home' },
-    },
-  })
-
-  return result.docs?.[0] || null
-})
+const queryHomePage = cache(async () => getPageBySlug('home'))
 
 export default async function HomePage() {
-  const { isEnabled: draft } = await draftMode()
   const page = await queryHomePage()
 
   if (!page) {
@@ -43,12 +23,11 @@ export default async function HomePage() {
     )
   }
 
-  const { heroType, heroRichText, heroLinks, heroMedia, layout } = page
+  const { hero, layout } = page
 
   return (
     <article>
-      {draft && <LivePreviewListener />}
-      <RenderHero type={heroType} richText={heroRichText} links={heroLinks} media={heroMedia} />
+      <RenderHero type={hero.type} richText={hero.richText} links={hero.links} media={hero.media} />
       <RenderBlocks blocks={layout} />
     </article>
   )

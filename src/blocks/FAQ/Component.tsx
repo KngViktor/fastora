@@ -1,8 +1,12 @@
 import React from 'react'
 
-import type { FAQBlock as FAQBlockProps } from '@/payload-types'
+type Props = {
+  eyebrow?: string | null
+  heading?: string | null
+  items?: { question: string; answer: string }[]
+}
 
-export const FAQBlockComponent: React.FC<FAQBlockProps> = ({ eyebrow, heading, items }) => {
+export const FAQBlockComponent: React.FC<Props> = ({ eyebrow, heading, items }) => {
   if (!items?.length) return null
 
   const jsonLd = {

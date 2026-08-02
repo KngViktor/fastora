@@ -1,14 +1,4 @@
-/** The color fields from Site Settings → Colors that drive the theme. */
-export interface BrandPalette {
-  accentColor?: string | null
-  backgroundColor?: string | null
-  textColor?: string | null
-  surfaceColor?: string | null
-  borderColor?: string | null
-  mutedTextColor?: string | null
-  primaryColor?: string | null
-  darkPanelTextColor?: string | null
-}
+import type { SiteSettings } from '@/lib/api'
 
 /**
  * Turns the admin-editable color palette (Site Settings → Colors) into a
@@ -18,8 +8,8 @@ export interface BrandPalette {
  * The returned string is injected as a <style> tag in the frontend layout,
  * so changing colors in the admin recolors the entire public site.
  */
-export function buildBrandStyle(settings: BrandPalette | null | undefined): string {
-  if (!settings) return ''
+export function buildBrandStyle(colors: SiteSettings['colors'] | null | undefined): string {
+  if (!colors) return ''
 
   const rules: string[] = []
   const set = (cssVar: string, value?: string | null) => {
@@ -28,17 +18,17 @@ export function buildBrandStyle(settings: BrandPalette | null | undefined): stri
     }
   }
 
-  set('--background', settings.backgroundColor)
-  set('--foreground', settings.textColor)
-  set('--color-card-foreground', settings.textColor)
-  set('--color-primary', settings.primaryColor)
-  set('--color-primary-foreground', settings.darkPanelTextColor)
-  set('--color-card', settings.surfaceColor)
-  set('--color-muted', settings.surfaceColor)
-  set('--color-muted-foreground', settings.mutedTextColor)
-  set('--color-border', settings.borderColor)
+  set('--background', colors.background)
+  set('--foreground', colors.text)
+  set('--color-card-foreground', colors.text)
+  set('--color-primary', colors.primary)
+  set('--color-primary-foreground', colors.darkPanelText)
+  set('--color-card', colors.surface)
+  set('--color-muted', colors.surface)
+  set('--color-muted-foreground', colors.mutedText)
+  set('--color-border', colors.border)
 
-  const accent = settings.accentColor?.trim()
+  const accent = colors.accent?.trim()
   if (accent) {
     rules.push(`--color-secondary: ${accent};`)
     rules.push(`--color-accent: ${accent};`)

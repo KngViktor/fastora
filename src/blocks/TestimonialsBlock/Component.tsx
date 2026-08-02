@@ -1,26 +1,17 @@
 import React from 'react'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 
-import type { TestimonialsBlockType as TestimonialsBlockProps } from '@/payload-types'
+import { getTestimonials } from '@/lib/api'
 import type { Testimonial } from '@/components/ui/testimonial-v2'
 import { ScrollingTestimonials } from '@/components/ui/testimonial-v2'
 
-export const TestimonialsBlockComponent: React.FC<TestimonialsBlockProps> = async ({
-  eyebrow,
-  heading,
-  limit,
-}) => {
-  const payload = await getPayload({ config: configPromise })
+type Props = {
+  eyebrow?: string | null
+  heading?: string | null
+  limit?: number | null
+}
 
-  const { docs } = await payload.find({
-    collection: 'testimonials',
-    depth: 1,
-    limit: limit || 3,
-    where: {
-      showOnHome: { equals: true },
-    },
-  })
+export const TestimonialsBlockComponent: React.FC<Props> = async ({ eyebrow, heading, limit }) => {
+  const docs = await getTestimonials({ showOnHome: true, limit: limit || 3 })
 
   if (!docs?.length) return null
 

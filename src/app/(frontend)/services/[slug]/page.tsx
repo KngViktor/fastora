@@ -1,49 +1,29 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
-import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
 import React, { cache } from 'react'
 
+import { getServiceBySlug, getServices, getTestimonials } from '@/lib/api'
 import RichText from '@/components/RichText'
 import { Media } from '@/components/Media'
 import { PageHeader } from '@/components/PageHeader'
-import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { generateMeta } from '@/utilities/generateMeta'
 import { getServerSideURL } from '@/utilities/getURL'
 
 export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const services = await payload.find({
-    collection: 'services',
-    draft: false,
-    limit: 1000,
-    overrideAccess: false,
-    pagination: false,
-    select: { slug: true },
-  })
-  return (services.docs || [])
-    .filter((doc) => Boolean(doc.slug))
-    .map(({ slug }) => ({ slug: String(slug) }))
+  const services = await getServices()
+  return services.filter((doc) => Boolean(doc.slug)).map(({ slug }) => ({ slug }))
 }
 
 type Args = { params: Promise<{ slug: string }> }
 
 export default async function ServicePage({ params }: Args) {
-  const { isEnabled: draft } = await draftMode()
   const { slug } = await params
   const service = await queryServiceBySlug({ slug })
 
   if (!service) notFound()
 
-  const payload = await getPayload({ config: configPromise })
-  const { docs: testimonials } = await payload.find({
-    collection: 'testimonials',
-    depth: 1,
-    limit: 3,
-    where: { relatedService: { in: [service.id] } },
-  })
+  const testimonials = await getTestimonials({ relatedService: service.id, limit: 3 })
 
   const url = getServerSideURL()
   const hasFaqs = Array.isArray(service.faqs) && service.faqs.length > 0
@@ -82,7 +62,6 @@ export default async function ServicePage({ params }: Args) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
       )}
-      {draft && <LivePreviewListener />}
       <PageHeader eyebrow="Service" title={service.title} description={service.summary} />
 
       <div className="container grid gap-16 py-20 md:py-28 lg:grid-cols-[1fr_20rem]">
@@ -178,16 +157,4 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   return generateMeta({ doc: service })
 }
 
-const queryServiceBySlug = cache(async ({ slug }: { slug: string }) => {
-  const { isEnabled: draft } = await draftMode()
-  const payload = await getPayload({ config: configPromise })
-  const result = await payload.find({
-    collection: 'services',
-    draft,
-    limit: 1,
-    pagination: false,
-    overrideAccess: draft,
-    where: { slug: { equals: slug } },
-  })
-  return result.docs?.[0] || null
-})
+const queryServiceBySlug = cache(async ({ slug }: { slug: string }) => getServiceBySlug(slug))

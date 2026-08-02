@@ -1,36 +1,22 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
-import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
 import React, { cache } from 'react'
 
+import { getCaseStudies, getCaseStudyBySlug } from '@/lib/api'
 import RichText from '@/components/RichText'
 import { Media } from '@/components/Media'
 import { PageHeader } from '@/components/PageHeader'
-import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { generateMeta } from '@/utilities/generateMeta'
 
 export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const studies = await payload.find({
-    collection: 'case-studies',
-    draft: false,
-    limit: 1000,
-    overrideAccess: false,
-    pagination: false,
-    select: { slug: true },
-  })
-  return (studies.docs || [])
-    .filter((doc) => Boolean(doc.slug))
-    .map(({ slug }) => ({ slug: String(slug) }))
+  const studies = await getCaseStudies()
+  return studies.filter((doc) => Boolean(doc.slug)).map(({ slug }) => ({ slug }))
 }
 
 type Args = { params: Promise<{ slug: string }> }
 
 export default async function CaseStudyPage({ params }: Args) {
-  const { isEnabled: draft } = await draftMode()
   const { slug } = await params
   const study = await queryCaseStudyBySlug({ slug })
 
@@ -38,7 +24,6 @@ export default async function CaseStudyPage({ params }: Args) {
 
   return (
     <article>
-      {draft && <LivePreviewListener />}
       <PageHeader
         eyebrow={[study.clientName, study.industry].filter(Boolean).join(' · ')}
         title={study.title}
@@ -89,10 +74,10 @@ export default async function CaseStudyPage({ params }: Args) {
 
       {Array.isArray(study.gallery) && study.gallery.length > 0 && (
         <section className="container grid gap-6 pb-20 md:grid-cols-2" data-reveal-group="100">
-          {study.gallery.map((item, i) =>
-            item.image && typeof item.image === 'object' ? (
+          {study.gallery.map((media, i) =>
+            media ? (
               <div key={i} data-reveal="up" className="overflow-hidden rounded-3xl border border-border">
-                <Media resource={item.image} imgClassName="w-full object-cover" />
+                <Media resource={media} imgClassName="w-full object-cover" />
               </div>
             ) : null,
           )}
@@ -117,16 +102,4 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   return generateMeta({ doc: study })
 }
 
-const queryCaseStudyBySlug = cache(async ({ slug }: { slug: string }) => {
-  const { isEnabled: draft } = await draftMode()
-  const payload = await getPayload({ config: configPromise })
-  const result = await payload.find({
-    collection: 'case-studies',
-    draft,
-    limit: 1,
-    pagination: false,
-    overrideAccess: draft,
-    where: { slug: { equals: slug } },
-  })
-  return result.docs?.[0] || null
-})
+const queryCaseStudyBySlug = cache(async ({ slug }: { slug: string }) => getCaseStudyBySlug(slug))

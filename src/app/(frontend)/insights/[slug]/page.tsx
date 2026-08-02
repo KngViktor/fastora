@@ -1,47 +1,30 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
-import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
 import React, { cache } from 'react'
 
+import { getPostBySlug, getPosts } from '@/lib/api'
 import RichText from '@/components/RichText'
 import { Media } from '@/components/Media'
-import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { generateMeta } from '@/utilities/generateMeta'
 import { formatAuthors } from '@/utilities/formatAuthors'
 import { formatDateTime } from '@/utilities/formatDateTime'
 import { getServerSideURL } from '@/utilities/getURL'
 
 export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const posts = await payload.find({
-    collection: 'posts',
-    draft: false,
-    limit: 1000,
-    overrideAccess: false,
-    pagination: false,
-    select: { slug: true },
-  })
-  return (posts.docs || [])
-    .filter((doc) => Boolean(doc.slug))
-    .map(({ slug }) => ({ slug: String(slug) }))
+  const posts = await getPosts()
+  return posts.filter((doc) => Boolean(doc.slug)).map(({ slug }) => ({ slug }))
 }
 
 type Args = { params: Promise<{ slug: string }> }
 
 export default async function PostPage({ params }: Args) {
-  const { isEnabled: draft } = await draftMode()
   const { slug } = await params
   const post = await queryPostBySlug({ slug })
 
   if (!post) notFound()
 
-  const hasAuthors =
-    post.populatedAuthors &&
-    post.populatedAuthors.length > 0 &&
-    formatAuthors(post.populatedAuthors) !== ''
+  const hasAuthors = post.authors && post.authors.length > 0 && formatAuthors(post.authors) !== ''
 
   const url = getServerSideURL()
   const articleJsonLd = {
@@ -50,8 +33,8 @@ export default async function PostPage({ params }: Args) {
     headline: post.title,
     description: post.meta?.description,
     datePublished: post.publishedAt,
-    dateModified: post.updatedAt,
-    ...(hasAuthors ? { author: { '@type': 'Person', name: formatAuthors(post.populatedAuthors!) } } : {}),
+    dateModified: post.updatedAt || post.publishedAt,
+    ...(hasAuthors ? { author: { '@type': 'Person', name: formatAuthors(post.authors) } } : {}),
     publisher: { '@type': 'Organization', name: 'Fastora', url },
     mainEntityOfPage: `${url}/insights/${post.slug}`,
   }
@@ -62,7 +45,6 @@ export default async function PostPage({ params }: Args) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
-      {draft && <LivePreviewListener />}
 
       <header className="relative overflow-hidden bg-primary text-primary-foreground">
         <div
@@ -74,15 +56,13 @@ export default async function PostPage({ params }: Args) {
         <div className="container relative z-10 pt-28 pb-16 md:pt-36 md:pb-20" data-reveal-group="110">
           <div className="flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-wide text-secondary" data-reveal="up">
             {Array.isArray(post.categories) &&
-              post.categories.map((c) =>
-                typeof c === 'object' && c ? <span key={c.id}>{c.title}</span> : null,
-              )}
+              post.categories.map((c) => <span key={c.id}>{c.title}</span>)}
           </div>
           <h1 data-reveal="up" className="mt-4 max-w-4xl text-4xl font-semibold leading-[1.05] md:text-6xl">
             {post.title}
           </h1>
           <div data-reveal="up" className="mt-6 flex flex-wrap gap-x-8 gap-y-2 text-sm text-primary-foreground/70">
-            {hasAuthors && <span>By {formatAuthors(post.populatedAuthors!)}</span>}
+            {hasAuthors && <span>By {formatAuthors(post.authors)}</span>}
             {post.publishedAt && (
               <time dateTime={post.publishedAt}>{formatDateTime(post.publishedAt)}</time>
             )}
@@ -104,12 +84,12 @@ export default async function PostPage({ params }: Args) {
 
       {Array.isArray(post.tags) && post.tags.length > 0 && (
         <div className="container flex flex-wrap gap-2">
-          {post.tags.map((t, i) => (
+          {post.tags.map((tag, i) => (
             <span
               key={i}
               className="rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground"
             >
-              #{t.tag}
+              #{tag}
             </span>
           ))}
         </div>
@@ -133,16 +113,4 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   return generateMeta({ doc: post })
 }
 
-const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
-  const { isEnabled: draft } = await draftMode()
-  const payload = await getPayload({ config: configPromise })
-  const result = await payload.find({
-    collection: 'posts',
-    draft,
-    limit: 1,
-    pagination: false,
-    overrideAccess: draft,
-    where: { slug: { equals: slug } },
-  })
-  return result.docs?.[0] || null
-})
+const queryPostBySlug = cache(async ({ slug }: { slug: string }) => getPostBySlug(slug))

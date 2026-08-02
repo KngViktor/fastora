@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 import React from 'react'
 
+import { getPosts } from '@/lib/api'
 import { Media } from '@/components/Media'
 import { PageHeader } from '@/components/PageHeader'
 import { formatDateTime } from '@/utilities/formatDateTime'
@@ -14,14 +13,7 @@ export const metadata: Metadata = {
 }
 
 export default async function InsightsPage() {
-  const payload = await getPayload({ config: configPromise })
-  const { docs: posts } = await payload.find({
-    collection: 'posts',
-    depth: 1,
-    limit: 100,
-    sort: '-publishedAt',
-    where: { _status: { equals: 'published' } },
-  })
+  const posts = await getPosts({ limit: 100 })
 
   return (
     <div>

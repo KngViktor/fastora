@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import Image from 'next/image'
 import React from 'react'
 
-import type { Media as MediaType } from '@/payload-types'
+import type { Media as MediaType } from '@/lib/api'
 
 import { Media } from '@/components/Media'
 

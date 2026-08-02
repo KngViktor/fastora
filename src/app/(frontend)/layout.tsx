@@ -12,7 +12,7 @@ import { CurrencyProvider } from '@/providers/Currency'
 import { CURRENCY_COOKIE, CURRENCY_HEADER, DEFAULT_CURRENCY } from '@/config/currencies'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { getServerSideURL } from '@/utilities/getURL'
-import { getCachedGlobal } from '@/utilities/getGlobals'
+import { getSiteSettings } from '@/lib/api'
 import { buildBrandStyle } from '@/utilities/brandTokens'
 
 import './globals.css'
@@ -39,8 +39,8 @@ const geistMono = Geist_Mono({
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
 
-  const siteSettings = await getCachedGlobal('site-settings', 0)()
-  const brandStyle = buildBrandStyle(siteSettings)
+  const siteSettings = await getSiteSettings()
+  const brandStyle = buildBrandStyle(siteSettings.colors)
   const url = getServerSideURL()
 
   // Currency resolved by the proxy (geo or manual choice), forwarded via header;

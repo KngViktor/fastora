@@ -1,13 +1,12 @@
 import React from 'react'
 
-import type { AudienceGridBlock as AudienceGridBlockProps } from '@/payload-types'
+type Props = {
+  eyebrow?: string | null
+  heading?: string | null
+  items?: { title: string; description: string }[]
+}
 
-export const AudienceGridBlock: React.FC<AudienceGridBlockProps> = ({
-  eyebrow,
-  heading,
-  description,
-  items,
-}) => {
+export const AudienceGridBlock: React.FC<Props> = ({ eyebrow, heading, items }) => {
   if (!items?.length) return null
 
   return (
@@ -20,18 +19,18 @@ export const AudienceGridBlock: React.FC<AudienceGridBlockProps> = ({
           </span>
         )}
         {heading && <h2 className="mt-3 text-3xl font-semibold md:text-5xl">{heading}</h2>}
-        {description && <p className="mt-4 text-muted-foreground">{description}</p>}
       </div>
 
-      <div className="mt-10 flex flex-wrap gap-3" data-reveal-group="60">
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group="60">
         {items.map((item, i) => (
-          <span
+          <div
             key={i}
             data-reveal="up"
-            className="rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium text-foreground"
+            className="rounded-2xl border border-border bg-card p-6"
           >
-            {item.label}
-          </span>
+            <h3 className="text-base font-semibold">{item.title}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
+          </div>
         ))}
       </div>
     </section>

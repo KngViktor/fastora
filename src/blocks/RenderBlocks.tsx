@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 
-import type { Page } from '@/payload-types'
+import type { LayoutBlock } from '@/lib/api'
 
 import { ArchiveBlock } from '@/blocks/ArchiveBlock/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
@@ -31,7 +31,7 @@ const blockComponents = {
 }
 
 export const RenderBlocks: React.FC<{
-  blocks: Page['layout']
+  blocks: LayoutBlock[]
 }> = (props) => {
   const { blocks } = props
 
@@ -41,16 +41,13 @@ export const RenderBlocks: React.FC<{
     return (
       <Fragment>
         {blocks.map((block, index) => {
-          const { blockType } = block
+          const { type, data } = block
 
-          if (blockType && blockType in blockComponents) {
-            const Block = blockComponents[blockType]
+          if (type && type in blockComponents) {
+            const Block = blockComponents[type as keyof typeof blockComponents]
 
             if (Block) {
-              return (
-                // @ts-expect-error there may be some mismatch between the expected types here
-                <Block {...block} disableInnerContainer key={index} />
-              )
+              return <Block {...data} disableInnerContainer key={index} />
             }
           }
           return null
