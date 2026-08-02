@@ -31,7 +31,7 @@ export const Logo: React.FC<Props> = ({
       <Media
         resource={media}
         htmlElement={null}
-        imgClassName={clsx('h-8 w-auto object-contain', className)}
+        imgClassName={clsx('h-12 w-auto object-contain', className)}
         loading={loading}
         priority={priority === 'high'}
       />
@@ -40,7 +40,7 @@ export const Logo: React.FC<Props> = ({
 
   // Real cropped-asset dimensions (402x440), used only so Next/Image can
   // compute the correct intrinsic aspect ratio — actual display size is
-  // controlled by the "h-8 w-auto" className below.
+  // controlled by the "h-12 w-auto" className below.
   const fallbackSrc = variant === 'dark' ? '/brand/icon-white.png' : '/brand/logo-color.png'
 
   return (
@@ -51,7 +51,7 @@ export const Logo: React.FC<Props> = ({
       height={440}
       priority={priority === 'high'}
       loading={priority === 'high' ? undefined : loading}
-      className={clsx('h-8 w-auto object-contain', className)}
+      className={clsx('h-12 w-auto object-contain', className)}
     />
   )
 }
