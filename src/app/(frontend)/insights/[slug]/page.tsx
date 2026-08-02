@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import React, { cache } from 'react'
 
-import { getPostBySlug, getPosts } from '@/lib/api'
+import { getPostBySlug, getPosts, safely } from '@/lib/api'
 import RichText from '@/components/RichText'
 import { Media } from '@/components/Media'
 import { generateMeta } from '@/utilities/generateMeta'
@@ -12,7 +12,7 @@ import { formatDateTime } from '@/utilities/formatDateTime'
 import { getServerSideURL } from '@/utilities/getURL'
 
 export async function generateStaticParams() {
-  const posts = await getPosts()
+  const posts = await safely(() => getPosts(), [])
   return posts.filter((doc) => Boolean(doc.slug)).map(({ slug }) => ({ slug }))
 }
 

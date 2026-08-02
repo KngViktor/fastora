@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import React, { cache } from 'react'
 
-import { getPageBySlug, getPageSlugs } from '@/lib/api'
+import { getPageBySlug, getPageSlugs, safely } from '@/lib/api'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
@@ -14,7 +14,7 @@ import { generateMeta } from '@/utilities/generateMeta'
 const RESERVED_SLUGS = ['home', 'services', 'case-studies', 'contact', 'insights', 'login']
 
 export async function generateStaticParams() {
-  const slugs = await getPageSlugs()
+  const slugs = await safely(() => getPageSlugs(), [])
 
   return slugs.filter((slug) => Boolean(slug) && !RESERVED_SLUGS.includes(slug)).map((slug) => ({ slug }))
 }

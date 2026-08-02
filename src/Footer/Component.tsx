@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 
-import { getFooter, getSiteSettings } from '@/lib/api'
+import { DEFAULT_NAV, DEFAULT_SITE_SETTINGS, getFooter, getSiteSettings, safely } from '@/lib/api'
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
 
@@ -16,8 +16,8 @@ const socialLabels: Record<string, string> = {
 }
 
 export async function Footer() {
-  const footerData = await getFooter()
-  const siteSettings = await getSiteSettings()
+  const footerData = await safely(() => getFooter(), DEFAULT_NAV)
+  const siteSettings = await safely(() => getSiteSettings(), DEFAULT_SITE_SETTINGS)
 
   const navItems = footerData?.navItems || []
   const socialLinks = siteSettings?.socialLinks || []

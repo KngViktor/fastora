@@ -1,16 +1,16 @@
 import type { MetadataRoute } from 'next'
 
-import { getCaseStudies, getPages, getPosts, getServices } from '@/lib/api'
+import { getCaseStudies, getPages, getPosts, getServices, safely } from '@/lib/api'
 import { getServerSideURL } from '@/utilities/getURL'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const url = getServerSideURL()
 
   const [pages, posts, services, caseStudies] = await Promise.all([
-    getPages(),
-    getPosts(),
-    getServices(),
-    getCaseStudies(),
+    safely(() => getPages(), []),
+    safely(() => getPosts(), []),
+    safely(() => getServices(), []),
+    safely(() => getCaseStudies(), []),
   ])
 
   const staticRoutes: MetadataRoute.Sitemap = [

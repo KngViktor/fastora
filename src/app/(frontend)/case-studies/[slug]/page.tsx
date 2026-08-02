@@ -3,14 +3,14 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import React, { cache } from 'react'
 
-import { getCaseStudies, getCaseStudyBySlug } from '@/lib/api'
+import { getCaseStudies, getCaseStudyBySlug, safely } from '@/lib/api'
 import RichText from '@/components/RichText'
 import { Media } from '@/components/Media'
 import { PageHeader } from '@/components/PageHeader'
 import { generateMeta } from '@/utilities/generateMeta'
 
 export async function generateStaticParams() {
-  const studies = await getCaseStudies()
+  const studies = await safely(() => getCaseStudies(), [])
   return studies.filter((doc) => Boolean(doc.slug)).map(({ slug }) => ({ slug }))
 }
 

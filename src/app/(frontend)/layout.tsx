@@ -12,7 +12,7 @@ import { CurrencyProvider } from '@/providers/Currency'
 import { CURRENCY_COOKIE, CURRENCY_HEADER, DEFAULT_CURRENCY } from '@/config/currencies'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { getServerSideURL } from '@/utilities/getURL'
-import { getSiteSettings } from '@/lib/api'
+import { DEFAULT_SITE_SETTINGS, getSiteSettings, safely } from '@/lib/api'
 import { buildBrandStyle } from '@/utilities/brandTokens'
 
 import './globals.css'
@@ -39,7 +39,7 @@ const geistMono = Geist_Mono({
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
 
-  const siteSettings = await getSiteSettings()
+  const siteSettings = await safely(() => getSiteSettings(), DEFAULT_SITE_SETTINGS)
   const brandStyle = buildBrandStyle(siteSettings.colors)
   const url = getServerSideURL()
 

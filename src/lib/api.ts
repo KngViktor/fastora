@@ -58,6 +58,36 @@ export interface Meta {
   image: Media | null
 }
 
+// Fallbacks for when the API is briefly unreachable — used with `safely()` in
+// the root layout / Header / Footer, which render on every single page (including
+// statically-generated shells like /_not-found), so they can't be allowed to throw.
+export const DEFAULT_SITE_SETTINGS: SiteSettings = {
+  siteName: 'Fastora',
+  tagline: null,
+  logoLight: null,
+  logoDark: null,
+  favicon: null,
+  colors: {
+    accent: null,
+    background: null,
+    text: null,
+    surface: null,
+    border: null,
+    mutedText: null,
+    primary: null,
+    darkPanelText: null,
+  },
+  contactEmail: null,
+  contactPhone: null,
+  address: null,
+  socialLinks: [],
+  footerText: null,
+  newsletterHeading: null,
+  newsletterSubheading: null,
+}
+
+export const DEFAULT_NAV: Nav = { navItems: [] }
+
 export interface Service {
   id: number
   title: string
@@ -168,6 +198,21 @@ async function apiFetchOrNull<T>(path: string): Promise<T | null> {
 
   const json = (await res.json()) as { data: T }
   return json.data
+}
+
+/**
+ * Wraps a build-time-only call (generateStaticParams) so a temporarily
+ * unreachable API can't fail the whole build — falls back to `fallback`
+ * (typically []) and logs instead of throwing. Pages just render on-demand
+ * with no pre-built params rather than the deploy failing outright.
+ */
+export async function safely<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
+  try {
+    return await fn()
+  } catch (error) {
+    console.warn('[fastora] build-time API call failed, continuing without it:', error)
+    return fallback
+  }
 }
 
 export const getSiteSettings = () => apiFetch<SiteSettings>('/site-settings')
