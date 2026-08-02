@@ -113,4 +113,6 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   return generateMeta({ doc: post })
 }
 
-const queryPostBySlug = cache(async ({ slug }: { slug: string }) => getPostBySlug(slug))
+const queryPostBySlug = cache(async ({ slug }: { slug: string }) =>
+  safely(() => getPostBySlug(slug), null),
+)

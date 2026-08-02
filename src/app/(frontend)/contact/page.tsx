@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import React from 'react'
 
-import { getServices, getSiteSettings } from '@/lib/api'
+import { DEFAULT_SITE_SETTINGS, getServices, getSiteSettings, safely } from '@/lib/api'
 import { PageHeader } from '@/components/PageHeader'
 import { FAQBlockComponent } from '@/blocks/FAQ/Component'
 import { generateMeta } from '@/utilities/generateMeta'
@@ -43,8 +43,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ContactPage() {
   const [page, services, siteSettings] = await Promise.all([
     queryUtilityPage('contact'),
-    getServices({ limit: 100 }),
-    getSiteSettings(),
+    safely(() => getServices({ limit: 100 }), []),
+    safely(() => getSiteSettings(), DEFAULT_SITE_SETTINGS),
   ])
   const header = {
     eyebrow: page?.pageHeaderEyebrow || FALLBACK.eyebrow,
@@ -99,7 +99,7 @@ export default async function ContactPage() {
         </aside>
       </section>
 
-      <FAQBlockComponent eyebrow="FAQ" heading="Questions before you reach out" items={CONTACT_FAQS} />
+      <FAQBlockComponent heading="Questions before you reach out" items={CONTACT_FAQS} />
     </div>
   )
 }

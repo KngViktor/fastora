@@ -15,7 +15,7 @@ interface HeaderClientProps {
 export const HeaderClient: React.FC<HeaderClientProps> = ({ data, siteSettings }) => {
   return (
     <header className="sticky top-0 z-30 border-b border-border/60 bg-background/70 backdrop-blur-xl">
-      <div className="container-page flex items-center justify-between py-5">
+      <div className="container-page flex items-center justify-between py-3">
         <Link href="/" className="shrink-0">
           <Logo
             loading="eager"

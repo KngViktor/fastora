@@ -49,4 +49,6 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   return generateMeta({ doc: page })
 }
 
-const queryPageBySlug = cache(async ({ slug }: { slug: string }) => getPageBySlug(slug))
+const queryPageBySlug = cache(async ({ slug }: { slug: string }) =>
+  safely(() => getPageBySlug(slug), null),
+)

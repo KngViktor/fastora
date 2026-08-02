@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import React from 'react'
 
-import { getServices } from '@/lib/api'
+import { getServices, safely } from '@/lib/api'
 import { Media } from '@/components/Media'
 import { PageHeader } from '@/components/PageHeader'
 import { FAQBlockComponent } from '@/blocks/FAQ/Component'
@@ -46,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ServicesPage() {
   const [page, services] = await Promise.all([
     queryUtilityPage('services'),
-    getServices({ limit: 100 }),
+    safely(() => getServices({ limit: 100 }), []),
   ])
   const header = {
     eyebrow: page?.pageHeaderEyebrow || FALLBACK.eyebrow,
@@ -95,7 +95,7 @@ export default async function ServicesPage() {
         )}
       </section>
 
-      <FAQBlockComponent eyebrow="FAQ" heading="Questions about our services" items={SERVICES_FAQS} />
+      <FAQBlockComponent heading="Questions about our services" items={SERVICES_FAQS} />
     </div>
   )
 }

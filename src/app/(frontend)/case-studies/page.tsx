@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import React from 'react'
 
-import { getCaseStudies } from '@/lib/api'
+import { getCaseStudies, safely } from '@/lib/api'
 import { Media } from '@/components/Media'
 import { PageHeader } from '@/components/PageHeader'
 import { generateMeta } from '@/utilities/generateMeta'
@@ -26,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function CaseStudiesPage() {
   const [page, caseStudies] = await Promise.all([
     queryUtilityPage('case-studies'),
-    getCaseStudies({ limit: 100 }),
+    safely(() => getCaseStudies({ limit: 100 }), []),
   ])
   const header = {
     eyebrow: page?.pageHeaderEyebrow || FALLBACK.eyebrow,

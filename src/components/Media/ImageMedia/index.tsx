@@ -85,7 +85,12 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
         .join(', ')
 
   return (
-    <picture className={cn(pictureClassName)}>
+    // `fill` positions the <img> absolutely against its nearest positioned
+    // ancestor, which is this <picture>. Left as the default static inline
+    // element it has no size, so the image escapes to whatever is positioned
+    // further up and Next logs an invalid-parent warning. Making it a
+    // full-size relative block gives `fill` the containing box it expects.
+    <picture className={cn(fill && 'absolute inset-0 block', pictureClassName)}>
       <NextImage
         alt={alt || ''}
         className={cn(imgClassName)}

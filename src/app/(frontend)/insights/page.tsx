@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import React from 'react'
 
-import { getPosts } from '@/lib/api'
+import { getPosts, safely } from '@/lib/api'
 import { Media } from '@/components/Media'
 import { PageHeader } from '@/components/PageHeader'
 import { formatDateTime } from '@/utilities/formatDateTime'
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 }
 
 export default async function InsightsPage() {
-  const posts = await getPosts({ limit: 100 })
+  const posts = await safely(() => getPosts({ limit: 100 }), [])
 
   return (
     <div>

@@ -1,12 +1,11 @@
 import React from 'react'
 
 type Props = {
-  eyebrow?: string | null
   heading?: string | null
   items?: { question: string; answer: string }[]
 }
 
-export const FAQBlockComponent: React.FC<Props> = ({ eyebrow, heading, items }) => {
+export const FAQBlockComponent: React.FC<Props> = ({ heading, items }) => {
   if (!items?.length) return null
 
   const jsonLd = {
@@ -25,12 +24,11 @@ export const FAQBlockComponent: React.FC<Props> = ({ eyebrow, heading, items }) 
   return (
     <section className="container py-20 md:py-28">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <div className="mx-auto max-w-2xl text-center">
-        {eyebrow && (
-          <p className="text-sm font-medium uppercase tracking-wide text-secondary">{eyebrow}</p>
-        )}
-        {heading && <h2 className="mt-2 text-3xl font-semibold md:text-4xl">{heading}</h2>}
-      </div>
+      {heading && (
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="text-3xl font-semibold md:text-4xl">{heading}</h2>
+        </div>
+      )}
 
       <div className="mx-auto mt-10 max-w-3xl divide-y divide-border border-t border-border">
         {items.map((item, i) => (

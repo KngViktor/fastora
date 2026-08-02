@@ -23,7 +23,10 @@ export default async function ServicePage({ params }: Args) {
 
   if (!service) notFound()
 
-  const testimonials = await getTestimonials({ relatedService: service.id, limit: 3 })
+  const testimonials = await safely(
+    () => getTestimonials({ relatedService: service.id, limit: 3 }),
+    [],
+  )
 
   const url = getServerSideURL()
   const hasFaqs = Array.isArray(service.faqs) && service.faqs.length > 0
@@ -157,4 +160,6 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   return generateMeta({ doc: service })
 }
 
-const queryServiceBySlug = cache(async ({ slug }: { slug: string }) => getServiceBySlug(slug))
+const queryServiceBySlug = cache(async ({ slug }: { slug: string }) =>
+  safely(() => getServiceBySlug(slug), null),
+)

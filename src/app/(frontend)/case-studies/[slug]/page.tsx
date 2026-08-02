@@ -102,4 +102,6 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   return generateMeta({ doc: study })
 }
 
-const queryCaseStudyBySlug = cache(async ({ slug }: { slug: string }) => getCaseStudyBySlug(slug))
+const queryCaseStudyBySlug = cache(async ({ slug }: { slug: string }) =>
+  safely(() => getCaseStudyBySlug(slug), null),
+)

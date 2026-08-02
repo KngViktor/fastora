@@ -1,44 +1,33 @@
 import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 import React from 'react'
 
-import { getCaseStudies } from '@/lib/api'
+import { getCaseStudies, safely } from '@/lib/api'
 import { Media } from '@/components/Media'
+import { SectionHeading } from '@/components/SectionHeading'
 import { cn } from '@/utilities/ui'
 
 type Props = {
-  eyebrow?: string | null
   heading?: string | null
   limit?: number | null
 }
 
-export const SelectedWorkBlock: React.FC<Props> = async ({ eyebrow, heading, limit }) => {
-  const caseStudies = await getCaseStudies({ featuredOnHome: true, limit: limit || 3 })
+/**
+ * Layout family: stacked header, asymmetric feature grid (first study runs
+ * full width), action moved below the grid. Deliberately different from the
+ * services tile grid above it so the page does not repeat one rhythm.
+ */
+export const SelectedWorkBlock: React.FC<Props> = async ({ heading, limit }) => {
+  const caseStudies = await safely(
+    () => getCaseStudies({ featuredOnHome: true, limit: limit || 3 }),
+    [],
+  )
 
   if (!caseStudies?.length) return null
 
   return (
     <section className="container py-20 md:py-28">
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div data-reveal="up">
-          {eyebrow && (
-            <span className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-secondary">
-              <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
-              {eyebrow}
-            </span>
-          )}
-          {heading && (
-            <h2 className="mt-3 max-w-xl text-3xl font-semibold md:text-5xl">{heading}</h2>
-          )}
-        </div>
-        <Link
-          href="/case-studies"
-          data-reveal="up"
-          className="group inline-flex items-center gap-2 text-sm font-medium text-foreground/70 transition-colors hover:text-foreground"
-        >
-          View all case studies
-          <span className="transition-transform group-hover:translate-x-1">→</span>
-        </Link>
-      </div>
+      <SectionHeading heading={heading} />
 
       <div className="mt-12 grid gap-8 lg:grid-cols-2" data-reveal-group="120">
         {caseStudies.map((study, i) => {
@@ -67,11 +56,16 @@ export const SelectedWorkBlock: React.FC<Props> = async ({ eyebrow, heading, lim
                   />
                 )}
               </div>
-              <div className={cn('p-6', featured && 'lg:flex lg:w-1/2 lg:flex-col lg:justify-center lg:p-10')}>
+              <div
+                className={cn(
+                  'p-6',
+                  featured && 'lg:flex lg:w-1/2 lg:flex-col lg:justify-center lg:p-10',
+                )}
+              >
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   {study.industry || study.clientName}
                 </p>
-                <h3 className={cn('mt-2 text-lg font-semibold', featured && 'lg:text-2xl')}>
+                <h3 className={cn('mt-2 text-lg font-semibold', featured && 'lg:text-3xl')}>
                   {study.title}
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground">{study.summary}</p>
@@ -79,6 +73,20 @@ export const SelectedWorkBlock: React.FC<Props> = async ({ eyebrow, heading, lim
             </Link>
           )
         })}
+      </div>
+
+      <div className="mt-10 flex justify-center" data-reveal="up">
+        <Link
+          href="/case-studies"
+          className="group inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 text-sm font-medium transition-colors hover:border-secondary hover:text-secondary"
+        >
+          View our work
+          <ArrowRight
+            className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+            strokeWidth={1.5}
+            aria-hidden="true"
+          />
+        </Link>
       </div>
     </section>
   )

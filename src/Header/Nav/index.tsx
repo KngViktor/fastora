@@ -1,5 +1,6 @@
 'use client'
 
+import { Menu, X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 import type { Nav } from '@/lib/api'
@@ -52,13 +53,9 @@ export const HeaderNav: React.FC<{ data: Nav }> = ({ data }) => {
         className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-muted md:hidden"
       >
         {open ? (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-            <path d="M18 6 6 18M6 6l12 12" />
-          </svg>
+          <X className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
         ) : (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-            <path d="M3 12h18M3 6h18M3 18h18" />
-          </svg>
+          <Menu className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
         )}
       </button>
 

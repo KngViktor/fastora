@@ -1,75 +1,60 @@
 import Link from 'next/link'
+import { ArrowUpRight } from 'lucide-react'
 import React from 'react'
 
-import { getServices } from '@/lib/api'
+import { getServices, safely } from '@/lib/api'
 import { Media } from '@/components/Media'
+import { SectionHeading } from '@/components/SectionHeading'
 
 type Props = {
-  eyebrow?: string | null
   heading?: string | null
   limit?: number | null
 }
 
-export const ServicesOverviewBlock: React.FC<Props> = async ({ eyebrow, heading, limit }) => {
-  const services = await getServices({ featuredOnHome: true, limit: limit || 6 })
+/** Layout family: split header + edge-to-edge tile grid on the navy band. */
+export const ServicesOverviewBlock: React.FC<Props> = async ({ heading, limit }) => {
+  const services = await safely(() => getServices({ featuredOnHome: true, limit: limit || 6 }), [])
 
   if (!services?.length) return null
 
   return (
     <section className="bg-primary text-primary-foreground">
       <div className="container pt-4 pb-20 md:pt-[1.4rem] md:pb-28">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div data-reveal="up">
-            {eyebrow && (
-              <span className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-secondary">
-                <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
-                {eyebrow}
-              </span>
-            )}
-            {heading && (
-              <h2 className="mt-3 max-w-xl text-3xl font-semibold md:text-5xl">{heading}</h2>
-            )}
-          </div>
-          <Link
-            href="/services"
-            data-reveal="up"
-            className="group inline-flex items-center gap-2 text-sm font-medium text-primary-foreground/70 transition-colors hover:text-primary-foreground"
-          >
-            View all services
-            <span className="transition-transform group-hover:translate-x-1">→</span>
-          </Link>
-        </div>
+        <SectionHeading
+          heading={heading}
+          tone="dark"
+          action={{ label: 'View all services', href: '/services' }}
+        />
 
-        <div className="mt-12 grid gap-px overflow-hidden rounded-3xl border border-primary-foreground/10 bg-primary-foreground/10 sm:grid-cols-2 lg:grid-cols-2" data-reveal-group="90">
-          {services.map((service, i) => (
+        <div
+          className="mt-12 grid gap-px overflow-hidden rounded-3xl border border-primary-foreground/10 bg-primary-foreground/10 sm:grid-cols-2"
+          data-reveal-group="90"
+        >
+          {services.map((service) => (
             <Link
               key={service.id}
               href={`/services/${service.slug}`}
               data-reveal="up"
               className="group relative flex flex-col justify-between gap-10 bg-primary p-8 transition-colors hover:bg-card md:p-10"
             >
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  {service.icon && typeof service.icon === 'object' && (
-                    <Media
-                      resource={service.icon}
-                      imgClassName="h-9 w-9 object-contain"
-                      htmlElement={null}
-                    />
-                  )}
-                  <h3 className="mt-6 text-2xl font-semibold transition-colors group-hover:text-primary">
-                    {service.title}
-                  </h3>
-                  <p className="mt-3 max-w-sm text-sm text-primary-foreground/60 transition-colors group-hover:text-primary/70">
-                    {service.summary}
-                  </p>
-                </div>
-                <span className="font-display text-5xl font-semibold text-primary-foreground/15 transition-colors group-hover:text-secondary md:text-6xl">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
+              <div>
+                {service.icon && typeof service.icon === 'object' && (
+                  <Media
+                    resource={service.icon}
+                    imgClassName="h-9 w-9 object-contain"
+                    htmlElement={null}
+                  />
+                )}
+                <h3 className="mt-6 text-2xl font-semibold transition-colors group-hover:text-primary">
+                  {service.title}
+                </h3>
+                <p className="mt-3 max-w-sm text-sm text-primary-foreground/60 transition-colors group-hover:text-primary/70">
+                  {service.summary}
+                </p>
               </div>
-              <span className="inline-flex items-center gap-1 text-sm font-medium text-secondary opacity-0 transition-opacity group-hover:opacity-100">
-                Learn more →
+              <span className="inline-flex items-center gap-1.5 text-sm font-medium text-secondary opacity-0 transition-opacity group-hover:opacity-100">
+                Learn more
+                <ArrowUpRight className="h-4 w-4" strokeWidth={1.5} aria-hidden="true" />
               </span>
             </Link>
           ))}

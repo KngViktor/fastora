@@ -201,10 +201,16 @@ async function apiFetchOrNull<T>(path: string): Promise<T | null> {
 }
 
 /**
- * Wraps a build-time-only call (generateStaticParams) so a temporarily
- * unreachable API can't fail the whole build — falls back to `fallback`
- * (typically []) and logs instead of throwing. Pages just render on-demand
- * with no pre-built params rather than the deploy failing outright.
+ * Wraps an API call so a temporarily unreachable backend degrades to an
+ * empty state instead of throwing. Used in two places:
+ *
+ *  - build time (generateStaticParams, sitemap), so a deploy can't fail
+ *    just because the API wasn't reachable from the build machine
+ *  - request time (page bodies, layout, blocks), so a backend outage
+ *    renders the page's own empty state rather than a 500
+ *
+ * The error is always logged, so a real outage is still visible in logs
+ * rather than silently swallowed.
  */
 export async function safely<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
   try {

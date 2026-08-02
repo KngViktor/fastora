@@ -6,8 +6,8 @@ type ServiceOption = { id: number | string; title: string }
 
 const BUDGETS = [
   { label: 'Under $1,000', value: 'under-1k' },
-  { label: '$1,000 – $5,000', value: '1k-5k' },
-  { label: '$5,000 – $15,000', value: '5k-15k' },
+  { label: '$1,000 to $5,000', value: '1k-5k' },
+  { label: '$5,000 to $15,000', value: '5k-15k' },
   { label: '$15,000+', value: '15k-plus' },
   { label: 'Not sure yet', value: 'not-sure' },
 ]
@@ -15,7 +15,7 @@ const BUDGETS = [
 const TIMELINES = [
   { label: 'ASAP', value: 'asap' },
   { label: 'Within 1 month', value: '1-month' },
-  { label: '1–3 months', value: '1-3-months' },
+  { label: '1 to 3 months', value: '1-3-months' },
   { label: 'Just exploring', value: 'exploring' },
 ]
 
@@ -57,7 +57,7 @@ export const ContactForm: React.FC<{ services: ServiceOption[] }> = ({ services 
   if (status === 'success') {
     return (
       <div className="rounded-3xl border border-secondary/40 bg-secondary/10 p-8 text-center">
-        <h3 className="text-xl font-semibold">Thanks — we&apos;ve got your brief.</h3>
+        <h3 className="text-xl font-semibold">Thanks, we&apos;ve got your brief.</h3>
         <p className="mt-2 text-sm text-muted-foreground">
           We&apos;ll get back to you within one business day.
         </p>
@@ -164,7 +164,7 @@ export const ContactForm: React.FC<{ services: ServiceOption[] }> = ({ services 
       <button
         type="submit"
         disabled={status === 'loading'}
-        className="mt-2 inline-flex items-center justify-center rounded-full bg-secondary px-6 py-3 text-sm font-semibold text-secondary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+        className="mt-2 inline-flex items-center justify-center rounded-full bg-secondary px-6 py-3 text-sm font-semibold text-secondary-foreground transition-all hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100"
       >
         {status === 'loading' ? 'Sending…' : 'Send project brief'}
       </button>

@@ -21,9 +21,8 @@ export const PageHeader: React.FC<{
         {eyebrow && (
           <span
             data-reveal="up"
-            className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-secondary"
+            className="text-sm font-medium uppercase tracking-wide text-secondary"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
             {eyebrow}
           </span>
         )}

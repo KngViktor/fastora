@@ -102,7 +102,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 export const metadata: Metadata = {
   metadataBase: new URL(getServerSideURL()),
   title: {
-    default: 'Fastora — Communications & Digital Strategy',
+    default: 'Fastora, Communications & Digital Strategy',
     template: '%s | Fastora',
   },
   description:

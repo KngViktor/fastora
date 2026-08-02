@@ -1,7 +1,9 @@
 import React from 'react'
 
+import { SectionHeading } from '@/components/SectionHeading'
+import { cn } from '@/utilities/ui'
+
 type Props = {
-  eyebrow?: string | null
   heading?: string | null
   points?: { stat: string; title: string; description: string }[]
 }
@@ -13,45 +15,47 @@ function parseStat(stat: string): { value: number; suffix: string } | null {
   return { value: Number(match[1]), suffix: match[2] }
 }
 
-export const WhyFastoraBlock: React.FC<Props> = ({ eyebrow, heading, points }) => {
+/**
+ * Alternating wide/narrow spans across a 3-column grid, so the row always
+ * fills exactly (2+1, then 1+2, ...) and an odd final card runs full width.
+ * Avoids both the three-equal-cards look and empty trailing cells at any
+ * point count.
+ */
+function spanFor(index: number, total: number): string {
+  if (index === total - 1 && total % 2 === 1) return 'lg:col-span-3'
+  return index % 2 === 0 ? 'lg:col-span-2' : 'lg:col-span-1'
+}
+
+export const WhyFastoraBlock: React.FC<Props> = ({ heading, points }) => {
   if (!points?.length) return null
 
   return (
     <section className="container py-20 md:py-28">
-      <div className="max-w-2xl" data-reveal="up">
-        {eyebrow && (
-          <span className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-secondary">
-            <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
-            {eyebrow}
-          </span>
-        )}
-        {heading && <h2 className="mt-3 text-3xl font-semibold md:text-5xl">{heading}</h2>}
-      </div>
+      <SectionHeading heading={heading} />
 
-      <div
-        className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        data-reveal-group="110"
-      >
+      <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group="110">
         {points.map((point, i) => {
           const parsed = point.stat ? parseStat(point.stat) : null
-          // First card gets the gradient accent treatment (like the reference).
+          // The lead stat carries the brand gradient; the rest stay quiet so
+          // one number owns the section instead of three competing.
           const accent = i === 0
           return (
             <div
               key={i}
               data-reveal="up"
-              className={
+              className={cn(
+                'flex flex-col justify-between rounded-3xl p-8 sm:col-span-2 lg:col-span-1',
+                spanFor(i, points.length),
                 accent
-                  ? 'rounded-3xl bg-gradient-velocity p-8 text-accent-foreground'
-                  : 'rounded-3xl border border-border bg-card p-8'
-              }
+                  ? 'bg-gradient-velocity text-accent-foreground'
+                  : 'border border-border bg-card',
+              )}
             >
               <p
-                className={
-                  accent
-                    ? 'font-display text-5xl font-bold md:text-6xl'
-                    : 'font-display text-5xl font-bold text-gradient-velocity md:text-6xl'
-                }
+                className={cn(
+                  'font-display text-5xl font-bold md:text-6xl',
+                  !accent && 'text-gradient-velocity',
+                )}
               >
                 {parsed ? (
                   <span data-count={parsed.value} data-count-suffix={parsed.suffix}>
@@ -61,14 +65,17 @@ export const WhyFastoraBlock: React.FC<Props> = ({ eyebrow, heading, points }) =
                   point.stat
                 )}
               </p>
-              <h3 className="mt-5 text-lg font-semibold">{point.title}</h3>
-              <p
-                className={
-                  accent ? 'mt-2 text-sm text-accent-foreground/80' : 'mt-2 text-sm text-muted-foreground'
-                }
-              >
-                {point.description}
-              </p>
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold">{point.title}</h3>
+                <p
+                  className={cn(
+                    'mt-2 max-w-md text-sm',
+                    accent ? 'text-accent-foreground/80' : 'text-muted-foreground',
+                  )}
+                >
+                  {point.description}
+                </p>
+              </div>
             </div>
           )
         })}
