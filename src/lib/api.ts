@@ -35,6 +35,8 @@ export interface SiteSettings {
   favicon: Media | null
   colors: {
     accent: string | null
+    /** Reserved for emphasis: figures, statistics, the hero label. */
+    gold: string | null
     background: string | null
     text: string | null
     surface: string | null
@@ -73,6 +75,7 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   favicon: null,
   colors: {
     accent: null,
+    gold: null,
     background: null,
     text: null,
     surface: null,

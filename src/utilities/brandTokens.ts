@@ -28,6 +28,11 @@ export function buildBrandStyle(colors: SiteSettings['colors'] | null | undefine
   set('--color-muted-foreground', colors.mutedText)
   set('--color-border', colors.border)
 
+  // Gold is the emphasis accent from the brand spec. `--color-gold` already
+  // has a default in globals.css, so this only overrides it when Site
+  // Settings supplies a value.
+  set('--color-gold', colors.gold)
+
   const accent = colors.accent?.trim()
   if (accent) {
     rules.push(`--color-secondary: ${accent};`)

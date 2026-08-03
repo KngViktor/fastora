@@ -159,6 +159,38 @@
     background: var(--gradient-velocity);
   }
 
+  /* Gold is the emphasis accent from the brand spec, reserved for proof:
+     result figures, statistics, and the hero label. Sky blue stays the
+     interactive colour for links and buttons, so the two never compete.
+
+     A flat fill rather than a gradient. Gold reads as cheap when it is
+     ramped, and the figures it sits on are already large enough to carry
+     weight on their own.
+
+     Two tones, because one cannot serve both surfaces. The brand gold sits
+     at 6.3:1 on navy but only 2.4:1 on white, well under the 3:1 minimum for
+     large text. `.text-gold` therefore darkens it to roughly 4.1:1 for light
+     backgrounds, derived from the same variable so a gold changed in Site
+     Settings carries through to both. */
+  .text-gold {
+    color: color-mix(in srgb, var(--color-gold) 75%, #000000);
+  }
+
+  .text-gold-on-dark {
+    color: var(--color-gold);
+  }
+
+  /* Short rule used above a section heading to mark emphasis without
+     reintroducing the uppercase label on every section. */
+  .rule-gold::before {
+    content: '';
+    display: block;
+    width: 2.5rem;
+    height: 2px;
+    margin-bottom: 1.25rem;
+    background: var(--color-gold);
+  }
+
   .container-page {
     max-width: var(--container-page);
     margin-inline: auto;

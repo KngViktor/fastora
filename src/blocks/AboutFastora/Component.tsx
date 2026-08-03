@@ -64,7 +64,7 @@ export const AboutFastoraBlock: React.FC<Props> = ({
             >
               {stats.map((stat, i) => (
                 <div key={i}>
-                  <dt className="font-display text-3xl font-semibold text-gradient-velocity md:text-4xl">
+                  <dt className="font-display text-3xl font-semibold text-gold md:text-4xl">
                     {stat.value}
                   </dt>
                   <dd className="mt-1 text-sm text-muted-foreground">{stat.label}</dd>

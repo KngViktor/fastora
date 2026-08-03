@@ -43,7 +43,7 @@ export default async function CaseStudyPage({ params }: Args) {
           <div className="grid gap-8 rounded-3xl border border-border bg-card p-8 sm:grid-cols-3 md:p-12" data-reveal-group="90">
             {study.results.map((r, i) => (
               <div key={i} data-reveal="up">
-                <p className="font-display text-4xl font-semibold text-gradient-velocity md:text-5xl">
+                <p className="font-display text-4xl font-semibold text-gold md:text-5xl">
                   {r.metric}
                 </p>
                 <p className="mt-2 text-sm text-muted-foreground">{r.label}</p>

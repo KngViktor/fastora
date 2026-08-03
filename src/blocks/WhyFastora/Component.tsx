@@ -54,7 +54,9 @@ export const WhyFastoraBlock: React.FC<Props> = ({ heading, points }) => {
               <p
                 className={cn(
                   'font-display text-5xl font-bold md:text-6xl',
-                  !accent && 'text-gradient-velocity',
+                  // On the gradient card the figure stays white for contrast;
+                  // elsewhere gold marks it as a claim rather than a link.
+                  !accent && 'text-gold',
                 )}
               >
                 {parsed ? (

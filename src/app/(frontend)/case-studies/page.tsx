@@ -68,7 +68,7 @@ export default async function CaseStudiesPage() {
                     <div className="mt-6 flex flex-wrap gap-6">
                       {study.results.slice(0, 3).map((r, i) => (
                         <div key={i}>
-                          <p className="font-display text-2xl font-semibold text-gradient-velocity">
+                          <p className="font-display text-2xl font-semibold text-gold">
                             {r.metric}
                           </p>
                           <p className="mt-1 text-xs text-muted-foreground">{r.label}</p>
