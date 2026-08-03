@@ -18,8 +18,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const page = await queryUtilityPage('case-studies')
   return generateMeta({
     doc: page || {
-      meta: { title: 'Case Studies', description: FALLBACK.description, image: null },
+      meta: { title: 'Case Studies', description: FALLBACK.description, image: null, canonicalUrl: null, noindex: false },
     },
+    path: '/case-studies',
   })
 }
 

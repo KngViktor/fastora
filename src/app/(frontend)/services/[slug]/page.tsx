@@ -157,7 +157,7 @@ export default async function ServicePage({ params }: Args) {
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const service = await queryServiceBySlug({ slug })
-  return generateMeta({ doc: service })
+  return generateMeta({ doc: service, path: `/services/${slug}` })
 }
 
 const queryServiceBySlug = cache(async ({ slug }: { slug: string }) =>

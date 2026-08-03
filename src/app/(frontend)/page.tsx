@@ -41,5 +41,5 @@ export default async function HomePage() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await queryHomePage()
-  return generateMeta({ doc: page })
+  return generateMeta({ doc: page, path: '/' })
 }

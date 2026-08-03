@@ -99,7 +99,7 @@ export default async function CaseStudyPage({ params }: Args) {
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const study = await queryCaseStudyBySlug({ slug })
-  return generateMeta({ doc: study })
+  return generateMeta({ doc: study, path: `/case-studies/${slug}` })
 }
 
 const queryCaseStudyBySlug = cache(async ({ slug }: { slug: string }) =>

@@ -19,7 +19,16 @@ const FALLBACK = {
 export async function generateMetadata(): Promise<Metadata> {
   const page = await queryUtilityPage('insights')
   return generateMeta({
-    doc: page || { meta: { title: 'Insights', description: FALLBACK.description, image: null } },
+    doc: page || {
+      meta: {
+        title: 'Insights',
+        description: FALLBACK.description,
+        image: null,
+        canonicalUrl: null,
+        noindex: false,
+      },
+    },
+    path: '/insights',
   })
 }
 

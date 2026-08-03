@@ -52,7 +52,7 @@ export default async function Page({ params }: Args) {
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug = 'home' } = await params
   const page = await queryPageBySlug({ slug })
-  return generateMeta({ doc: page })
+  return generateMeta({ doc: page, path: `/${slug}` })
 }
 
 const queryPageBySlug = cache(async ({ slug }: { slug: string }) =>

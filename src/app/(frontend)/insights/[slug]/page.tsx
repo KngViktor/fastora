@@ -110,7 +110,7 @@ export default async function PostPage({ params }: Args) {
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const post = await queryPostBySlug({ slug })
-  return generateMeta({ doc: post })
+  return generateMeta({ doc: post, path: `/insights/${slug}` })
 }
 
 const queryPostBySlug = cache(async ({ slug }: { slug: string }) =>

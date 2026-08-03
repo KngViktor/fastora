@@ -55,6 +55,10 @@ export interface SiteSettings {
 export interface Meta {
   title: string | null
   description: string | null
+  /** Set only when the same content is reachable at more than one URL. */
+  canonicalUrl: string | null
+  /** Asks search engines and AI crawlers not to list the page. */
+  noindex: boolean
   image: Media | null
 }
 

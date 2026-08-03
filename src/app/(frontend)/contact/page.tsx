@@ -18,8 +18,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const page = await queryUtilityPage('contact')
   return generateMeta({
     doc: page || {
-      meta: { title: 'Contact', description: FALLBACK.description, image: null },
+      meta: { title: 'Contact', description: FALLBACK.description, image: null, canonicalUrl: null, noindex: false },
     },
+    path: '/contact',
   })
 }
 
