@@ -164,8 +164,10 @@ export interface Page {
   pageHeaderEyebrow: string | null
   pageHeaderHeading: string | null
   pageHeaderDescription: string | null
+  faqs: { question: string; answer: string }[]
   hero: {
     type: string
+    eyebrow: string | null
     richText: string | null
     links: { label: string; url: string; appearance?: string }[]
     media: Media | null

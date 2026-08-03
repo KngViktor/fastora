@@ -12,10 +12,12 @@ const heroes = {
   mediumImpact: MediumImpactHero,
 }
 
-export const RenderHero: React.FC<HeroData> = ({ type, richText, links, media }) => {
+export const RenderHero: React.FC<HeroData> = ({ type, eyebrow, richText, links, media }) => {
   if (!type || type === 'none' || !(type in heroes)) return null
 
   const HeroToRender = heroes[type as keyof typeof heroes]
 
-  return <HeroToRender links={links} media={media} richText={richText} type={type} />
+  return (
+    <HeroToRender eyebrow={eyebrow} links={links} media={media} richText={richText} type={type} />
+  )
 }

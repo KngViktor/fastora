@@ -9,24 +9,6 @@ import { FAQBlockComponent } from '@/blocks/FAQ/Component'
 import { generateMeta } from '@/utilities/generateMeta'
 import { queryUtilityPage } from '@/utilities/queryUtilityPage'
 
-const SERVICES_FAQS = [
-  {
-    question: 'How do I know which service is right for us?',
-    answer:
-      "Book a consultation and we'll help you figure out the right starting point, most engagements begin with Strategic Communications or Brand Consulting before moving into execution.",
-  },
-  {
-    question: 'Can we combine multiple services?',
-    answer:
-      'Yes. Most clients combine two or three services, strategy, content, and digital marketing are a common pairing, delivered as one connected engagement.',
-  },
-  {
-    question: 'Do you offer one-off projects or only retainers?',
-    answer:
-      'Both. Some services, like Brand Consulting, work well as defined projects. Others, like Social Media Management and Communication Advisory, are typically ongoing retainers.',
-  },
-]
-
 const FALLBACK = {
   eyebrow: 'What we do',
   heading: 'Services built around how you communicate',
@@ -95,7 +77,7 @@ export default async function ServicesPage() {
         )}
       </section>
 
-      <FAQBlockComponent heading="Questions about our services" items={SERVICES_FAQS} />
+      <FAQBlockComponent heading="Questions about our services" items={page?.faqs} />
     </div>
   )
 }

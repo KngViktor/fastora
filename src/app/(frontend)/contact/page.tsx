@@ -8,23 +8,6 @@ import { generateMeta } from '@/utilities/generateMeta'
 import { queryUtilityPage } from '@/utilities/queryUtilityPage'
 import { ContactForm } from './ContactForm'
 
-const CONTACT_FAQS = [
-  {
-    question: 'What happens after I submit the form?',
-    answer: "We'll review your message and follow up within one to two business days to schedule a consultation.",
-  },
-  {
-    question: 'Is the first consultation free?',
-    answer:
-      "Yes. The first consultation is a conversation about your business and communication goals, there's no obligation.",
-  },
-  {
-    question: 'What information should I include in my message?',
-    answer:
-      "A short description of your business, what you're hoping to achieve, and which service you're interested in helps us prepare for the call.",
-  },
-]
-
 const FALLBACK = {
   eyebrow: 'Contact',
   heading: "Let's start your project",
@@ -99,7 +82,7 @@ export default async function ContactPage() {
         </aside>
       </section>
 
-      <FAQBlockComponent heading="Questions before you reach out" items={CONTACT_FAQS} />
+      <FAQBlockComponent heading="Questions before you reach out" items={page?.faqs} />
     </div>
   )
 }

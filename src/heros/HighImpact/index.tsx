@@ -19,7 +19,7 @@ import { cn } from '@/utilities/ui'
  * keeping the hero a normal vertical stack (eyebrow, heading, subtext,
  * buttons) instead of a cropped, squeezed version of the desktop layout.
  */
-export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) => {
+export const HighImpactHero: React.FC<HeroData> = ({ eyebrow, links, media, richText }) => {
   const hasImage = Boolean(media && typeof media === 'object')
 
   return (
@@ -38,13 +38,15 @@ export const HighImpactHero: React.FC<HeroData> = ({ links, media, richText }) =
           >
             <div className="flex flex-col gap-6">
               {/* eyebrow */}
-              <div
-                data-reveal="up"
-                className="flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-secondary"
-              >
-                <Sparkle className="h-3.5 w-3.5 shrink-0" strokeWidth={2} aria-hidden="true" />
-                <span>Communications &amp; Digital Strategy</span>
-              </div>
+              {eyebrow && (
+                <div
+                  data-reveal="up"
+                  className="flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-secondary"
+                >
+                  <Sparkle className="h-3.5 w-3.5 shrink-0" strokeWidth={2} aria-hidden="true" />
+                  <span>{eyebrow}</span>
+                </div>
+              )}
 
               {richText && (
                 <div data-reveal="up">

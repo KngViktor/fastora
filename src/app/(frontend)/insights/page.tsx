@@ -6,21 +6,35 @@ import { getPosts, safely } from '@/lib/api'
 import { Media } from '@/components/Media'
 import { PageHeader } from '@/components/PageHeader'
 import { formatDateTime } from '@/utilities/formatDateTime'
+import { generateMeta } from '@/utilities/generateMeta'
+import { queryUtilityPage } from '@/utilities/queryUtilityPage'
 
-export const metadata: Metadata = {
-  title: 'Insights',
-  description: 'Practical thinking on communications, branding, and digital strategy from the Fastora team.',
+const FALLBACK = {
+  eyebrow: 'Insights',
+  heading: 'Thinking on communication and brand strategy',
+  description:
+    'Practical ideas on communications, branding, and digital strategy, for businesses that want to be understood, not just seen.',
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await queryUtilityPage('insights')
+  return generateMeta({
+    doc: page || { meta: { title: 'Insights', description: FALLBACK.description, image: null } },
+  })
 }
 
 export default async function InsightsPage() {
-  const posts = await safely(() => getPosts({ limit: 100 }), [])
+  const [page, posts] = await Promise.all([
+    queryUtilityPage('insights'),
+    safely(() => getPosts({ limit: 100 }), []),
+  ])
 
   return (
     <div>
       <PageHeader
-        eyebrow="Insights"
-        title="Thinking on communication and brand strategy"
-        description="Practical ideas on communications, branding, and digital strategy, for businesses that want to be understood, not just seen."
+        eyebrow={page?.pageHeaderEyebrow || FALLBACK.eyebrow}
+        title={page?.pageHeaderHeading || FALLBACK.heading}
+        description={page?.pageHeaderDescription || FALLBACK.description}
       />
 
       <section className="container pb-24 pt-16">

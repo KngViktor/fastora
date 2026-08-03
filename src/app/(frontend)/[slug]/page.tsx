@@ -37,7 +37,13 @@ export default async function Page({ params }: Args) {
 
   return (
     <article>
-      <RenderHero type={hero.type} richText={hero.richText} links={hero.links} media={hero.media} />
+      <RenderHero
+        type={hero.type}
+        eyebrow={hero.eyebrow}
+        richText={hero.richText}
+        links={hero.links}
+        media={hero.media}
+      />
       <RenderBlocks blocks={layout} />
     </article>
   )
