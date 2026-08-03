@@ -2,7 +2,9 @@ import React, { Fragment } from 'react'
 
 import type { LayoutBlock } from '@/lib/api'
 
+import { AboutFastoraBlock } from '@/blocks/AboutFastora/Component'
 import { ArchiveBlock } from '@/blocks/ArchiveBlock/Component'
+import { TrustedByBlock } from '@/blocks/TrustedBy/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { ContentBlock } from '@/blocks/Content/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
@@ -16,6 +18,8 @@ import { FAQBlockComponent } from '@/blocks/FAQ/Component'
 import { LatestInsightsBlockComponent } from '@/blocks/LatestInsights/Component'
 
 const blockComponents = {
+  aboutFastora: AboutFastoraBlock,
+  trustedBy: TrustedByBlock,
   archive: ArchiveBlock,
   content: ContentBlock,
   cta: CallToActionBlock,
