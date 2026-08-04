@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
 import React from 'react'
 
 import { getCaseStudies, safely } from '@/lib/api'
@@ -14,9 +13,8 @@ type Props = {
 }
 
 /**
- * Layout family: stacked header, asymmetric feature grid (first study runs
- * full width), action moved below the grid. Deliberately different from the
- * services tile grid above it so the page does not repeat one rhythm.
+ * Asymmetric feature grid: the first case study runs full width with its image
+ * beside the text, the rest are ordinary cards below it.
  */
 export const SelectedWorkBlock: React.FC<Props> = async ({ eyebrow, heading, limit }) => {
   const caseStudies = await safely(
@@ -28,7 +26,11 @@ export const SelectedWorkBlock: React.FC<Props> = async ({ eyebrow, heading, lim
 
   return (
     <section className="container py-20 md:py-28">
-      <SectionHeading eyebrow={eyebrow} heading={heading} />
+      <SectionHeading
+        eyebrow={eyebrow}
+        heading={heading}
+        action={{ label: 'View all case studies', href: '/case-studies' }}
+      />
 
       <div className="mt-12 grid gap-8 lg:grid-cols-2" data-reveal-group="120">
         {caseStudies.map((study, i) => {
@@ -66,7 +68,7 @@ export const SelectedWorkBlock: React.FC<Props> = async ({ eyebrow, heading, lim
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   {study.industry || study.clientName}
                 </p>
-                <h3 className={cn('mt-2 text-lg font-semibold', featured && 'lg:text-3xl')}>
+                <h3 className={cn('mt-2 text-lg font-semibold', featured && 'lg:text-2xl')}>
                   {study.title}
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground">{study.summary}</p>
@@ -74,20 +76,6 @@ export const SelectedWorkBlock: React.FC<Props> = async ({ eyebrow, heading, lim
             </Link>
           )
         })}
-      </div>
-
-      <div className="mt-10 flex justify-center" data-reveal="up">
-        <Link
-          href="/case-studies"
-          className="group inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 text-sm font-medium transition-colors hover:border-secondary hover:text-secondary"
-        >
-          View our work
-          <ArrowRight
-            className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-            strokeWidth={1.5}
-            aria-hidden="true"
-          />
-        </Link>
       </div>
     </section>
   )
