@@ -186,8 +186,56 @@ export interface Page {
   meta: Meta
 }
 
+/**
+ * Statuses where the backend is reachable but momentarily can't answer, so
+ * trying again is likely to succeed. Deliberately excludes 404 and the other
+ * 4xx codes: those are real answers about the resource, and retrying them
+ * just multiplies the latency of a page that was always going to be empty.
+ *
+ * Shared hosting makes this worth doing. api.fastora.africa returned 500 on
+ * /pages and one post during a production build, then served 12 concurrent
+ * requests without a single error moments later. A blip that short should not
+ * reach the caller at all.
+ */
+const RETRYABLE_STATUSES = new Set([429, 500, 502, 503, 504])
+
+/** Backoff between attempts. Length also defines the number of retries. */
+const RETRY_DELAYS_MS = [300, 900]
+
+async function fetchWithRetry(path: string): Promise<Response> {
+  let lastError: unknown
+
+  for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
+    if (attempt > 0) {
+      await new Promise((resolve) => setTimeout(resolve, RETRY_DELAYS_MS[attempt - 1]))
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}${path}`, { cache: 'force-cache' })
+
+      // Anything that isn't a transient server hiccup is the real answer,
+      // including 404 — hand it back and let the caller decide.
+      if (res.ok || !RETRYABLE_STATUSES.has(res.status)) return res
+
+      lastError = new Error(`Laravel API request failed: ${path} (${res.status})`)
+    } catch (error) {
+      // Network-level failure: DNS, refused connection, timeout.
+      lastError = error
+    }
+
+    if (attempt < RETRY_DELAYS_MS.length) {
+      console.warn(
+        `[fastora] ${path} failed, retrying in ${RETRY_DELAYS_MS[attempt]}ms ` +
+          `(attempt ${attempt + 2} of ${RETRY_DELAYS_MS.length + 1})`,
+      )
+    }
+  }
+
+  throw lastError
+}
+
 async function apiFetch<T>(path: string): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, { cache: 'force-cache' })
+  const res = await fetchWithRetry(path)
 
   if (!res.ok) {
     throw new Error(`Laravel API request failed: ${path} (${res.status})`)
@@ -198,7 +246,7 @@ async function apiFetch<T>(path: string): Promise<T> {
 }
 
 async function apiFetchOrNull<T>(path: string): Promise<T | null> {
-  const res = await fetch(`${API_BASE}${path}`, { cache: 'force-cache' })
+  const res = await fetchWithRetry(path)
 
   if (res.status === 404) return null
   if (!res.ok) {

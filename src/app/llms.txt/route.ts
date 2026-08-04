@@ -36,6 +36,18 @@ export async function GET(): Promise<Response> {
     safely(() => getPosts({ limit: 50 }), []),
   ])
 
+  // Same reasoning as sitemap.ts: every fetch above degrades to empty rather
+  // than throwing, so an outage during a build produces a file with a heading
+  // and nothing else. Unlike the sitemap this route already revalidates, so
+  // it recovers on its own — but the warning is what makes it diagnosable.
+  if (!services.length && !caseStudies.length && !posts.length) {
+    console.error(
+      '[fastora] llms.txt: every content fetch came back empty, so the API ' +
+        'was almost certainly unreachable. Serving a near-empty file until ' +
+        'the next revalidation.',
+    )
+  }
+
   const name = settings.siteName || 'Fastora'
 
   const body = [
