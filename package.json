@@ -35,7 +35,7 @@
     "framer-motion": "^12.42.2",
     "graphql": "^16.14.2",
     "lucide-react": "^1.25.0",
-    "next": "16.2.10",
+    "next": "16.2.11",
     "payload": "^3.86.0",
     "prism-react-renderer": "^2.4.1",
     "react": "19.2.4",
