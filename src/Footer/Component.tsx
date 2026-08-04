@@ -12,6 +12,7 @@ const socialLabels: Record<string, string> = {
   tiktok: 'TikTok',
   youtube: 'YouTube',
   facebook: 'Facebook',
+  threads: 'Threads',
   whatsapp: 'WhatsApp',
 }
 
