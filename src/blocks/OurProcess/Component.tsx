@@ -3,16 +3,17 @@ import React from 'react'
 import { SectionHeading } from '@/components/SectionHeading'
 
 type Props = {
+  eyebrow?: string | null
   heading?: string | null
   steps?: { title: string; description: string }[]
 }
 
-export const OurProcessBlock: React.FC<Props> = ({ heading, steps }) => {
+export const OurProcessBlock: React.FC<Props> = ({ eyebrow, heading, steps }) => {
   if (!steps?.length) return null
 
   return (
     <section className="container py-20 md:py-28">
-      <SectionHeading heading={heading} />
+      <SectionHeading eyebrow={eyebrow} heading={heading} />
 
       <ol className="mt-12 grid gap-10 md:grid-cols-2 md:gap-x-8 md:gap-y-14 lg:grid-cols-4" data-reveal-group="110">
         {steps.map((step, i) => (

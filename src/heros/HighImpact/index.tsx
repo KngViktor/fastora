@@ -1,4 +1,3 @@
-import { Sparkle } from 'lucide-react'
 import React from 'react'
 
 import type { HeroData } from '@/heros/types'
@@ -33,7 +32,7 @@ export const HighImpactHero: React.FC<HeroData> = ({ eyebrow, links, media, rich
 
         <div className="relative z-10 flex w-full md:min-h-[42rem] md:items-center lg:min-h-[48rem]">
           <div
-            className="w-full max-w-xl pt-24 pb-16 pl-8 pr-6 md:max-w-xl md:pt-0 md:pb-0 md:pl-12 lg:max-w-4xl lg:pl-16"
+            className="w-full max-w-xl pt-32 pb-16 pl-8 pr-6 md:max-w-lg md:pt-0 md:pb-0 md:pl-12 lg:max-w-2xl lg:pl-16"
             data-reveal-group="120"
           >
             <div className="flex flex-col gap-6">
@@ -41,9 +40,19 @@ export const HighImpactHero: React.FC<HeroData> = ({ eyebrow, links, media, rich
               {eyebrow && (
                 <div
                   data-reveal="up"
-                  className="flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-gold-on-dark"
+                  className="flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-secondary"
                 >
-                  <Sparkle className="h-3.5 w-3.5 shrink-0" strokeWidth={2} aria-hidden="true" />
+                  {/* Solid four-point star, as on the reference design. A stroked
+                      lucide icon reads as a thin outline at this size and lost the
+                      crispness the mark has against the navy. */}
+                  <svg
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="h-3.5 w-3.5 shrink-0"
+                    aria-hidden="true"
+                  >
+                    <path d="M10 0l2.245 6.91h7.265l-5.878 4.27 2.245 6.91L10 13.82l-5.877 4.27 2.245-6.91L.49 6.91h7.265z" />
+                  </svg>
                   <span>{eyebrow}</span>
                 </div>
               )}
@@ -51,7 +60,7 @@ export const HighImpactHero: React.FC<HeroData> = ({ eyebrow, links, media, rich
               {richText && (
                 <div data-reveal="up">
                   <RichText
-                    className="max-w-4xl [&_h1]:text-4xl [&_h1]:font-semibold [&_h1]:leading-[1.05] [&_h1]:break-words [&_h1]:text-primary-foreground sm:[&_h1]:text-5xl lg:[&_h1]:text-6xl [&_p]:mt-6 [&_p]:max-w-md [&_p]:text-lg [&_p]:text-primary-foreground/70"
+                    className="max-w-2xl [&_h1]:text-4xl [&_h1]:font-semibold [&_h1]:leading-[1.05] [&_h1]:break-words [&_h1]:text-primary-foreground sm:[&_h1]:text-5xl md:[&_h1]:text-6xl lg:[&_h1]:text-7xl [&_p]:mt-6 [&_p]:max-w-md [&_p]:text-lg [&_p]:text-primary-foreground/70"
                     data={richText}
                     enableGutter={false}
                   />

@@ -3,17 +3,18 @@ import React from 'react'
 import { SectionHeading } from '@/components/SectionHeading'
 
 type Props = {
+  eyebrow?: string | null
   heading?: string | null
   items?: { title: string; description: string }[]
 }
 
 /** Layout family: two-column definition list, no cards. */
-export const AudienceGridBlock: React.FC<Props> = ({ heading, items }) => {
+export const AudienceGridBlock: React.FC<Props> = ({ eyebrow, heading, items }) => {
   if (!items?.length) return null
 
   return (
     <section className="container py-20 md:py-28">
-      <SectionHeading heading={heading} />
+      <SectionHeading eyebrow={eyebrow} heading={heading} />
 
       <dl
         className="mt-12 grid gap-x-12 gap-y-10 border-t border-border pt-10 md:grid-cols-2"

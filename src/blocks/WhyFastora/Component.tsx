@@ -4,6 +4,7 @@ import { SectionHeading } from '@/components/SectionHeading'
 import { cn } from '@/utilities/ui'
 
 type Props = {
+  eyebrow?: string | null
   heading?: string | null
   points?: { stat: string; title: string; description: string }[]
 }
@@ -26,12 +27,12 @@ function spanFor(index: number, total: number): string {
   return index % 2 === 0 ? 'lg:col-span-2' : 'lg:col-span-1'
 }
 
-export const WhyFastoraBlock: React.FC<Props> = ({ heading, points }) => {
+export const WhyFastoraBlock: React.FC<Props> = ({ eyebrow, heading, points }) => {
   if (!points?.length) return null
 
   return (
     <section className="container py-20 md:py-28">
-      <SectionHeading heading={heading} />
+      <SectionHeading eyebrow={eyebrow} heading={heading} />
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group="110">
         {points.map((point, i) => {

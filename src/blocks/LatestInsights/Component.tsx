@@ -8,6 +8,7 @@ import { SectionHeading } from '@/components/SectionHeading'
 import { formatDateTime } from '@/utilities/formatDateTime'
 
 type Props = {
+  eyebrow?: string | null
   heading?: string | null
   limit?: number | null
 }
@@ -17,7 +18,7 @@ type Props = {
  * was the third identical "header + card grid" section on the home page, so
  * the same content is presented as a reading list instead.
  */
-export const LatestInsightsBlockComponent: React.FC<Props> = async ({ heading, limit }) => {
+export const LatestInsightsBlockComponent: React.FC<Props> = async ({ eyebrow, heading, limit }) => {
   const posts = await safely(() => getPosts({ limit: limit || 3 }), [])
 
   if (!posts?.length) return null
@@ -25,6 +26,7 @@ export const LatestInsightsBlockComponent: React.FC<Props> = async ({ heading, l
   return (
     <section className="container py-20 md:py-28">
       <SectionHeading
+        eyebrow={eyebrow}
         heading={heading}
         action={{ label: 'View all insights', href: '/insights' }}
       />

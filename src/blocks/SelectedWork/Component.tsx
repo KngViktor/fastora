@@ -8,6 +8,7 @@ import { SectionHeading } from '@/components/SectionHeading'
 import { cn } from '@/utilities/ui'
 
 type Props = {
+  eyebrow?: string | null
   heading?: string | null
   limit?: number | null
 }
@@ -17,7 +18,7 @@ type Props = {
  * full width), action moved below the grid. Deliberately different from the
  * services tile grid above it so the page does not repeat one rhythm.
  */
-export const SelectedWorkBlock: React.FC<Props> = async ({ heading, limit }) => {
+export const SelectedWorkBlock: React.FC<Props> = async ({ eyebrow, heading, limit }) => {
   const caseStudies = await safely(
     () => getCaseStudies({ featuredOnHome: true, limit: limit || 3 }),
     [],
@@ -27,7 +28,7 @@ export const SelectedWorkBlock: React.FC<Props> = async ({ heading, limit }) => 
 
   return (
     <section className="container py-20 md:py-28">
-      <SectionHeading heading={heading} />
+      <SectionHeading eyebrow={eyebrow} heading={heading} />
 
       <div className="mt-12 grid gap-8 lg:grid-cols-2" data-reveal-group="120">
         {caseStudies.map((study, i) => {

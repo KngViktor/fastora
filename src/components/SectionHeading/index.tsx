@@ -1,11 +1,12 @@
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
 import React from 'react'
 
 import { cn } from '@/utilities/ui'
 
 type Props = {
   heading?: string | null
+  /** Small uppercase label above the heading, e.g. "What we do". */
+  eyebrow?: string | null
   /** Optional trailing link, rendered inline with the heading on desktop. */
   action?: { label: string; href: string } | null
   /** Use on the dark navy sections so contrast stays correct. */
@@ -14,21 +15,21 @@ type Props = {
 }
 
 /**
- * Shared heading for content sections.
+ * Shared heading for content sections: eyebrow, heading, and an optional
+ * trailing link.
  *
- * Deliberately has no "eyebrow" slot. Small uppercase labels above every
- * heading made all eight home-page sections read with the same templated
- * rhythm; the heading alone carries the section, and its position on the
- * page already says what it is. The eyebrow is kept only on the hero and
- * on PageHeader, where it labels the page rather than a section.
+ * The eyebrow is driven entirely by the CMS. The API has always sent one for
+ * every block, so a section shows a label only if an editor has written one,
+ * and clearing the field in the admin removes it without a deploy.
  */
 export const SectionHeading: React.FC<Props> = ({
   heading,
+  eyebrow,
   action,
   tone = 'light',
   className,
 }) => {
-  if (!heading && !action) return null
+  if (!heading && !action && !eyebrow) return null
 
   const linkTone =
     tone === 'dark'
@@ -37,31 +38,34 @@ export const SectionHeading: React.FC<Props> = ({
 
   return (
     <div
-      className={cn(
-        'flex flex-col gap-4 sm:flex-row sm:items-baseline sm:justify-between',
-        className,
-      )}
+      className={cn('flex flex-col gap-4 md:flex-row md:items-end md:justify-between', className)}
     >
-      {heading && (
-        <h2 data-reveal="up" className="max-w-2xl text-3xl font-semibold md:text-5xl">
-          {heading}
-        </h2>
-      )}
+      <div data-reveal="up">
+        {eyebrow && (
+          <span className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-secondary">
+            <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
+            {eyebrow}
+          </span>
+        )}
+        {heading && (
+          <h2 className={cn('max-w-xl text-3xl font-semibold md:text-5xl', eyebrow && 'mt-3')}>
+            {heading}
+          </h2>
+        )}
+      </div>
       {action && (
         <Link
           href={action.href}
           data-reveal="up"
           className={cn(
-            'group inline-flex shrink-0 items-center gap-1.5 text-sm font-medium transition-colors',
+            'group inline-flex shrink-0 items-center gap-2 text-sm font-medium transition-colors',
             linkTone,
           )}
         >
           {action.label}
-          <ArrowRight
-            className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-            strokeWidth={1.5}
-            aria-hidden="true"
-          />
+          <span className="transition-transform group-hover:translate-x-1" aria-hidden="true">
+            →
+          </span>
         </Link>
       )}
     </div>
