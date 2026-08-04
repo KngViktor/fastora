@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
 import { Poppins, Inter, Geist_Mono } from 'next/font/google'
 import React from 'react'
-import { cookies, draftMode, headers } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 
 import { cn } from '@/utilities/ui'
-import { AdminBar } from '@/components/AdminBar'
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
 import { ScrollReveal } from '@/components/ScrollReveal'
@@ -37,8 +36,6 @@ const geistMono = Geist_Mono({
 })
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const { isEnabled } = await draftMode()
-
   const siteSettings = await safely(() => getSiteSettings(), DEFAULT_SITE_SETTINGS)
   const brandStyle = buildBrandStyle(siteSettings.colors)
   const url = getServerSideURL()
@@ -84,11 +81,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className="min-h-full flex flex-col">
         <CurrencyProvider initialCurrency={initialCurrency}>
-          <AdminBar
-            adminBarProps={{
-              preview: isEnabled,
-            }}
-          />
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />

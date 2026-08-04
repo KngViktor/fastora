@@ -35,9 +35,7 @@ export const HeaderNav: React.FC<{ data: Nav }> = ({ data }) => {
         ))}
       </ul>
 
-      <CMSLink
-        type="custom"
-        url="/contact"
+      <CMSLink        url="/contact"
         label="Book a Consultation"
         appearance="default"
         className="hidden rounded-full bg-secondary px-5 py-2.5 text-sm font-medium text-secondary-foreground transition-opacity hover:opacity-90 sm:inline-flex"
@@ -78,9 +76,7 @@ export const HeaderNav: React.FC<{ data: Nav }> = ({ data }) => {
               </li>
             ))}
             <li className="mt-2 px-1">
-              <CMSLink
-                type="custom"
-                url="/contact"
+              <CMSLink                url="/contact"
                 label="Book a Consultation"
                 appearance="default"
                 onClick={() => setOpen(false)}

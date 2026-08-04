@@ -1,56 +1,64 @@
 # Fastora
 
-Digital services & social media agency site. Next.js 16 (App Router) + Payload CMS 3 + Supabase Postgres, deployed on Vercel.
+Communications and digital strategy consultancy site. Next.js 16 frontend, reading all content from a separate Laravel + Filament backend.
+
+## How the two halves fit together
+
+This repository is **frontend only**. It renders pages and knows nothing about a database.
+
+| | Repo | Lives at |
+|---|---|---|
+| Frontend (this repo) | `KngViktor/fastora` | `fastora.africa` |
+| Backend, CMS and API | `KngViktor/Fastorabackend` | `api.fastora.africa`, admin at `/admin` |
+
+Content flows one way: editors work in the Filament admin on the backend, which serves JSON from `api.fastora.africa/api`, which this app fetches. To change page copy, images, services, case studies, posts, colours or the logo, use the backend admin — nothing here needs editing.
+
+Requests are one-way, so a backend outage degrades this site rather than breaking it: every fetch goes through `safely()` in [`src/lib/api.ts`](src/lib/api.ts), which retries transient 5xx and then falls back to an empty state.
 
 ## Stack
 
 - **Next.js 16** (App Router, Turbopack) + TypeScript + Tailwind CSS v4
-- **Payload CMS 3** embedded in the same app, admin panel at `/admin`
-- **Supabase Postgres** via `@payloadcms/db-postgres`
-- **Supabase Storage** (S3-compatible) for media in production, local `/public/media` in dev
-- **Resend** for the contact-form admin notification email
+- **Resend** for the contact-form notification email
+- No database, no ORM, no CMS in this repo
 
 ## Local setup
 
 1. `npm install`
-2. Copy `.env.example` to `.env` and fill in real values (see below).
-3. Run migrations: `npm run payload -- migrate` (see the pooler note below — use the **session** pooler, port 5432, just for this command).
-4. `npm run dev` and visit `http://localhost:3000/admin` to create the first admin user.
-5. Optional: `npm run seed` to populate Site Settings, sample services, case studies, testimonials, and a blog post.
+2. Copy `.env.example` to `.env.local` and fill in real values.
+3. Start the backend first, so there is an API to read from — see that repo's README.
+4. `npm run dev`, then open `http://localhost:3000`.
+
+The site renders without the backend running, just with empty content and warnings in the terminal.
 
 ### Environment variables
 
-All variables are documented inline in [`.env.example`](.env.example). The important ones:
+Documented inline in [`.env.example`](.env.example). The ones that matter:
 
 | Variable | Notes |
 |---|---|
-| `DATABASE_URI` | Supabase **Transaction pooler** connection string (port **6543**) — for `next dev`, `next build`, and Vercel. Next.js opens several parallel connection pools at once (build workers, dev, serverless functions); the session-mode pooler (5432) and direct connection both cap total clients too low for that and you'll hit "max clients reached". Only switch to the session pooler transiently to run `payload migrate`. |
-| `PAYLOAD_SECRET` | Random string, e.g. `openssl rand -base64 32`. |
-| `PREVIEW_SECRET` | Random string, same command. Required for draft/live-preview links. |
-| `SUPABASE_S3_*` | Only needed for persistent media storage (required in production — Vercel's filesystem is ephemeral and read-only). Get these from Supabase → Project Settings → Storage → S3 Connection, after creating a bucket. |
-| `RESEND_API_KEY`, `ADMIN_NOTIFICATION_EMAIL`, `RESEND_FROM_EMAIL` | Contact form emails. Ships with a placeholder key — replace before going live. If unset, submissions still save to the CMS, just without an email notification. |
+| `LARAVEL_API_URL` | Base URL of the backend API, including `/api`. Server-side only — never exposed to the browser. |
+| `NEXT_PUBLIC_SERVER_URL` | This site's own public URL. Used for absolute URLs in the sitemap, JSON-LD and meta tags. |
+| `FASTORA_API_TOKEN` | Shared secret the backend presents when calling `/api/revalidate` to flush caches after an edit. Must match the backend's `FASTORA_API_TOKEN`. |
+| `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `ADMIN_NOTIFICATION_EMAIL` | Contact-form notification email. Optional — without them submissions still reach the backend, they just do not send an email. |
 
-## Deploying (Vercel + Supabase)
+## Deploying
 
-1. **Supabase**: create a project (or use the existing one), then in Project Settings → Database, grab the **Transaction pooler** connection string (port 6543) for `DATABASE_URI`.
-2. **Vercel**: import this GitHub repo as a new project (vercel.com → Add New → Project → import from Git).
-3. In the Vercel project's Settings → Environment Variables, add every variable from `.env.example` with real values (same `DATABASE_URI`, a fresh `PAYLOAD_SECRET`/`PREVIEW_SECRET`, real Supabase Storage S3 credentials, real Resend key). Set `NEXT_PUBLIC_SERVER_URL` to the production domain Vercel gives you (or your custom domain).
-4. Deploy. Vercel will build with `next build`.
-5. Run migrations against the production database once, from your machine: point `.env`'s `DATABASE_URI` at the **session pooler** (port 5432) temporarily, run `npm run payload -- migrate`, then switch back to 6543.
-6. Visit `https://<your-domain>/admin` and create the first admin user, then (optionally) `npm run seed` against the production `DATABASE_URI` to seed initial content — or just build it out by hand in the admin panel.
+Any Node host works; there is nothing to migrate and no database to provision.
 
-## Admin guide
+1. Point the host at this repo and let it run `npm ci && npm run build`.
+2. Set every variable from `.env.example` in the host's environment, with `LARAVEL_API_URL` pointing at the live API.
+3. For a Passenger-style host (Hostinger), the start command is `npm run start:server`, which runs [`server.js`](server.js). On Vercel, no start command is needed.
 
-**Log in**: go to `/admin` and sign in with the account you created on first run (Users collection).
+Deploy the backend before the first frontend build, otherwise the build will succeed with empty content and you will need to redeploy to pick it up.
 
-**Change the logo**: `/admin` → Site Settings → Brand tab → upload "Logo (for light backgrounds)" and "Logo (for dark backgrounds)". Changes apply across the whole site immediately.
+## Editing content
 
-**Edit page text**: `/admin` → Pages → open **Home**, **About**, or **Contact** → edit the Hero tab and the block list under the Content tab. Each block (Services Overview, Why Fastora, Selected Work, Testimonials, FAQ, Latest Insights, CTA) has its own editable fields. Services, Case Studies, and Testimonials are edited in their own collections in the sidebar, not inside Pages.
+Everything is in the backend admin at `api.fastora.africa/admin`:
 
-**Recolor the site**: `/admin` → Site Settings → Colors tab. Every field is a hex value; leave any field blank to fall back to the built-in theme. Saves apply site-wide.
+- **Page text and images** — Pages → Home, About or Contact
+- **Services, case studies, posts, testimonials** — their own sections in the sidebar
+- **Logo, colours, contact details, social links** — Site Settings
+- **Contact form submissions** — Enquiries
+- **SEO title, description, canonical URL, noindex** — the SEO tab on any of the above
 
-**Publish a blog post**: `/admin` → Posts → Create New → fill in title, hero image, content, category, tags, and SEO tab → set status to **Published** (top-right) → Save. It's live at `/insights/<slug>` immediately (or use "Schedule publish" to publish later).
-
-**View contact form submissions**: `/admin` → Inquiries.
-
-**Demo login**: `demo@fastora.example` / `FastoraDemo2026!` — safe to share. This account can browse every collection in `/admin` but cannot create, edit, delete, or see Inquiries (verified: write requests return 403). Change the password by editing the user in Users, or add more read-only accounts the same way — just set their role to **Demo (read-only)**.
+Saving triggers a revalidation call to this app, so changes appear without a redeploy.

@@ -10,7 +10,7 @@ type Props = {
 
 /**
  * Renders rich text authored in Filament's RichEditor, which stores plain
- * HTML rather than Payload's Lexical JSON. Content is only ever written by
+ * HTML. Content is only ever written by
  * trusted admin/editor-tier users through the CMS, so rendering it directly
  * is safe — there is no user-supplied HTML path here.
  */
@@ -22,7 +22,7 @@ export default function RichText(props: Props) {
   return (
     <div
       className={cn(
-        'payload-richtext',
+        'cms-richtext',
         {
           container: enableGutter,
           'max-w-none': !enableGutter,

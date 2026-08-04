@@ -1,16 +1,23 @@
 import type { Metadata } from 'next'
 import { getServerSideURL } from './getURL'
 
+/**
+ * Fallback Open Graph tags, used whenever a page supplies none of its own.
+ *
+ * These were still the starter template's values, so any Fastora link shared
+ * without page-specific metadata previewed as "Payload Website Template" with
+ * a broken image — /website-template-OG.webp was never in public/.
+ */
 const defaultOpenGraph: Metadata['openGraph'] = {
   type: 'website',
-  description: 'An open-source website built with Payload and Next.js.',
+  description: 'Communications and digital strategy for businesses that want to be understood.',
   images: [
     {
-      url: `${getServerSideURL()}/website-template-OG.webp`,
+      url: `${getServerSideURL()}/brand/logo-color.png`,
     },
   ],
-  siteName: 'Payload Website Template',
-  title: 'Payload Website Template',
+  siteName: 'Fastora',
+  title: 'Fastora',
 }
 
 export const mergeOpenGraph = (og?: Metadata['openGraph']): Metadata['openGraph'] => {

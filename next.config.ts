@@ -1,4 +1,3 @@
-import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
 
 // The Laravel API serves media from whatever host APP_URL points at (its
@@ -16,10 +15,13 @@ const laravelMediaHost = (() => {
 const nextConfig: NextConfig = {
   images: {
     qualities: [75, 100],
-    // No `search` key here on purpose: Payload appends a `?<updatedAt>` cache-busting
-    // query string per image, so we can't pin an exact literal value. Omitting `search`
-    // skips Next's exact-match check entirely and allows any query string on this path.
     localPatterns: [
+      // Kept for any media the API returns as a relative path rather than an
+      // absolute URL, which happens when the backend's APP_URL is unset in
+      // local development. getMediaUrl() passes those through untouched so
+      // Next treats them as local and skips remotePatterns, which since
+      // Next.js 16 refuses private IPs. No `search` key, so any cache-busting
+      // query string on this path is allowed rather than matched literally.
       {
         pathname: '/api/media/file/**',
       },
@@ -51,4 +53,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default withPayload(nextConfig, { devBundleServerPackages: false })
+export default nextConfig
