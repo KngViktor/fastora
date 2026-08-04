@@ -168,6 +168,13 @@ export const ContactForm: React.FC<{ services: ServiceOption[] }> = ({ services 
       >
         {status === 'loading' ? 'Sending…' : 'Send project brief'}
       </button>
+
+      {/* Sits under the button rather than above the form: it answers "what
+          happens if I send this?", which is the question a reader has at the
+          moment of deciding, not when they start typing. */}
+      <p className="text-sm text-muted-foreground">
+        Within one business day we&apos;ll review your enquiry and recommend the next step.
+      </p>
     </form>
   )
 }
