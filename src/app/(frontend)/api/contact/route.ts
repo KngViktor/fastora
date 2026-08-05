@@ -6,6 +6,36 @@ import { submitContact } from '@/lib/api'
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 /**
+ * Length ceilings, matched to the database columns behind them.
+ *
+ * Without these, `brief` was unbounded on both sides — the Laravel rule is
+ * `required|string` with no max — so a multi-megabyte body would be accepted and
+ * stored. Truncating is friendlier than rejecting: nobody legitimately writes
+ * past these, and a bot does not deserve an error message.
+ */
+const LIMITS = {
+  name: 255,
+  email: 254,
+  company: 255,
+  brief: 5000,
+  budgetRange: 255,
+  preferredTimes: 2000,
+  timezone: 100,
+} as const
+
+/**
+ * Strips CR and LF from anything interpolated into an email header.
+ *
+ * Resend sends structured JSON rather than assembling raw headers, so injection
+ * is unlikely through this path. The stripping is here anyway because the safety
+ * currently depends on an implementation detail of someone else's SDK, and a
+ * newline in a subject line has no legitimate purpose.
+ */
+const headerSafe = (value: string): string => value.replace(/[\r\n]+/g, ' ').trim()
+
+const clamp = (value: string, max: number): string => value.slice(0, max)
+
+/**
  * Public contact endpoint. Proxies to the Laravel API's /api/contact, which
  * does the real validation and Inquiry creation — this route stays a thin
  * pass-through so the client-side form's fetch target (`/api/contact`) never
@@ -45,13 +75,26 @@ export async function POST(req: Request) {
       ? Number(serviceNeededRaw)
       : undefined
 
+  // Consultation fields. These were missing, so every session request arrived as
+  // an ordinary enquiry with the times the visitor offered silently discarded —
+  // this route builds an explicit payload, and anything absent from it is dropped.
+  // The backend endpoint accepted them all along; it was only ever tested
+  // directly, never through this proxy, which is how the gap survived.
+  const kind = body.kind === 'consultation' ? 'consultation' : 'general'
+  const preferredTimes =
+    typeof body.preferredTimes === 'string' ? body.preferredTimes.trim() : undefined
+  const timezone = typeof body.timezone === 'string' ? body.timezone.trim() : undefined
+
   const result = await submitContact({
-    name,
-    email,
-    brief,
-    company,
-    budgetRange,
+    name: clamp(name, LIMITS.name),
+    email: clamp(email, LIMITS.email),
+    brief: clamp(brief, LIMITS.brief),
+    company: company ? clamp(company, LIMITS.company) : undefined,
+    budgetRange: budgetRange ? clamp(budgetRange, LIMITS.budgetRange) : undefined,
     timeline,
+    kind,
+    preferredTimes: preferredTimes ? clamp(preferredTimes, LIMITS.preferredTimes) : undefined,
+    timezone: timezone ? clamp(timezone, LIMITS.timezone) : undefined,
     serviceNeeded: serviceNeeded && !Number.isNaN(serviceNeeded) ? serviceNeeded : undefined,
     website: typeof body.website === 'string' ? body.website : undefined,
   })
@@ -68,14 +111,20 @@ export async function POST(req: Request) {
       await resend.emails.send({
         from: process.env.RESEND_FROM_EMAIL || 'Fastora <onboarding@resend.dev>',
         to: process.env.ADMIN_NOTIFICATION_EMAIL,
-        replyTo: email,
-        subject: `New inquiry from ${name}${company ? ` (${company})` : ''}`,
+        replyTo: headerSafe(email),
+        subject: headerSafe(
+          `${kind === 'consultation' ? 'Consultation request' : 'New inquiry'} from ${name}${
+            company ? ` (${company})` : ''
+          }`,
+        ),
         text: [
           `Name: ${name}`,
           `Email: ${email}`,
           company ? `Company: ${company}` : null,
           budgetRange ? `Budget: ${budgetRange}` : null,
           timeline ? `Timeline: ${timeline}` : null,
+          preferredTimes ? `Times they can make: ${preferredTimes}` : null,
+          timezone ? `Their timezone: ${timezone}` : null,
           '',
           'Brief:',
           brief,

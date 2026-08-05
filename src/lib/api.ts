@@ -368,6 +368,11 @@ export interface ContactPayload {
   budgetRange?: string
   timeline?: string
   brief: string
+  /** 'consultation' marks a session request; the backend defaults to 'general'. */
+  kind?: 'general' | 'consultation'
+  /** Times the visitor said they can make, in their own words. */
+  preferredTimes?: string
+  timezone?: string
   website?: string
 }
 
