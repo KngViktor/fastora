@@ -3,6 +3,8 @@
 import { Check } from 'lucide-react'
 import React, { useState } from 'react'
 
+import { analytics } from '@/lib/analytics'
+
 type Props = {
   idealFor: { label: string }[]
   submitLabel: string
@@ -72,10 +74,13 @@ export const ConsultationFormClient: React.FC<Props> = ({
       if (!res.ok) throw new Error('failed')
 
       setStatus('success')
+      analytics.formSubmission('consultation')
+      analytics.consultationRequest(service?.title)
       form.reset()
     } catch {
       setError('Something went wrong. Please try again, or email us directly.')
       setStatus('error')
+      analytics.formSubmission('consultation', false)
     }
   }
 

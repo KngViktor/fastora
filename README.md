@@ -45,6 +45,7 @@ Documented inline in [`.env.example`](.env.example). The ones that matter:
 | `NEXT_PUBLIC_SERVER_URL` | This site's own public URL. Used for absolute URLs in the sitemap, JSON-LD and meta tags. |
 | `FASTORA_API_TOKEN` | Shared secret the backend presents when calling `/api/revalidate` to flush caches after an edit. Must match the backend's `FASTORA_API_TOKEN`. |
 | `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `ADMIN_NOTIFICATION_EMAIL` | Contact-form notification email. Optional — without them submissions still reach the backend, they just do not send an email. |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 property ID. Optional — see below. |
 
 ## Deploying
 
@@ -55,6 +56,28 @@ Any Node host works; there is nothing to migrate and no database to provision.
 3. For a Passenger-style host (Hostinger), the start command is `npm run start:server`, which runs [`server.js`](server.js). On Vercel, no start command is needed.
 
 Deploy the backend before the first frontend build, otherwise the build will succeed with empty content and you will need to redeploy to pick it up.
+
+## Analytics
+
+Off by default. Nothing is loaded and no request goes to Google until two separate
+things are true:
+
+1. `NEXT_PUBLIC_GA_MEASUREMENT_ID` holds a real `G-` ID. Blank, absent, or left as
+   the `G-XXXXXXXXXX` placeholder all mean off, as does running in development.
+   Because it is a `NEXT_PUBLIC_` variable it is read at build time, so changing it
+   needs a rebuild, not just a restart.
+2. The visitor has clicked **Accept** on the cookie banner. Until then the GA
+   component renders nothing, so the tag is never injected — "Reject" means no
+   request and no cookie, not a cookie set quietly. Consent Mode defaults are also
+   set to denied in the document head as a second line of defence, and the choice
+   is remembered in `localStorage` under `fastora-analytics-consent`.
+
+What is tracked, in [`src/lib/analytics.ts`](src/lib/analytics.ts): page views (by
+GA itself), Core Web Vitals, contact-form and consultation-form submissions
+including failures, and consultation requests tagged with the service they came
+from. Deliberately nothing else.
+
+To see the banner again while testing, clear that `localStorage` key.
 
 ## Editing content
 

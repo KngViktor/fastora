@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react'
 
+import { analytics } from '@/lib/analytics'
+
 type ServiceOption = { id: number | string; title: string }
 
 const BUDGETS = [
@@ -44,13 +46,16 @@ export const ContactForm: React.FC<{ services: ServiceOption[] }> = ({ services 
         const json = await res.json().catch(() => null)
         setError(json?.error || 'Something went wrong. Please try again.')
         setStatus('error')
+        analytics.formSubmission('contact', false)
         return
       }
       setStatus('success')
+      analytics.formSubmission('contact')
       form.reset()
     } catch {
       setError('Something went wrong. Please try again.')
       setStatus('error')
+      analytics.formSubmission('contact', false)
     }
   }
 

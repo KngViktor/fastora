@@ -7,12 +7,16 @@ import { cn } from '@/utilities/ui'
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
 import { ScrollReveal } from '@/components/ScrollReveal'
+import { Analytics } from '@/components/Analytics'
+import { CookieConsent } from '@/components/CookieConsent'
+import { ConsentProvider } from '@/providers/Consent'
 import { CurrencyProvider } from '@/providers/Currency'
 import { CURRENCY_COOKIE, CURRENCY_HEADER, DEFAULT_CURRENCY } from '@/config/currencies'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { getServerSideURL } from '@/utilities/getURL'
 import { DEFAULT_SITE_SETTINGS, getSiteSettings, safely } from '@/lib/api'
 import { buildBrandStyle } from '@/utilities/brandTokens'
+import { isAnalyticsEnabled } from '@/lib/analytics'
 
 import './globals.css'
 
@@ -89,6 +93,24 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     '@graph': [organizationNode, websiteJsonLd],
   }
 
+  /**
+   * Google Consent Mode v2 defaults, denied.
+   *
+   * A plain inline script rather than next/script, because this has to execute
+   * before any gtag command and a plain script in the head is the only way to be
+   * certain of that. It also defines the `gtag` shim and the dataLayer array, which
+   * is what lets the consent provider queue an update from React even though
+   * gtag.js has not loaded yet.
+   *
+   * Denying by default is the point: nothing is stored until the visitor says yes.
+   * The GA component not mounting is the primary guarantee — this is the backstop
+   * for the case where a tag ends up on the page some other way.
+   */
+  const consentDefaultScript = `
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
+`.trim()
+
   return (
     <html
       className={cn(poppins.variable, inter.variable, geistMono.variable, 'h-full')}
@@ -99,6 +121,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link href="/favicon.png" rel="icon" type="image/png" sizes="32x32" />
         <link href="/favicon.png" rel="apple-touch-icon" />
         {brandStyle && <style id="fastora-brand-tokens">{brandStyle}</style>}
+        {isAnalyticsEnabled() && (
+          <script
+            id="fastora-consent-default"
+            dangerouslySetInnerHTML={{ __html: consentDefaultScript }}
+          />
+        )}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
@@ -108,12 +136,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </noscript>
       </head>
       <body className="min-h-full flex flex-col">
-        <CurrencyProvider initialCurrency={initialCurrency}>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <ScrollReveal />
-        </CurrencyProvider>
+        <ConsentProvider>
+          <CurrencyProvider initialCurrency={initialCurrency}>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <ScrollReveal />
+          </CurrencyProvider>
+          <CookieConsent />
+          {/* After the content, so the tag never competes with the page for bandwidth. */}
+          <Analytics />
+        </ConsentProvider>
       </body>
     </html>
   )
