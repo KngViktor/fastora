@@ -7,6 +7,7 @@ import { getCaseStudies, getCaseStudyBySlug, safely } from '@/lib/api'
 import RichText from '@/components/RichText'
 import { Media } from '@/components/Media'
 import { PageHeader } from '@/components/PageHeader'
+import { buildBreadcrumbs } from '@/utilities/breadcrumbs'
 import { generateMeta } from '@/utilities/generateMeta'
 
 export async function generateStaticParams() {
@@ -22,8 +23,18 @@ export default async function CaseStudyPage({ params }: Args) {
 
   if (!study) notFound()
 
+  const breadcrumbJsonLd = buildBreadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Case Studies', path: '/case-studies' },
+    { name: study.title },
+  ])
+
   return (
     <article>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <PageHeader
         eyebrow={[study.clientName, study.industry].filter(Boolean).join(' · ')}
         title={study.title}

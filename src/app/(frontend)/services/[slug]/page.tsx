@@ -9,6 +9,7 @@ import RichText from '@/components/RichText'
 import { Media } from '@/components/Media'
 import { PageHeader } from '@/components/PageHeader'
 import { ConsultationFormBlock } from '@/blocks/ConsultationForm/Component'
+import { buildBreadcrumbs } from '@/utilities/breadcrumbs'
 import { generateMeta } from '@/utilities/generateMeta'
 import { getServerSideURL } from '@/utilities/getURL'
 
@@ -62,11 +63,21 @@ export default async function ServicePage({ params }: Args) {
       }
     : null
 
+  const breadcrumbJsonLd = buildBreadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+    { name: service.title },
+  ])
+
   return (
     <article>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       {faqJsonLd && (
         <script

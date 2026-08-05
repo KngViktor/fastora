@@ -6,6 +6,7 @@ import React, { cache } from 'react'
 import { getPostBySlug, getPosts, safely } from '@/lib/api'
 import RichText from '@/components/RichText'
 import { Media } from '@/components/Media'
+import { buildBreadcrumbs } from '@/utilities/breadcrumbs'
 import { generateMeta } from '@/utilities/generateMeta'
 import { formatAuthors } from '@/utilities/formatAuthors'
 import { formatDateTime } from '@/utilities/formatDateTime'
@@ -39,11 +40,21 @@ export default async function PostPage({ params }: Args) {
     mainEntityOfPage: `${url}/insights/${post.slug}`,
   }
 
+  const breadcrumbJsonLd = buildBreadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Insights', path: '/insights' },
+    { name: post.title },
+  ])
+
   return (
     <article className="pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
       <header className="relative overflow-hidden bg-primary text-primary-foreground">

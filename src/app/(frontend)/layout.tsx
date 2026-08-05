@@ -59,6 +59,34 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     ...(siteSettings?.contactPhone ? { telephone: siteSettings.contactPhone } : {}),
     ...(siteSettings?.address ? { address: siteSettings.address } : {}),
     sameAs: (siteSettings?.socialLinks || []).map((social) => social.url).filter(Boolean),
+    ...(siteSettings?.logoLight?.url ? { logo: siteSettings.logoLight.url } : {}),
+  }
+
+  /**
+   * WebSite, bundled with the organisation in a single @graph rather than a
+   * second script tag. `publisher` pointing at the organisation's @id is what
+   * tells Google the two describe one entity rather than two unrelated ones.
+   *
+   * No SearchAction: that property is what enables the sitelinks search box, and
+   * Google only honours it when the site has a working search endpoint. There
+   * isn't one here, so claiming it would be a promise the site can't keep.
+   */
+  const websiteJsonLd = {
+    '@type': 'WebSite',
+    '@id': `${url}/#website`,
+    name: siteSettings?.siteName || 'Fastora',
+    description: siteSettings?.tagline,
+    url,
+    inLanguage: 'en',
+    publisher: { '@id': `${url}/#organization` },
+  }
+
+  // @context lives on the graph, so it is stripped from the member objects.
+  const { '@context': _organizationContext, ...organizationNode } = organizationJsonLd
+
+  const siteJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [organizationNode, websiteJsonLd],
   }
 
   return (
@@ -73,7 +101,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {brandStyle && <style id="fastora-brand-tokens">{brandStyle}</style>}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
         />
         <noscript>
           <style>{`[data-reveal]{opacity:1 !important;transform:none !important;clip-path:none !important}`}</style>
