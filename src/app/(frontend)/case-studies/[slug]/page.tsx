@@ -51,7 +51,7 @@ export default async function CaseStudyPage({ params }: Args) {
 
       {Array.isArray(study.results) && study.results.length > 0 && (
         <section className="container py-16 md:py-20">
-          <div className="grid gap-8 rounded-3xl border border-border bg-card p-8 sm:grid-cols-3 md:p-12" data-reveal-group="90">
+          <div className="grid grid-cols-1 gap-8 rounded-3xl border border-border bg-card p-8 sm:grid-cols-3 md:p-12" data-reveal-group="90">
             {study.results.map((r, i) => (
               <div key={i} data-reveal="up">
                 <p className="font-display text-4xl font-semibold text-gold md:text-5xl">
@@ -64,7 +64,7 @@ export default async function CaseStudyPage({ params }: Args) {
         </section>
       )}
 
-      <div className="container grid gap-14 pb-16 md:grid-cols-2">
+      <div className="container grid grid-cols-1 gap-14 pb-16 md:grid-cols-2">
         {study.challenge && (
           <section data-reveal="up">
             <h2 className="text-sm font-medium uppercase tracking-wide text-secondary">The challenge</h2>
@@ -84,7 +84,7 @@ export default async function CaseStudyPage({ params }: Args) {
       </div>
 
       {Array.isArray(study.gallery) && study.gallery.length > 0 && (
-        <section className="container grid gap-6 pb-20 md:grid-cols-2" data-reveal-group="100">
+        <section className="container grid grid-cols-1 gap-6 pb-20 md:grid-cols-2" data-reveal-group="100">
           {study.gallery.map((media, i) =>
             media ? (
               <div key={i} data-reveal="up" className="overflow-hidden rounded-3xl border border-border">

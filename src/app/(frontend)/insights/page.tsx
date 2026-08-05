@@ -48,7 +48,7 @@ export default async function InsightsPage() {
 
       <section className="container pb-24 pt-16">
         {posts.length ? (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3" data-reveal-group="110">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3" data-reveal-group="110">
             {posts.map((post) => (
               <Link
                 key={post.id}

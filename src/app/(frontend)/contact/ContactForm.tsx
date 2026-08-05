@@ -86,7 +86,7 @@ export const ContactForm: React.FC<{ services: ServiceOption[] }> = ({ services 
         </label>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <label htmlFor="name" className="text-sm font-medium">
             Name <span className="text-secondary">*</span>
@@ -101,7 +101,7 @@ export const ContactForm: React.FC<{ services: ServiceOption[] }> = ({ services 
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <label htmlFor="company" className="text-sm font-medium">
             Company
@@ -123,7 +123,7 @@ export const ContactForm: React.FC<{ services: ServiceOption[] }> = ({ services 
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <label htmlFor="budgetRange" className="text-sm font-medium">
             Budget

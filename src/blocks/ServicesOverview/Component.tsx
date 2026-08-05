@@ -28,7 +28,7 @@ export const ServicesOverviewBlock: React.FC<Props> = async ({ eyebrow, heading,
         />
 
         <div
-          className="mt-12 grid gap-px overflow-hidden rounded-3xl border border-primary-foreground/10 bg-primary-foreground/10 sm:grid-cols-2"
+          className="mt-12 grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-primary-foreground/10 bg-primary-foreground/10 sm:grid-cols-2"
           data-reveal-group="90"
         >
           {services.map((service, i) => (
@@ -39,7 +39,7 @@ export const ServicesOverviewBlock: React.FC<Props> = async ({ eyebrow, heading,
               className="group relative flex flex-col justify-between gap-10 bg-primary p-8 transition-colors hover:bg-card md:p-10"
             >
               <div className="flex items-start justify-between">
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
                   {service.icon && typeof service.icon === 'object' && (
                     <Media
                       resource={service.icon}
@@ -47,7 +47,7 @@ export const ServicesOverviewBlock: React.FC<Props> = async ({ eyebrow, heading,
                       htmlElement={null}
                     />
                   )}
-                  <h3 className="mt-6 text-2xl font-semibold transition-colors group-hover:text-primary">
+                  <h3 className="mt-6 break-words text-2xl font-semibold transition-colors group-hover:text-primary">
                     {service.title}
                   </h3>
                   <p className="mt-3 max-w-sm text-sm text-primary-foreground/60 transition-colors group-hover:text-primary/70">

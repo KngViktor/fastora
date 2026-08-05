@@ -21,7 +21,7 @@ export const VisionMissionBlock: React.FC<Props> = ({
     <section className="container py-8 md:py-12">
       <div
         data-reveal="up"
-        className="grid gap-10 rounded-3xl bg-muted p-8 sm:grid-cols-2 sm:gap-16 md:p-12"
+        className="grid grid-cols-1 gap-10 rounded-3xl bg-muted p-8 sm:grid-cols-2 sm:gap-16 md:p-12"
       >
         {visionBody && (
           <div>

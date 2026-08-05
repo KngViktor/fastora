@@ -32,7 +32,7 @@ export const AboutFastoraBlock: React.FC<Props> = ({
 
   return (
     <section className="container py-20 md:py-28">
-      <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] lg:gap-20">
+      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] lg:gap-20">
         {image && typeof image === 'object' && (
           <div data-reveal="scale" className="relative order-last lg:order-first">
             <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-border bg-muted">

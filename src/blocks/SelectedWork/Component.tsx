@@ -32,7 +32,7 @@ export const SelectedWorkBlock: React.FC<Props> = async ({ eyebrow, heading, lim
         action={{ label: 'View all case studies', href: '/case-studies' }}
       />
 
-      <div className="mt-12 grid gap-8 lg:grid-cols-2" data-reveal-group="120">
+      <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2" data-reveal-group="120">
         {caseStudies.map((study, i) => {
           const featured = i === 0
           return (

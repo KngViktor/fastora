@@ -94,7 +94,7 @@ export const ConsultationFormClient: React.FC<Props> = ({
   }
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+    <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
       {idealFor.length > 0 && (
         <div>
           <p className="text-sm font-medium text-muted-foreground">Ideal for</p>
@@ -137,7 +137,7 @@ export const ConsultationFormClient: React.FC<Props> = ({
           </label>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <div>
             <label htmlFor="cf-name" className="text-sm font-medium">
               Your name

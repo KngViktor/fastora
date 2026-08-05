@@ -43,7 +43,7 @@ export default async function ServicesPage() {
 
       <section className="container pb-24">
         {services.length ? (
-          <div className="grid gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-2" data-reveal-group="90">
+          <div className="grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-2" data-reveal-group="90">
             {services.map((service, i) => (
               <Link
                 key={service.id}
@@ -52,7 +52,7 @@ export default async function ServicesPage() {
                 className="group flex flex-col justify-between gap-10 bg-background p-8 transition-colors hover:bg-card md:p-10"
               >
                 <div className="flex items-start justify-between gap-6">
-                  <div>
+                  <div className="min-w-0 flex-1">
                     {service.icon && typeof service.icon === 'object' && (
                       <Media
                         resource={service.icon}
@@ -60,7 +60,7 @@ export default async function ServicesPage() {
                         imgClassName="h-9 w-9 object-contain"
                       />
                     )}
-                    <h2 className="mt-6 text-2xl font-semibold">{service.title}</h2>
+                    <h2 className="mt-6 break-words text-2xl font-semibold">{service.title}</h2>
                     <p className="mt-3 max-w-sm text-sm text-muted-foreground">{service.summary}</p>
                   </div>
                   <span className="font-display text-5xl font-semibold text-border transition-colors group-hover:text-secondary">

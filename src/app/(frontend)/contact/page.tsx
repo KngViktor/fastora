@@ -46,7 +46,7 @@ export default async function ContactPage() {
         description={header.description}
       />
 
-      <section className="container grid gap-12 py-20 md:py-24 lg:grid-cols-[1fr_18rem]">
+      <section className="container grid grid-cols-1 gap-12 py-20 md:py-24 lg:grid-cols-[1fr_18rem]">
         <div data-reveal="up" className="rounded-3xl border border-border bg-card p-6 md:p-10">
           <ContactForm services={serviceOptions} />
         </div>

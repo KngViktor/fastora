@@ -41,7 +41,7 @@ export default async function CaseStudiesPage() {
 
       <section className="container pb-24 pt-16">
         {caseStudies.length ? (
-          <div className="grid gap-8 md:grid-cols-2" data-reveal-group="120">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2" data-reveal-group="120">
             {caseStudies.map((study) => (
               <Link
                 key={study.id}

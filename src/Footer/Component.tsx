@@ -25,14 +25,14 @@ export async function Footer() {
 
   return (
     <footer className="mt-auto bg-primary text-primary-foreground">
-      <div className="container-page grid gap-12 py-16 md:grid-cols-[1.2fr_1fr_1fr]">
+      <div className="container-page grid grid-cols-1 gap-12 py-16 md:grid-cols-[1.2fr_1fr_1fr]">
         <div className="space-y-4">
           <Link href="/" className="inline-block">
             <Logo media={siteSettings?.logoDark} siteName={siteSettings?.siteName} variant="dark" />
           </Link>
           <p className="max-w-xs text-sm text-primary-foreground/70">{siteSettings?.tagline}</p>
           {socialLinks.length > 0 && (
-            <ul className="flex gap-4 pt-2 text-sm">
+            <ul className="flex flex-wrap gap-x-4 gap-y-2 pt-2 text-sm">
               {socialLinks.map((social, i) => (
                 <li key={i}>
                   <a

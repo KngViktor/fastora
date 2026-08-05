@@ -26,7 +26,7 @@ export const LatestInsightsBlockComponent: React.FC<Props> = async ({ eyebrow, h
         action={{ label: 'View all insights', href: '/insights' }}
       />
 
-      <div className="mt-12 grid gap-8 lg:grid-cols-3" data-reveal-group="120">
+      <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-3" data-reveal-group="120">
         {posts.map((post) => (
           <Link
             key={post.id}

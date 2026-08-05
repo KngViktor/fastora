@@ -101,7 +101,7 @@ export default async function ServicePage({ params }: Args) {
         </div>
       )}
 
-      <div className="container grid gap-16 py-20 md:py-28 lg:grid-cols-[1fr_20rem]">
+      <div className="container grid grid-cols-1 gap-16 py-20 md:py-28 lg:grid-cols-[1fr_20rem]">
         <div className="flex flex-col gap-14">
           {(service.overviewHeading || service.overviewCopy) && (
             <section data-reveal="up">
@@ -144,7 +144,7 @@ export default async function ServicePage({ params }: Args) {
                 What&apos;s included
               </h2>
               <p className="mt-3 text-sm text-muted-foreground">This service may include:</p>
-              <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+              <ul className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {service.deliverables.map((d, i) => (
                   <li
                     key={i}
@@ -196,7 +196,7 @@ export default async function ServicePage({ params }: Args) {
                 Related services
               </h2>
               <p className="mt-3 text-sm text-muted-foreground">You may also need</p>
-              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {relatedServices.map((related) => (
                   <Link
                     key={related.slug}

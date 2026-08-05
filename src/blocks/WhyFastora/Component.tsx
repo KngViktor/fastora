@@ -23,7 +23,7 @@ export const WhyFastoraBlock: React.FC<Props> = ({ eyebrow, heading, points }) =
     <section className="container py-20 md:py-28">
       <SectionHeading eyebrow={eyebrow} heading={heading} />
 
-      <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group="110">
+      <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group="110">
         {points.map((point, i) => {
           const parsed = point.stat ? parseStat(point.stat) : null
           // The lead card inverts: brand gradient behind white text, the rest
@@ -42,7 +42,12 @@ export const WhyFastoraBlock: React.FC<Props> = ({ eyebrow, heading, points }) =
             >
               <p
                 className={cn(
-                  'font-display text-5xl font-bold md:text-6xl',
+                  'font-display font-bold',
+                  // Numeric stats ("89%", "150+") get the big count-up figure.
+                  // A short text label ("Think first") is not a statistic, and
+                  // rendering it at the same size overflows narrow screens, so
+                  // it gets a smaller, wrap-safe treatment instead.
+                  parsed ? 'text-5xl md:text-6xl' : 'break-words text-2xl md:text-3xl',
                   !accent && 'text-gradient-velocity',
                 )}
               >
