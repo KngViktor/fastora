@@ -104,9 +104,26 @@ export interface Service {
   featuredImage: Media | null
   order: number
   featuredOnHome: boolean
+  /** The longer intro under the page heading, framing the problem. */
   problem: string | null
+  overviewHeading: string | null
+  overviewCopy: string | null
   approach: string | null
+  /** "What this helps you achieve". */
+  outcomes: { label: string }[]
+  /** "This service may include" — the longer page list. */
   deliverables: { label: string }[]
+  /** "This service is a good fit if...". */
+  goodFitIf: { label: string }[]
+  /**
+   * The former standalone services now grouped under this one, shown on cards.
+   * Shorter and coarser than deliverables.
+   */
+  includes: { label: string }[]
+  /** Slugs only; the page resolves them into links itself. */
+  relatedServiceSlugs: string[]
+  ctaHeading: string | null
+  ctaCopy: string | null
   faqs: { question: string; answer: string }[]
   status: string
   publishedAt: string | null

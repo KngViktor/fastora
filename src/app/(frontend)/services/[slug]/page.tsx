@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { Check } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import React, { cache } from 'react'
 
@@ -28,6 +29,13 @@ export default async function ServicePage({ params }: Args) {
     () => getTestimonials({ relatedService: service.id, limit: 3 }),
     [],
   )
+
+  // The API sends related services as slugs, so resolve them here against the
+  // full list rather than making one request per link.
+  const allServices = await safely(() => getServices(), [])
+  const relatedServices = service.relatedServiceSlugs
+    .map((slug) => allServices.find((candidate) => candidate.slug === slug))
+    .filter((candidate): candidate is NonNullable<typeof candidate> => Boolean(candidate))
 
   const url = getServerSideURL()
   const hasFaqs = Array.isArray(service.faqs) && service.faqs.length > 0
@@ -66,16 +74,79 @@ export default async function ServicePage({ params }: Args) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
       )}
-      <PageHeader eyebrow="Service" title={service.title} description={service.summary} />
+      <PageHeader eyebrow="Service" title={service.title} />
+
+      {/* The document's "supporting copy": a few lines under the heading that
+          frame the problem, ahead of the overview. Larger than body text because
+          it belongs to the header rather than the article. */}
+      {service.problem && (
+        <div className="container pt-10 md:pt-14">
+          <div
+            data-reveal="up"
+            className="max-w-2xl [&_p]:text-lg [&_p]:text-muted-foreground [&_p+p]:mt-4"
+          >
+            <RichText data={service.problem} enableGutter={false} enableProse={false} />
+          </div>
+        </div>
+      )}
 
       <div className="container grid gap-16 py-20 md:py-28 lg:grid-cols-[1fr_20rem]">
         <div className="flex flex-col gap-14">
-          {service.problem && (
+          {(service.overviewHeading || service.overviewCopy) && (
             <section data-reveal="up">
-              <h2 className="text-sm font-medium uppercase tracking-wide text-secondary">The problem</h2>
-              <div className="mt-4">
-                <RichText data={service.problem} enableGutter={false} />
-              </div>
+              {service.overviewHeading && (
+                <h2 className="max-w-2xl text-2xl font-semibold md:text-3xl">
+                  {service.overviewHeading}
+                </h2>
+              )}
+              {service.overviewCopy && (
+                <div className="mt-4">
+                  <RichText data={service.overviewCopy} enableGutter={false} />
+                </div>
+              )}
+            </section>
+          )}
+
+          {service.outcomes.length > 0 && (
+            <section data-reveal="up">
+              <h2 className="text-sm font-medium uppercase tracking-wide text-secondary">
+                What this helps you achieve
+              </h2>
+              <ul className="mt-5 flex flex-col gap-3">
+                {service.outcomes.map((o, i) => (
+                  <li key={i} className="flex items-start gap-3 text-base">
+                    <Check
+                      className="mt-1 h-4 w-4 shrink-0 text-secondary"
+                      strokeWidth={2}
+                      aria-hidden="true"
+                    />
+                    {o.label}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {service.deliverables.length > 0 && (
+            <section data-reveal="up">
+              <h2 className="text-sm font-medium uppercase tracking-wide text-secondary">
+                What&apos;s included
+              </h2>
+              <p className="mt-3 text-sm text-muted-foreground">This service may include:</p>
+              <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+                {service.deliverables.map((d, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm"
+                  >
+                    <span className="mt-0.5 text-secondary">✓</span>
+                    {d.label}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 text-sm text-muted-foreground">
+                The exact scope depends on the engagement.
+              </p>
             </section>
           )}
 
@@ -88,17 +159,46 @@ export default async function ServicePage({ params }: Args) {
             </section>
           )}
 
-          {Array.isArray(service.deliverables) && service.deliverables.length > 0 && (
+          {service.goodFitIf.length > 0 && (
             <section data-reveal="up">
-              <h2 className="text-sm font-medium uppercase tracking-wide text-secondary">Deliverables</h2>
-              <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-                {service.deliverables.map((d, i) => (
-                  <li key={i} className="flex items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm">
-                    <span className="mt-0.5 text-secondary">✓</span>
-                    {d.label}
+              <h2 className="text-sm font-medium uppercase tracking-wide text-secondary">
+                This service is a good fit if…
+              </h2>
+              <ul className="mt-5 flex flex-col gap-3">
+                {service.goodFitIf.map((f, i) => (
+                  <li key={i} className="flex items-start gap-3 text-base">
+                    <Check
+                      className="mt-1 h-4 w-4 shrink-0 text-secondary"
+                      strokeWidth={2}
+                      aria-hidden="true"
+                    />
+                    {f.label}
                   </li>
                 ))}
               </ul>
+            </section>
+          )}
+
+          {relatedServices.length > 0 && (
+            <section data-reveal="up">
+              <h2 className="text-sm font-medium uppercase tracking-wide text-secondary">
+                Related services
+              </h2>
+              <p className="mt-3 text-sm text-muted-foreground">You may also need</p>
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                {relatedServices.map((related) => (
+                  <Link
+                    key={related.slug}
+                    href={`/services/${related.slug}`}
+                    className="group rounded-2xl border border-border bg-card p-5 transition-colors hover:border-secondary/60"
+                  >
+                    <p className="font-semibold transition-colors group-hover:text-secondary">
+                      {related.title}
+                    </p>
+                    <p className="mt-2 text-sm text-muted-foreground">{related.summary}</p>
+                  </Link>
+                ))}
+              </div>
             </section>
           )}
 
@@ -157,7 +257,7 @@ export default async function ServicePage({ params }: Args) {
       <ConsultationFormBlock
         id="book"
         eyebrow="Request a session"
-        heading={`Talk to us about ${service.title}`}
+        heading={service.ctaHeading || `Talk to us about ${service.title}`}
         description="Send two or three times that suit you and we'll confirm one by email. Sessions run over video, or by phone if you prefer."
         idealFor={[
           { label: 'Businesses preparing to grow' },
