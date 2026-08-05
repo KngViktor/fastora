@@ -2,6 +2,11 @@
 
 Communications and digital strategy consultancy site. Next.js 16 frontend, reading all content from a separate Laravel + Filament backend.
 
+> **New here?** Read [PROJECT-HISTORY.md](https://github.com/KngViktor/Fastorabackend/blob/main/PROJECT-HISTORY.md)
+> in the backend repo first. It covers how the site moved off Payload CMS, the host
+> restrictions that shaped both repos, which content is real and which is still
+> placeholder, and the caching layers behind every "the site isn't updating" report.
+
 ## How the two halves fit together
 
 This repository is **frontend only**. It renders pages and knows nothing about a database.
