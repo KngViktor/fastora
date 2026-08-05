@@ -7,6 +7,7 @@ import { getServiceBySlug, getServices, getTestimonials, safely } from '@/lib/ap
 import RichText from '@/components/RichText'
 import { Media } from '@/components/Media'
 import { PageHeader } from '@/components/PageHeader'
+import { ConsultationFormBlock } from '@/blocks/ConsultationForm/Component'
 import { generateMeta } from '@/utilities/generateMeta'
 import { getServerSideURL } from '@/utilities/getURL'
 
@@ -142,14 +143,31 @@ export default async function ServicePage({ params }: Args) {
             </div>
           )}
 
-          <Link
-            href="/contact"
+          {/* Scrolls to the form below rather than leaving for /contact, so the
+              service the reader just chose is carried into the request. */}
+          <a
+            href="#book"
             className="rounded-full bg-secondary px-6 py-3 text-center text-sm font-semibold text-secondary-foreground transition-opacity hover:opacity-90"
           >
             Book a Consultation
-          </Link>
+          </a>
         </aside>
       </div>
+
+      <ConsultationFormBlock
+        id="book"
+        eyebrow="Request a session"
+        heading={`Talk to us about ${service.title}`}
+        description="Send two or three times that suit you and we'll confirm one by email. Sessions run over video, or by phone if you prefer."
+        idealFor={[
+          { label: 'Businesses preparing to grow' },
+          { label: 'Founders refining positioning' },
+          { label: 'Organisations reviewing communication' },
+        ]}
+        submitLabel="Request a session"
+        reassurance="Within one business day we'll confirm one of your preferred times by email."
+        service={{ id: service.id, title: service.title }}
+      />
     </article>
   )
 }

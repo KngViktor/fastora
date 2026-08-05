@@ -1,23 +1,23 @@
-'use client'
+"use client";
 
-import { Menu, X } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import { Menu, X } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
-import type { Nav } from '@/lib/api'
+import type { Nav } from "@/lib/api";
 
-import { CMSLink } from '@/components/Link'
+import { CMSLink } from "@/components/Link";
 
 export const HeaderNav: React.FC<{ data: Nav }> = ({ data }) => {
-  const navItems = data?.navItems || []
-  const [open, setOpen] = useState(false)
+  const navItems = data?.navItems || [];
+  const [open, setOpen] = useState(false);
 
   // Lock body scroll while the mobile menu is open.
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : ''
+    document.body.style.overflow = open ? "hidden" : "";
     return () => {
-      document.body.style.overflow = ''
-    }
-  }, [open])
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
     <nav className="flex items-center gap-6">
@@ -35,7 +35,8 @@ export const HeaderNav: React.FC<{ data: Nav }> = ({ data }) => {
         ))}
       </ul>
 
-      <CMSLink        url="/contact"
+      <CMSLink
+        url="/consultation"
         label="Book a Consultation"
         appearance="default"
         className="hidden rounded-full bg-secondary px-5 py-2.5 text-sm font-medium text-secondary-foreground transition-opacity hover:opacity-90 sm:inline-flex"
@@ -45,7 +46,7 @@ export const HeaderNav: React.FC<{ data: Nav }> = ({ data }) => {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        aria-label={open ? 'Close menu' : 'Open menu'}
+        aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}
         aria-controls="mobile-menu"
         className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-muted md:hidden"
@@ -76,7 +77,8 @@ export const HeaderNav: React.FC<{ data: Nav }> = ({ data }) => {
               </li>
             ))}
             <li className="mt-2 px-1">
-              <CMSLink                url="/contact"
+              <CMSLink
+                url="/consultation"
                 label="Book a Consultation"
                 appearance="default"
                 onClick={() => setOpen(false)}
@@ -87,5 +89,5 @@ export const HeaderNav: React.FC<{ data: Nav }> = ({ data }) => {
         </div>
       )}
     </nav>
-  )
-}
+  );
+};

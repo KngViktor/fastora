@@ -16,6 +16,7 @@ import { SelectedWorkBlock } from '@/blocks/SelectedWork/Component'
 import { TestimonialsBlockComponent } from '@/blocks/TestimonialsBlock/Component'
 import { FAQBlockComponent } from '@/blocks/FAQ/Component'
 import { LatestInsightsBlockComponent } from '@/blocks/LatestInsights/Component'
+import { ConsultationFormBlock } from '@/blocks/ConsultationForm/Component'
 
 const blockComponents = {
   aboutFastora: AboutFastoraBlock,
@@ -32,6 +33,7 @@ const blockComponents = {
   testimonialsBlock: TestimonialsBlockComponent,
   faq: FAQBlockComponent,
   latestInsights: LatestInsightsBlockComponent,
+  consultationForm: ConsultationFormBlock,
 }
 
 export const RenderBlocks: React.FC<{
