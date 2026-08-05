@@ -219,6 +219,24 @@ const RETRYABLE_STATUSES = new Set([429, 500, 502, 503, 504])
 /** Backoff between attempts. Length also defines the number of retries. */
 const RETRY_DELAYS_MS = [300, 900]
 
+/**
+ * How long a cached API response may be served before Next refetches it.
+ *
+ * These fetches used to be `cache: 'force-cache'` with no window at all, which
+ * meant a response was held indefinitely: once cached, the only things that could
+ * update it were the revalidation webhook or a redeploy. That is fine when the
+ * webhook fires, and it repeatedly did not — the deploy command crashed before
+ * reaching it on one occasion, and it is skipped entirely when the backend has no
+ * frontend token configured. The result was a site showing content the API had
+ * already replaced, with no way to notice from the outside.
+ *
+ * The webhook still does the instant update on save. This is only the backstop
+ * that guarantees the two cannot stay out of step: five minutes is short enough
+ * that nobody is left looking at stale copy for long, and long enough that a
+ * busy page is not refetching per visitor.
+ */
+const REVALIDATE_SECONDS = 300
+
 async function fetchWithRetry(path: string): Promise<Response> {
   let lastError: unknown
 
@@ -228,7 +246,7 @@ async function fetchWithRetry(path: string): Promise<Response> {
     }
 
     try {
-      const res = await fetch(`${API_BASE}${path}`, { cache: 'force-cache' })
+      const res = await fetch(`${API_BASE}${path}`, { next: { revalidate: REVALIDATE_SECONDS } })
 
       // Anything that isn't a transient server hiccup is the real answer,
       // including 404 — hand it back and let the caller decide.
