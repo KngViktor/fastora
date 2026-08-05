@@ -17,12 +17,14 @@ import { TestimonialsBlockComponent } from '@/blocks/TestimonialsBlock/Component
 import { FAQBlockComponent } from '@/blocks/FAQ/Component'
 import { LatestInsightsBlockComponent } from '@/blocks/LatestInsights/Component'
 import { ConsultationFormBlock } from '@/blocks/ConsultationForm/Component'
+import { VisionMissionBlock } from '@/blocks/VisionMission/Component'
 
 const blockComponents = {
   aboutFastora: AboutFastoraBlock,
   trustedBy: TrustedByBlock,
   archive: ArchiveBlock,
   content: ContentBlock,
+  visionMission: VisionMissionBlock,
   cta: CallToActionBlock,
   mediaBlock: MediaBlock,
   servicesOverview: ServicesOverviewBlock,
