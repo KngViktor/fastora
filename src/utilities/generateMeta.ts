@@ -25,8 +25,20 @@ export const generateMeta = async (args: {
   const { doc, path } = args
 
   const ogImage = getImageURL(doc?.meta?.image)
-  const title = doc?.meta?.title ? doc?.meta?.title + ' | Fastora' : 'Fastora'
   const url = path ?? (doc?.slug ? `/${doc.slug}` : '/')
+
+  // Append the brand only when it is not already in the editor's title. The home
+  // page's SEO title is "Fastora, Communications & Digital Strategy", so an
+  // unconditional suffix produced "… Digital Strategy | Fastora" — the brand
+  // twice in one title, which reads as carelessness in a search result.
+  //
+  // Case-insensitive because an editor typing "FASTORA" means the same thing.
+  const editorTitle = doc?.meta?.title?.trim()
+  const title = editorTitle
+    ? editorTitle.toLowerCase().includes('fastora')
+      ? editorTitle
+      : `${editorTitle} | Fastora`
+    : 'Fastora'
 
   // An editor-supplied canonical wins; otherwise the page points at itself,
   // which is what Google recommends for pages that are their own original.
