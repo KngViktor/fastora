@@ -27,7 +27,14 @@ function initials(name: string) {
     .toUpperCase()
 }
 
-/** Auto-advancing carousel, one card at a time, looping back to the start. */
+/**
+ * Auto-advancing carousel, one card at a time, looping back to the end.
+ *
+ * Steps backward (scrollPrev) rather than forward on purpose: in a
+ * left-to-right track, the previous slide sits to the left, so moving to it
+ * animates new content in from the left and out to the right — the
+ * requested slide direction. scrollNext would visually run the other way.
+ */
 export const TestimonialsCarousel: React.FC<{ testimonials: Testimonial[] }> = ({
   testimonials,
 }) => {
@@ -38,12 +45,13 @@ export const TestimonialsCarousel: React.FC<{ testimonials: Testimonial[] }> = (
     if (!api || testimonials.length <= 1) return
 
     const timeout = setTimeout(() => {
-      if (api.selectedScrollSnap() + 1 === api.scrollSnapList().length) {
-        setCurrent(0)
-        api.scrollTo(0)
+      if (api.selectedScrollSnap() === 0) {
+        const lastIndex = api.scrollSnapList().length - 1
+        setCurrent(lastIndex)
+        api.scrollTo(lastIndex)
       } else {
-        api.scrollNext()
-        setCurrent(current + 1)
+        api.scrollPrev()
+        setCurrent(current - 1)
       }
     }, 4000)
 
