@@ -81,9 +81,16 @@ export async function GET(): Promise<Response> {
       pages
         .filter(
           (p) =>
-            !['home', 'contact', 'services', 'case-studies', 'insights', 'privacy-policy', 'terms-conditions'].includes(
-              p.slug,
-            ) && !p.meta?.noindex,
+            ![
+              'home',
+              'contact',
+              'services',
+              'case-studies',
+              'insights',
+              'privacy-policy',
+              'terms-of-use',
+              'cookie-policy',
+            ].includes(p.slug) && !p.meta?.noindex,
         )
         .map((p) => `- [${p.title}](${url}/${p.slug})${p.meta?.description ? `: ${p.meta.description}` : ''}`),
     ),

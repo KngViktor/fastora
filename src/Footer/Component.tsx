@@ -134,12 +134,15 @@ export async function Footer() {
       <div className="border-t border-primary-foreground/10">
         <div className="container-page flex flex-col gap-3 py-6 text-xs text-primary-foreground/60 md:flex-row md:items-center md:justify-between">
           <p>{siteSettings?.footerText}</p>
-          <nav className="flex gap-4">
+          <nav className="flex flex-wrap gap-4">
             <Link href="/privacy-policy" className="hover:text-primary-foreground">
               Privacy Policy
             </Link>
-            <Link href="/terms-conditions" className="hover:text-primary-foreground">
-              Terms &amp; Conditions
+            <Link href="/terms-of-use" className="hover:text-primary-foreground">
+              Terms of Use
+            </Link>
+            <Link href="/cookie-policy" className="hover:text-primary-foreground">
+              Cookie Policy
             </Link>
           </nav>
         </div>

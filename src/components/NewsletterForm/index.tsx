@@ -61,7 +61,7 @@ export const NewsletterForm: React.FC<{ variant?: keyof typeof VARIANTS; source:
   }
 
   if (status === 'success') {
-    return <p className={cn('mt-4', styles.success, className)}>You&apos;re on the list — thanks for subscribing.</p>
+    return <p className={cn('mt-4', styles.success, className)}>You&apos;re on the list, thanks for subscribing.</p>
   }
 
   return (

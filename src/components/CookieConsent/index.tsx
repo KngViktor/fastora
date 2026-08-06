@@ -32,7 +32,7 @@ export const CookieConsent: React.FC = () => {
       <p className="text-sm text-muted-foreground">
         We&apos;d like to use analytics cookies to understand how the site is used. They stay off
         unless you accept, and we don&apos;t use them for advertising.{' '}
-        <Link href="/privacy-policy" className="underline hover:text-secondary">
+        <Link href="/cookie-policy" className="underline hover:text-secondary">
           Learn more
         </Link>
       </p>
