@@ -54,13 +54,13 @@ export const TeamBlock: React.FC<Props> = ({ eyebrow, heading, description, memb
             className="rounded-3xl border border-border bg-card p-8"
           >
             {member.photo && typeof member.photo === 'object' ? (
-              <div className="h-16 w-16 overflow-hidden rounded-full">
+              <div className="h-28 w-28 overflow-hidden rounded-full">
                 <Media resource={member.photo} imgClassName="h-full w-full object-cover" />
               </div>
             ) : (
               <span
                 aria-hidden="true"
-                className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-secondary/15 text-lg font-semibold text-secondary"
+                className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-secondary/15 text-2xl font-semibold text-secondary"
               >
                 {initials(member.name)}
               </span>
