@@ -1,6 +1,7 @@
 import {
   DEFAULT_SITE_SETTINGS,
   getCaseStudies,
+  getPages,
   getPosts,
   getServices,
   getSiteSettings,
@@ -29,18 +30,19 @@ function section(title: string, lines: string[]): string {
 export async function GET(): Promise<Response> {
   const url = getServerSideURL()
 
-  const [settings, services, caseStudies, posts] = await Promise.all([
+  const [settings, services, caseStudies, posts, pages] = await Promise.all([
     safely(() => getSiteSettings(), DEFAULT_SITE_SETTINGS),
     safely(() => getServices({ limit: 100 }), []),
     safely(() => getCaseStudies({ limit: 100 }), []),
     safely(() => getPosts({ limit: 50 }), []),
+    safely(() => getPages(), []),
   ])
 
   // Same reasoning as sitemap.ts: every fetch above degrades to empty rather
   // than throwing, so an outage during a build produces a file with a heading
   // and nothing else. Unlike the sitemap this route already revalidates, so
   // it recovers on its own — but the warning is what makes it diagnosable.
-  if (!services.length && !caseStudies.length && !posts.length) {
+  if (!services.length && !caseStudies.length && !posts.length && !pages.length) {
     console.error(
       '[fastora] llms.txt: every content fetch came back empty, so the API ' +
         'was almost certainly unreachable. Serving a near-empty file until ' +
@@ -68,6 +70,15 @@ export async function GET(): Promise<Response> {
     section(
       'Insights',
       posts.map((p) => `- [${p.title}](${url}/insights/${p.slug})${p.meta?.description ? `: ${p.meta.description}` : ''}`),
+    ),
+    section(
+      'Pages',
+      // Excludes slugs with their own dedicated section above (Services,
+      // Case studies, Insights list their actual items there; a bare link to
+      // the index page here would be a redundant, less useful duplicate).
+      pages
+        .filter((p) => !['home', 'contact', 'services', 'case-studies', 'insights'].includes(p.slug) && !p.meta?.noindex)
+        .map((p) => `- [${p.title}](${url}/${p.slug})${p.meta?.description ? `: ${p.meta.description}` : ''}`),
     ),
     section(
       'Contact',
