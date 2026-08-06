@@ -39,7 +39,7 @@ export const HeaderNav: React.FC<{ data: Nav }> = ({ data }) => {
         url="/consultation"
         label="Book a Consultation"
         appearance="default"
-        className="hidden rounded-full bg-secondary px-5 py-2.5 text-sm font-medium text-secondary-foreground transition-opacity hover:opacity-90 sm:inline-flex"
+        className="hidden rounded-full bg-secondary px-5 py-2.5 text-sm font-medium text-secondary-foreground transition-colors hover:bg-gold hover:text-gold-foreground sm:inline-flex"
       />
 
       {/* Mobile hamburger */}
@@ -82,7 +82,7 @@ export const HeaderNav: React.FC<{ data: Nav }> = ({ data }) => {
                 label="Book a Consultation"
                 appearance="default"
                 onClick={() => setOpen(false)}
-                className="block w-full rounded-full bg-secondary px-5 py-3 text-center text-sm font-semibold text-secondary-foreground"
+                className="block w-full rounded-full bg-secondary px-5 py-3 text-center text-sm font-semibold text-secondary-foreground transition-colors hover:bg-gold hover:text-gold-foreground"
               />
             </li>
           </ul>

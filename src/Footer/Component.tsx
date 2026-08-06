@@ -1,5 +1,15 @@
 import Link from 'next/link'
 import React from 'react'
+import {
+  FaFacebook,
+  FaInstagram,
+  FaLinkedin,
+  FaThreads,
+  FaTiktok,
+  FaWhatsapp,
+  FaXTwitter,
+  FaYoutube,
+} from 'react-icons/fa6'
 
 import { DEFAULT_NAV, DEFAULT_SITE_SETTINGS, getFooter, getSiteSettings, safely } from '@/lib/api'
 import { CMSLink } from '@/components/Link'
@@ -14,6 +24,17 @@ const socialLabels: Record<string, string> = {
   facebook: 'Facebook',
   threads: 'Threads',
   whatsapp: 'WhatsApp',
+}
+
+const socialIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+  instagram: FaInstagram,
+  twitter: FaXTwitter,
+  linkedin: FaLinkedin,
+  tiktok: FaTiktok,
+  youtube: FaYoutube,
+  facebook: FaFacebook,
+  threads: FaThreads,
+  whatsapp: FaWhatsapp,
 }
 
 export async function Footer() {
@@ -32,19 +53,30 @@ export async function Footer() {
           </Link>
           <p className="max-w-xs text-sm text-primary-foreground/70">{siteSettings?.tagline}</p>
           {socialLinks.length > 0 && (
-            <ul className="flex flex-wrap gap-x-4 gap-y-2 pt-2 text-sm">
-              {socialLinks.map((social, i) => (
-                <li key={i}>
-                  <a
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary-foreground/70 hover:text-primary-foreground transition-colors"
-                  >
-                    {socialLabels[social.platform] || social.platform}
-                  </a>
-                </li>
-              ))}
+            <ul className="flex flex-wrap items-center gap-3 pt-2">
+              {socialLinks.map((social, i) => {
+                const Icon = socialIcons[social.platform]
+                const label = socialLabels[social.platform] || social.platform
+
+                return (
+                  <li key={i}>
+                    <a
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      title={label}
+                      className="flex h-9 w-9 items-center justify-center rounded-full text-primary-foreground/70 transition-colors hover:text-primary-foreground"
+                    >
+                      {Icon ? (
+                        <Icon className="h-[1.15rem] w-[1.15rem]" aria-hidden="true" />
+                      ) : (
+                        <span className="text-xs">{label}</span>
+                      )}
+                    </a>
+                  </li>
+                )
+              })}
             </ul>
           )}
         </div>
