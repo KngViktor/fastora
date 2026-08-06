@@ -1,8 +1,8 @@
 import React from 'react'
 
 import { getTestimonials, safely } from '@/lib/api'
-import type { Testimonial } from '@/components/ui/testimonial-v2'
-import { ScrollingTestimonials } from '@/components/ui/testimonial-v2'
+import type { Testimonial } from '@/components/ui/testimonial-carousel'
+import { TestimonialsCarousel } from '@/components/ui/testimonial-carousel'
 
 type Props = {
   heading?: string | null
@@ -32,8 +32,8 @@ export const TestimonialsBlockComponent: React.FC<Props> = async ({ heading, lim
         </div>
       )}
 
-      <div data-reveal="up">
-        <ScrollingTestimonials testimonials={testimonials} />
+      <div className="mt-10" data-reveal="up">
+        <TestimonialsCarousel testimonials={testimonials} />
       </div>
     </section>
   )

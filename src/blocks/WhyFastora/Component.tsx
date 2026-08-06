@@ -66,7 +66,7 @@ export const WhyFastoraBlock: React.FC<Props> = ({ eyebrow, heading, description
                 )}
               </p>
               <div className="mt-5">
-                <h3 className="text-lg font-semibold">{point.title}</h3>
+                {point.title && <h3 className="text-lg font-semibold">{point.title}</h3>}
                 <p
                   className={cn(
                     'mt-2 max-w-md text-sm',
