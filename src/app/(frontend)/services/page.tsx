@@ -11,9 +11,9 @@ import { queryUtilityPage } from '@/utilities/queryUtilityPage'
 
 const FALLBACK = {
   eyebrow: 'What we do',
-  heading: 'Services built around how you communicate',
+  heading: 'Services built around how people experience your business.',
   description:
-    'Ten integrated services, each designed to help your business communicate with more clarity, credibility, and confidence.',
+    'Every interaction shapes how people think about your business. Our services help you communicate more intentionally, strengthen your brand, and support long-term growth.',
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -68,7 +68,7 @@ export default async function ServicesPage() {
                   </span>
                 </div>
                 <span className="inline-flex items-center gap-1 text-sm font-medium text-secondary opacity-0 transition-opacity group-hover:opacity-100">
-                  Explore service →
+                  See how it works →
                 </span>
               </Link>
             ))}

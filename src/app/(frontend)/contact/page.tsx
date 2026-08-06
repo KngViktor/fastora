@@ -10,9 +10,16 @@ import { ContactForm } from './ContactForm'
 
 const FALLBACK = {
   eyebrow: 'Contact',
-  heading: "Let's start your project",
-  description: "Tell us where you want to go. We'll come back with how to get there, fast.",
+  heading: "Let's talk about your business.",
+  description:
+    "Every project starts with a conversation. Tell us what you're working on, where you'd like to go, or the challenge you're trying to solve. We'll take it from there.",
 }
+
+const AFTER_CONTACT_STEPS = [
+  { title: "We'll read through your message." },
+  { title: "If it looks like we're a good fit, we'll get in touch to arrange a conversation." },
+  { title: "From there, we'll recommend the best next step for your business." },
+]
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await queryUtilityPage('contact')
@@ -74,16 +81,48 @@ export default async function ContactPage() {
               </a>
             </div>
           )}
-          {siteSettings?.address && (
-            <div>
-              <p className="text-sm font-medium uppercase tracking-wide text-secondary">Studio</p>
-              <p className="mt-2 text-sm text-muted-foreground">{siteSettings.address}</p>
-            </div>
-          )}
+          <div>
+            <p className="text-sm font-medium uppercase tracking-wide text-secondary">
+              Response Time
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">Within one business day.</p>
+          </div>
+          <div>
+            <p className="text-sm font-medium uppercase tracking-wide text-secondary">
+              Where We Work
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Based in Nigeria, serving clients across Africa, Europe, North America, and
+              Australia.
+            </p>
+          </div>
         </aside>
       </section>
 
-      <FAQBlockComponent heading="Questions before you reach out" items={page?.faqs} />
+      <section className="container pb-20 md:pb-28">
+        <h2 className="max-w-xl text-3xl font-semibold md:text-4xl" data-reveal="up">
+          What happens after you get in touch?
+        </h2>
+        <ol className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3" data-reveal-group="110">
+          {AFTER_CONTACT_STEPS.map((step, i) => (
+            <li key={i} data-reveal="up">
+              <span className="font-display text-3xl font-semibold text-gold">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <p className="mt-3 text-base">{step.title}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <FAQBlockComponent heading="Frequently Asked Questions" items={page?.faqs} />
+
+      <section className="container pb-24 text-center">
+        <p className="mx-auto max-w-xl text-lg text-muted-foreground" data-reveal="up">
+          Every good partnership starts with a conversation. We&apos;re looking forward to hearing
+          about your business and learning how we can help.
+        </p>
+      </section>
     </div>
   )
 }

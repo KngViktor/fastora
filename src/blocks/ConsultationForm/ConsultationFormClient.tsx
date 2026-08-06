@@ -174,24 +174,29 @@ export const ConsultationFormClient: React.FC<Props> = ({
             name="preferredTimes"
             rows={3}
             required
-            placeholder="e.g. Tuesday or Wednesday afternoon, or Friday before noon"
+            placeholder="Tuesday afternoon, Wednesday morning, or Friday after 2:00 pm."
             className={`mt-2 ${fieldClass}`}
           />
           <p className="mt-2 text-xs text-muted-foreground">
-            Two or three options help us confirm on the first reply. Your timezone is detected
-            automatically.
+            Share two or three options and we&apos;ll confirm one that works for both of us. Your
+            timezone is detected automatically.
           </p>
         </div>
 
         <div>
           <label htmlFor="cf-brief" className="text-sm font-medium">
-            {service ? `What would you like to cover on ${service.title}?` : 'What would you like to cover?'}
+            {service ? `What would you like to cover on ${service.title}?` : 'Tell us a little about your business'}
           </label>
           <textarea
             id="cf-brief"
             name="brief"
             rows={4}
             required
+            placeholder={
+              service
+                ? undefined
+                : "What's bringing you here today? Tell us about your business, what you're working towards, and anything you'd like us to know before we meet."
+            }
             className={`mt-2 ${fieldClass}`}
           />
         </div>

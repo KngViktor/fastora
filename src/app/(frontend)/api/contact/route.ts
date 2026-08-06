@@ -16,6 +16,8 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const LIMITS = {
   name: 255,
   email: 254,
+  phone: 50,
+  websiteUrl: 255,
   company: 255,
   brief: 5000,
   budgetRange: 255,
@@ -66,6 +68,8 @@ export async function POST(req: Request) {
     }
   }
 
+  const phone = typeof body.phone === 'string' ? body.phone.trim() : undefined
+  const websiteUrl = typeof body.websiteUrl === 'string' ? body.websiteUrl.trim() : undefined
   const company = typeof body.company === 'string' ? body.company.trim() : undefined
   const budgetRange = typeof body.budgetRange === 'string' ? body.budgetRange : undefined
   const timeline = typeof body.timeline === 'string' ? body.timeline : undefined
@@ -88,6 +92,8 @@ export async function POST(req: Request) {
   const result = await submitContact({
     name: clamp(name, LIMITS.name),
     email: clamp(email, LIMITS.email),
+    phone: phone ? clamp(phone, LIMITS.phone) : undefined,
+    websiteUrl: websiteUrl ? clamp(websiteUrl, LIMITS.websiteUrl) : undefined,
     brief: clamp(brief, LIMITS.brief),
     company: company ? clamp(company, LIMITS.company) : undefined,
     budgetRange: budgetRange ? clamp(budgetRange, LIMITS.budgetRange) : undefined,
@@ -120,6 +126,8 @@ export async function POST(req: Request) {
         text: [
           `Name: ${name}`,
           `Email: ${email}`,
+          phone ? `Phone: ${phone}` : null,
+          websiteUrl ? `Website: ${websiteUrl}` : null,
           company ? `Company: ${company}` : null,
           budgetRange ? `Budget: ${budgetRange}` : null,
           timeline ? `Timeline: ${timeline}` : null,

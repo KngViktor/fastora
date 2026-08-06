@@ -8,12 +8,13 @@ import { PageHeader } from '@/components/PageHeader'
 import { formatDateTime } from '@/utilities/formatDateTime'
 import { generateMeta } from '@/utilities/generateMeta'
 import { queryUtilityPage } from '@/utilities/queryUtilityPage'
+import { InsightsGrid } from './InsightsGrid'
 
 const FALLBACK = {
   eyebrow: 'Insights',
-  heading: 'Thinking on communication and brand strategy',
+  heading: 'Insights',
   description:
-    'Practical ideas on communications, branding, and digital strategy, for businesses that want to be understood, not just seen.',
+    'Articles, observations, and practical insights on communication, branding, and digital strategy, shaped by our work and the businesses we serve.',
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -38,6 +39,12 @@ export default async function InsightsPage() {
     safely(() => getPosts({ limit: 100 }), []),
   ])
 
+  // At most one pinned post is featured up top; the rest of the grid never
+  // shows it a second time. If more than one is toggled on in the admin, the
+  // most recently published wins, since `posts` already comes back newest first.
+  const featuredPost = posts.find((post) => post.featured) ?? null
+  const gridPosts = featuredPost ? posts.filter((post) => post.id !== featuredPost.id) : posts
+
   return (
     <div>
       <PageHeader
@@ -46,44 +53,109 @@ export default async function InsightsPage() {
         description={page?.pageHeaderDescription || FALLBACK.description}
       />
 
+      {featuredPost && (
+        <section className="container pt-16">
+          <Link
+            href={`/insights/${featuredPost.slug}`}
+            data-reveal="up"
+            className="group grid grid-cols-1 overflow-hidden rounded-3xl border border-border bg-card transition-colors hover:border-secondary/60 lg:grid-cols-2"
+          >
+            <div className="relative aspect-[16/10] overflow-hidden bg-muted lg:aspect-auto">
+              {featuredPost.heroImage && typeof featuredPost.heroImage === 'object' && (
+                <Media
+                  resource={featuredPost.heroImage}
+                  fill
+                  imgClassName="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              )}
+            </div>
+            <div className="flex flex-col justify-center p-8 md:p-12">
+              <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                {featuredPost.categories.map((c) => (
+                  <span key={c.id} className="text-secondary">
+                    {c.title}
+                  </span>
+                ))}
+                <span>· {featuredPost.readingTimeMinutes} min read</span>
+              </div>
+              <h2 className="mt-3 text-2xl font-semibold md:text-3xl">{featuredPost.title}</h2>
+              {featuredPost.meta?.description && (
+                <p className="mt-3 max-w-lg text-muted-foreground">
+                  {featuredPost.meta.description}
+                </p>
+              )}
+              <div className="mt-6 flex items-center gap-4">
+                {featuredPost.publishedAt && (
+                  <time dateTime={featuredPost.publishedAt} className="text-xs text-muted-foreground">
+                    {formatDateTime(featuredPost.publishedAt)}
+                  </time>
+                )}
+                <span className="inline-flex items-center gap-1 text-sm font-medium text-secondary">
+                  Read article →
+                </span>
+              </div>
+            </div>
+          </Link>
+        </section>
+      )}
+
       <section className="container pb-24 pt-16">
-        {posts.length ? (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3" data-reveal-group="110">
-            {posts.map((post) => (
-              <Link
-                key={post.id}
-                href={`/insights/${post.slug}`}
-                data-reveal="up"
-                className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-secondary/60"
-              >
-                <div className="relative aspect-[16/10] overflow-hidden bg-muted">
-                  {post.heroImage && typeof post.heroImage === 'object' && (
-                    <Media
-                      resource={post.heroImage}
-                      fill
-                      imgClassName="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  )}
-                </div>
-                <div className="flex flex-1 flex-col p-6">
-                  <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    {Array.isArray(post.categories) &&
-                      post.categories.map((c) =>
-                        typeof c === 'object' && c ? <span key={c.id}>{c.title}</span> : null,
-                      )}
-                    {post.publishedAt && <span>· {formatDateTime(post.publishedAt)}</span>}
-                  </div>
-                  <h2 className="mt-3 text-lg font-semibold">{post.title}</h2>
-                  {post.meta?.description && (
-                    <p className="mt-2 text-sm text-muted-foreground">{post.meta.description}</p>
-                  )}
-                </div>
-              </Link>
-            ))}
+        <h2 className="text-2xl font-semibold md:text-3xl" data-reveal="up">
+          From the Fastora Journal
+        </h2>
+        <div className="mt-10">
+          <InsightsGrid posts={gridPosts} />
+        </div>
+      </section>
+
+      <section className="border-t border-border bg-muted/40">
+        <div className="container grid grid-cols-1 gap-10 py-20 md:grid-cols-2 md:py-28">
+          <h2 className="text-2xl font-semibold md:text-3xl" data-reveal="up">
+            Why we write
+          </h2>
+          <div data-reveal="up" className="text-muted-foreground [&_p+p]:mt-4">
+            <p>Good ideas deserve to be shared.</p>
+            <p>
+              The Fastora Journal is where we explore the questions we&apos;re asking, the
+              patterns we&apos;re noticing, and the lessons we learn while working with businesses.
+            </p>
+            <p>Some articles come from client work.</p>
+            <p>Others begin as conversations, observations, or ideas that deserve a closer look.</p>
           </div>
-        ) : (
-          <p className="text-muted-foreground">No insights published yet.</p>
-        )}
+        </div>
+      </section>
+
+      <section className="container py-20 md:py-28">
+        <div
+          data-reveal="up"
+          className="rounded-3xl border border-border bg-card p-8 text-center md:p-14"
+        >
+          <h2 className="text-2xl font-semibold md:text-3xl">
+            Stay connected with the Fastora Journal.
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-muted-foreground">
+            Receive new articles, practical insights, and occasional updates from our team.
+          </p>
+          {/* Not wired to a subscription service — no email list infrastructure
+              exists yet. Matches the Footer's newsletter form, which is the same
+              visual placeholder pending that setup. */}
+          <form className="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row" action="#" method="post">
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="you@company.com"
+              aria-label="Email address"
+              className="min-w-0 flex-1 rounded-full border border-border bg-background px-5 py-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-secondary focus-visible:ring-2 focus-visible:ring-secondary/40"
+            />
+            <button
+              type="submit"
+              className="shrink-0 rounded-full bg-secondary px-6 py-3 text-sm font-semibold text-secondary-foreground transition-opacity hover:opacity-90"
+            >
+              Subscribe
+            </button>
+          </form>
+        </div>
       </section>
     </div>
   )

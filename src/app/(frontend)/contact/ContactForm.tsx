@@ -36,6 +36,12 @@ export const ContactForm: React.FC<{ services: ServiceOption[] }> = ({ services 
     const form = e.currentTarget
     const data = Object.fromEntries(new FormData(form).entries())
 
+    // "Not sure yet" means no specific service, same as leaving the field on
+    // its placeholder — the backend only accepts a real service id here.
+    if (data.serviceNeeded === 'not-sure') {
+      delete data.serviceNeeded
+    }
+
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
@@ -89,28 +95,43 @@ export const ContactForm: React.FC<{ services: ServiceOption[] }> = ({ services 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <label htmlFor="name" className="text-sm font-medium">
-            Name <span className="text-secondary">*</span>
+            Full Name <span className="text-secondary">*</span>
           </label>
           <input id="name" name="name" required placeholder="Your name" className={fieldClass} />
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="email" className="text-sm font-medium">
-            Email <span className="text-secondary">*</span>
+          <label htmlFor="company" className="text-sm font-medium">
+            Company / Organisation
           </label>
-          <input id="email" name="email" type="email" required placeholder="you@company.com" className={fieldClass} />
+          <input id="company" name="company" placeholder="Company name" className={fieldClass} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
-          <label htmlFor="company" className="text-sm font-medium">
-            Company
+          <label htmlFor="email" className="text-sm font-medium">
+            Email Address <span className="text-secondary">*</span>
           </label>
-          <input id="company" name="company" placeholder="Company name" className={fieldClass} />
+          <input id="email" name="email" type="email" required placeholder="you@company.com" className={fieldClass} />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="phone" className="text-sm font-medium">
+            Phone Number <span className="text-muted-foreground">(Optional)</span>
+          </label>
+          <input id="phone" name="phone" type="tel" placeholder="+234 700 000 0000" className={fieldClass} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <div className="flex flex-col gap-2">
+          <label htmlFor="websiteUrl" className="text-sm font-medium">
+            Website <span className="text-muted-foreground">(Optional)</span>
+          </label>
+          <input id="websiteUrl" name="websiteUrl" placeholder="yourcompany.com" className={fieldClass} />
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="serviceNeeded" className="text-sm font-medium">
-            Service needed
+            What do you need help with?
           </label>
           <select id="serviceNeeded" name="serviceNeeded" defaultValue="" className={fieldClass}>
             <option value="">Select a service…</option>
@@ -119,6 +140,7 @@ export const ContactForm: React.FC<{ services: ServiceOption[] }> = ({ services 
                 {s.title}
               </option>
             ))}
+            <option value="not-sure">Not sure yet</option>
           </select>
         </div>
       </div>
@@ -154,7 +176,7 @@ export const ContactForm: React.FC<{ services: ServiceOption[] }> = ({ services 
 
       <div className="flex flex-col gap-2">
         <label htmlFor="brief" className="text-sm font-medium">
-          Project brief <span className="text-secondary">*</span>
+          Tell us about your project <span className="text-secondary">*</span>
         </label>
         <textarea
           id="brief"
@@ -171,7 +193,7 @@ export const ContactForm: React.FC<{ services: ServiceOption[] }> = ({ services 
         disabled={status === 'loading'}
         className="mt-2 inline-flex items-center justify-center rounded-full bg-secondary px-6 py-3 text-sm font-semibold text-secondary-foreground transition-all hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100"
       >
-        {status === 'loading' ? 'Sending…' : 'Send project brief'}
+        {status === 'loading' ? 'Sending…' : 'Send Enquiry'}
       </button>
 
       {/* Sits under the button rather than above the form: it answers "what

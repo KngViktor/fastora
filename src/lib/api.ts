@@ -158,6 +158,8 @@ export interface Post {
   slug: string
   heroImage: Media | null
   content: string | null
+  readingTimeMinutes: number
+  featured: boolean
   tags: string[]
   categories: { id: number; title: string; slug: string }[]
   authors: { id: number; name: string }[]
@@ -326,9 +328,14 @@ export const getServices = (params?: { featuredOnHome?: boolean; limit?: number 
 }
 export const getServiceBySlug = (slug: string) => apiFetchOrNull<Service>(`/services/${slug}`)
 
-export const getCaseStudies = (params?: { featuredOnHome?: boolean; limit?: number }) => {
+export const getCaseStudies = (params?: {
+  featuredOnHome?: boolean
+  relatedService?: string
+  limit?: number
+}) => {
   const qs = new URLSearchParams()
   if (params?.featuredOnHome) qs.set('featuredOnHome', '1')
+  if (params?.relatedService) qs.set('relatedService', params.relatedService)
   if (params?.limit) qs.set('limit', String(params.limit))
   const suffix = qs.toString() ? `?${qs}` : ''
   return apiFetch<CaseStudy[]>(`/case-studies${suffix}`)
@@ -363,6 +370,8 @@ export const getPageSlugs = () => apiFetch<string[]>('/pages/slugs')
 export interface ContactPayload {
   name: string
   email: string
+  phone?: string
+  websiteUrl?: string
   company?: string
   serviceNeeded?: number
   budgetRange?: string

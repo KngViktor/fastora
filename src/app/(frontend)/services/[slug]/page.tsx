@@ -4,7 +4,7 @@ import { Check } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import React, { cache } from 'react'
 
-import { getServiceBySlug, getServices, getTestimonials, safely } from '@/lib/api'
+import { getCaseStudies, getServiceBySlug, getServices, getTestimonials, safely } from '@/lib/api'
 import RichText from '@/components/RichText'
 import { Media } from '@/components/Media'
 import { PageHeader } from '@/components/PageHeader'
@@ -28,6 +28,14 @@ export default async function ServicePage({ params }: Args) {
 
   const testimonials = await safely(
     () => getTestimonials({ relatedService: service.id, limit: 3 }),
+    [],
+  )
+
+  // Reserves the "How this looked in practice" slot without inventing
+  // content: it's empty, and the section hides, until a real case study is
+  // linked to this service from the admin.
+  const relatedCaseStudies = await safely(
+    () => getCaseStudies({ relatedService: service.slug, limit: 2 }),
     [],
   )
 
@@ -207,6 +215,42 @@ export default async function ServicePage({ params }: Args) {
                       {related.title}
                     </p>
                     <p className="mt-2 text-sm text-muted-foreground">{related.summary}</p>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {relatedCaseStudies.length > 0 && (
+            <section data-reveal="up">
+              <h2 className="text-sm font-medium uppercase tracking-wide text-secondary">
+                How this looked in practice
+              </h2>
+              <div className="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-2">
+                {relatedCaseStudies.map((study) => (
+                  <Link
+                    key={study.slug}
+                    href={`/case-studies/${study.slug}`}
+                    className="group overflow-hidden rounded-3xl border border-border bg-card transition-colors hover:border-secondary/60"
+                  >
+                    {study.coverImage && typeof study.coverImage === 'object' && (
+                      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                        <Media
+                          resource={study.coverImage}
+                          fill
+                          imgClassName="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
+                    )}
+                    <div className="p-5">
+                      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                        {study.industry || study.clientName}
+                      </p>
+                      <h3 className="mt-2 font-semibold transition-colors group-hover:text-secondary">
+                        {study.title}
+                      </h3>
+                      <p className="mt-2 text-sm text-muted-foreground">{study.summary}</p>
+                    </div>
                   </Link>
                 ))}
               </div>
