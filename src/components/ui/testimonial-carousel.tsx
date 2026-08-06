@@ -60,11 +60,18 @@ export const TestimonialsCarousel: React.FC<{ testimonials: Testimonial[] }> = (
 
   if (!testimonials.length) return null
 
+  // Showing every card at once leaves nothing to scroll to, which is what
+  // silently stalled this at the default count of 3 with a 3-up desktop
+  // layout: cards filled the row exactly, so canScrollNext/Prev were both
+  // false. Capping how many show at a time — never all of them — guarantees
+  // at least one card always overflows, so there's always somewhere to slide.
+  const desktopTwoUp = testimonials.length > 2
+
   return (
     <Carousel setApi={setApi} className="w-full">
       <CarouselContent>
         {testimonials.map((testimonial, i) => (
-          <CarouselItem className="md:basis-1/2 lg:basis-1/3" key={i}>
+          <CarouselItem className={desktopTwoUp ? 'md:basis-1/2' : ''} key={i}>
             <div className="flex h-full flex-col justify-between gap-6 rounded-3xl border border-border bg-card p-8 shadow-lg shadow-black/20">
               <blockquote className="m-0 p-0">
                 <p className="leading-relaxed text-muted-foreground">{testimonial.text}</p>
