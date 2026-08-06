@@ -1,5 +1,3 @@
-import type { NextConfig } from 'next'
-
 // The Laravel API serves media from whatever host APP_URL points at (its
 // local "public" disk resolves to an absolute URL) — allow that host for
 // Next's image optimizer without hardcoding it, since it differs between
@@ -87,7 +85,8 @@ const contentSecurityPolicy = [
   .join('; ')
   .concat(';')
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   /**
    * Security headers on every response.
    *
@@ -149,9 +148,7 @@ const nextConfig: NextConfig = {
       ...(laravelMediaHost
         ? [
             {
-              protocol: (laravelMediaHost === 'localhost' || laravelMediaHost === '127.0.0.1'
-                ? 'http'
-                : 'https') as 'http' | 'https',
+              protocol: laravelMediaHost === 'localhost' || laravelMediaHost === '127.0.0.1' ? 'http' : 'https',
               hostname: laravelMediaHost,
             },
           ]
@@ -169,7 +166,7 @@ const nextConfig: NextConfig = {
    * the old URL had earned, where a 302 would strand it.
    */
   async redirects() {
-    const reparented: Record<string, string> = {
+    const reparented = {
       'strategic-communications': 'communications-strategy',
       'communication-advisory': 'communications-strategy',
       'reputation-management': 'communications-strategy',
