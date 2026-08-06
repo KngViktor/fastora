@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import React from 'react'
 
-import { DEFAULT_SITE_SETTINGS, getServices, getSiteSettings, safely } from '@/lib/api'
+import { DEFAULT_SITE_SETTINGS, getSiteSettings, safely } from '@/lib/api'
 import { PageHeader } from '@/components/PageHeader'
 import { FAQBlockComponent } from '@/blocks/FAQ/Component'
 import { generateMeta } from '@/utilities/generateMeta'
@@ -32,9 +32,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ContactPage() {
-  const [page, services, siteSettings] = await Promise.all([
+  const [page, siteSettings] = await Promise.all([
     queryUtilityPage('contact'),
-    safely(() => getServices({ limit: 100 }), []),
     safely(() => getSiteSettings(), DEFAULT_SITE_SETTINGS),
   ])
   const header = {
@@ -42,8 +41,6 @@ export default async function ContactPage() {
     heading: page?.pageHeaderHeading || FALLBACK.heading,
     description: page?.pageHeaderDescription || FALLBACK.description,
   }
-
-  const serviceOptions = services.map((s) => ({ id: s.id, title: s.title }))
 
   return (
     <div>
@@ -55,7 +52,7 @@ export default async function ContactPage() {
 
       <section className="container grid grid-cols-1 gap-12 py-20 md:py-24 lg:grid-cols-[1fr_18rem]">
         <div data-reveal="up" className="rounded-3xl border border-border bg-card p-6 md:p-10">
-          <ContactForm services={serviceOptions} />
+          <ContactForm />
         </div>
 
         <aside className="flex flex-col gap-8" data-reveal="up">

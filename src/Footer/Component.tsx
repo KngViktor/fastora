@@ -14,6 +14,7 @@ import {
 import { DEFAULT_NAV, DEFAULT_SITE_SETTINGS, getFooter, getSiteSettings, safely } from '@/lib/api'
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
+import { NewsletterForm } from '@/components/NewsletterForm'
 
 const socialLabels: Record<string, string> = {
   instagram: 'Instagram',
@@ -117,22 +118,7 @@ export async function Footer() {
           <p className="mt-2 text-sm text-primary-foreground/70">
             {siteSettings?.newsletterSubheading}
           </p>
-          <form className="mt-4 flex gap-2" action="#" method="post">
-            <input
-              type="email"
-              name="email"
-              required
-              placeholder="you@company.com"
-              aria-label="Email address"
-              className="min-w-0 flex-1 rounded-full border border-primary-foreground/20 bg-transparent px-4 py-2 text-sm text-primary-foreground placeholder:text-primary-foreground/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
-            />
-            <button
-              type="submit"
-              className="shrink-0 rounded-full bg-primary-foreground px-4 py-2 text-sm font-medium text-primary hover:opacity-90 transition-opacity"
-            >
-              Subscribe
-            </button>
-          </form>
+          <NewsletterForm source="footer" />
         </div>
       </div>
 

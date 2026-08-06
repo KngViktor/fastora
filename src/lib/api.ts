@@ -402,3 +402,27 @@ export async function submitContact(
 
   return json
 }
+
+export interface NewsletterPayload {
+  email: string
+  source?: string
+  website?: string
+}
+
+export async function submitNewsletter(
+  payload: NewsletterPayload,
+): Promise<{ success: true } | { error: string }> {
+  const res = await fetch(`${API_BASE}/newsletter/subscribe`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    cache: 'no-store',
+  })
+
+  const json = await res.json()
+  if (!res.ok) {
+    return { error: json?.error || 'Something went wrong. Please try again.' }
+  }
+
+  return json
+}

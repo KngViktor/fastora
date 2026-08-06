@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server'
-import { Resend } from 'resend'
 
 import { submitContact } from '@/lib/api'
 
@@ -25,24 +24,15 @@ const LIMITS = {
   timezone: 100,
 } as const
 
-/**
- * Strips CR and LF from anything interpolated into an email header.
- *
- * Resend sends structured JSON rather than assembling raw headers, so injection
- * is unlikely through this path. The stripping is here anyway because the safety
- * currently depends on an implementation detail of someone else's SDK, and a
- * newline in a subject line has no legitimate purpose.
- */
-const headerSafe = (value: string): string => value.replace(/[\r\n]+/g, ' ').trim()
-
 const clamp = (value: string, max: number): string => value.slice(0, max)
 
 /**
  * Public contact endpoint. Proxies to the Laravel API's /api/contact, which
- * does the real validation and Inquiry creation — this route stays a thin
- * pass-through so the client-side form's fetch target (`/api/contact`) never
- * has to change, and adds a best-effort admin notification email on success.
- * A hidden honeypot field (`website`) silently absorbs bots on both sides.
+ * does the real validation, Inquiry creation, and admin notification email
+ * (see InquiryObserver on the backend) — this route stays a thin pass-through
+ * so the client-side form's fetch target (`/api/contact`) never has to
+ * change. A hidden honeypot field (`website`) silently absorbs bots on both
+ * sides.
  */
 export async function POST(req: Request) {
   let body: Record<string, unknown>
@@ -107,42 +97,6 @@ export async function POST(req: Request) {
 
   if ('error' in result) {
     return NextResponse.json({ error: result.error }, { status: 422 })
-  }
-
-  // Best-effort admin notification — a failed email must never block the
-  // submission itself, since it's already safely saved in the CMS.
-  if (process.env.RESEND_API_KEY && process.env.ADMIN_NOTIFICATION_EMAIL) {
-    try {
-      const resend = new Resend(process.env.RESEND_API_KEY)
-      await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL || 'Fastora <onboarding@resend.dev>',
-        to: process.env.ADMIN_NOTIFICATION_EMAIL,
-        replyTo: headerSafe(email),
-        subject: headerSafe(
-          `${kind === 'consultation' ? 'Consultation request' : 'New inquiry'} from ${name}${
-            company ? ` (${company})` : ''
-          }`,
-        ),
-        text: [
-          `Name: ${name}`,
-          `Email: ${email}`,
-          phone ? `Phone: ${phone}` : null,
-          websiteUrl ? `Website: ${websiteUrl}` : null,
-          company ? `Company: ${company}` : null,
-          budgetRange ? `Budget: ${budgetRange}` : null,
-          timeline ? `Timeline: ${timeline}` : null,
-          preferredTimes ? `Times they can make: ${preferredTimes}` : null,
-          timezone ? `Their timezone: ${timezone}` : null,
-          '',
-          'Brief:',
-          brief,
-        ]
-          .filter(Boolean)
-          .join('\n'),
-      })
-    } catch (emailError) {
-      console.error('Failed to send inquiry notification email:', emailError)
-    }
   }
 
   return NextResponse.json({ success: true })

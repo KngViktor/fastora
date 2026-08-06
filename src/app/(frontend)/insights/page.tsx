@@ -4,6 +4,7 @@ import React from 'react'
 
 import { getPosts, safely } from '@/lib/api'
 import { Media } from '@/components/Media'
+import { NewsletterForm } from '@/components/NewsletterForm'
 import { PageHeader } from '@/components/PageHeader'
 import { formatDateTime } from '@/utilities/formatDateTime'
 import { generateMeta } from '@/utilities/generateMeta'
@@ -136,25 +137,7 @@ export default async function InsightsPage() {
           <p className="mx-auto mt-3 max-w-md text-muted-foreground">
             Receive new articles, practical insights, and occasional updates from our team.
           </p>
-          {/* Not wired to a subscription service — no email list infrastructure
-              exists yet. Matches the Footer's newsletter form, which is the same
-              visual placeholder pending that setup. */}
-          <form className="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row" action="#" method="post">
-            <input
-              type="email"
-              name="email"
-              required
-              placeholder="you@company.com"
-              aria-label="Email address"
-              className="min-w-0 flex-1 rounded-full border border-border bg-background px-5 py-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-secondary focus-visible:ring-2 focus-visible:ring-secondary/40"
-            />
-            <button
-              type="submit"
-              className="shrink-0 rounded-full bg-secondary px-6 py-3 text-sm font-semibold text-secondary-foreground transition-opacity hover:opacity-90"
-            >
-              Subscribe
-            </button>
-          </form>
+          <NewsletterForm variant="light" source="insights" className="mt-6" />
         </div>
       </section>
     </div>
