@@ -9,6 +9,7 @@ import { cn } from '@/utilities/ui'
 type Props = {
   eyebrow?: string | null
   heading?: string | null
+  description?: string | null
   limit?: number | null
 }
 
@@ -16,7 +17,12 @@ type Props = {
  * Asymmetric feature grid: the first case study runs full width with its image
  * beside the text, the rest are ordinary cards below it.
  */
-export const SelectedWorkBlock: React.FC<Props> = async ({ eyebrow, heading, limit }) => {
+export const SelectedWorkBlock: React.FC<Props> = async ({
+  eyebrow,
+  heading,
+  description,
+  limit,
+}) => {
   const caseStudies = await safely(
     () => getCaseStudies({ featuredOnHome: true, limit: limit || 3 }),
     [],
@@ -31,6 +37,11 @@ export const SelectedWorkBlock: React.FC<Props> = async ({ eyebrow, heading, lim
         heading={heading}
         action={{ label: 'View all case studies', href: '/case-studies' }}
       />
+      {description && (
+        <p data-reveal="up" className="mt-4 max-w-2xl text-muted-foreground">
+          {description}
+        </p>
+      )}
 
       <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2" data-reveal-group="120">
         {caseStudies.map((study, i) => {

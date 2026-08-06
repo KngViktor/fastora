@@ -6,6 +6,7 @@ import { cn } from '@/utilities/ui'
 type Props = {
   eyebrow?: string | null
   heading?: string | null
+  description?: string | null
   points?: { stat: string; title: string; description: string }[]
 }
 
@@ -16,12 +17,17 @@ function parseStat(stat: string): { value: number; suffix: string } | null {
   return { value: Number(match[1]), suffix: match[2] }
 }
 
-export const WhyFastoraBlock: React.FC<Props> = ({ eyebrow, heading, points }) => {
+export const WhyFastoraBlock: React.FC<Props> = ({ eyebrow, heading, description, points }) => {
   if (!points?.length) return null
 
   return (
     <section className="container py-20 md:py-28">
       <SectionHeading eyebrow={eyebrow} heading={heading} />
+      {description && (
+        <p data-reveal="up" className="mt-4 max-w-2xl text-muted-foreground">
+          {description}
+        </p>
+      )}
 
       <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group="110">
         {points.map((point, i) => {

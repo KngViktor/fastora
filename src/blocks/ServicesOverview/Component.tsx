@@ -8,11 +8,17 @@ import { SectionHeading } from '@/components/SectionHeading'
 type Props = {
   eyebrow?: string | null
   heading?: string | null
+  description?: string | null
   limit?: number | null
 }
 
 /** Layout family: split header + edge-to-edge tile grid on the navy band. */
-export const ServicesOverviewBlock: React.FC<Props> = async ({ eyebrow, heading, limit }) => {
+export const ServicesOverviewBlock: React.FC<Props> = async ({
+  eyebrow,
+  heading,
+  description,
+  limit,
+}) => {
   const services = await safely(() => getServices({ featuredOnHome: true, limit: limit || 6 }), [])
 
   if (!services?.length) return null
@@ -26,6 +32,11 @@ export const ServicesOverviewBlock: React.FC<Props> = async ({ eyebrow, heading,
           tone="dark"
           action={{ label: 'View all services', href: '/services' }}
         />
+        {description && (
+          <p data-reveal="up" className="mt-4 max-w-2xl text-primary-foreground/70">
+            {description}
+          </p>
+        )}
 
         <div
           className="mt-12 grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-primary-foreground/10 bg-primary-foreground/10 sm:grid-cols-2"

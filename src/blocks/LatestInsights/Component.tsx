@@ -9,11 +9,17 @@ import { formatDateTime } from '@/utilities/formatDateTime'
 type Props = {
   eyebrow?: string | null
   heading?: string | null
+  description?: string | null
   limit?: number | null
 }
 
 /** Three-card grid, matching the case studies cards directly above it. */
-export const LatestInsightsBlockComponent: React.FC<Props> = async ({ eyebrow, heading, limit }) => {
+export const LatestInsightsBlockComponent: React.FC<Props> = async ({
+  eyebrow,
+  heading,
+  description,
+  limit,
+}) => {
   const posts = await safely(() => getPosts({ limit: limit || 3 }), [])
 
   if (!posts?.length) return null
@@ -25,6 +31,11 @@ export const LatestInsightsBlockComponent: React.FC<Props> = async ({ eyebrow, h
         heading={heading}
         action={{ label: 'View all insights', href: '/insights' }}
       />
+      {description && (
+        <p data-reveal="up" className="mt-4 max-w-2xl text-muted-foreground">
+          {description}
+        </p>
+      )}
 
       <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-3" data-reveal-group="120">
         {posts.map((post) => (
