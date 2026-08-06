@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import React from 'react'
 
 import { isAnalyticsEnabled } from '@/lib/analytics'
@@ -30,7 +31,10 @@ export const CookieConsent: React.FC = () => {
     >
       <p className="text-sm text-muted-foreground">
         We&apos;d like to use analytics cookies to understand how the site is used. They stay off
-        unless you accept, and we don&apos;t use them for advertising.
+        unless you accept, and we don&apos;t use them for advertising.{' '}
+        <Link href="/privacy-policy" className="underline hover:text-secondary">
+          Learn more
+        </Link>
       </p>
 
       <div className="mt-4 flex flex-wrap gap-3">

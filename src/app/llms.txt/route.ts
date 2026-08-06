@@ -75,9 +75,16 @@ export async function GET(): Promise<Response> {
       'Pages',
       // Excludes slugs with their own dedicated section above (Services,
       // Case studies, Insights list their actual items there; a bare link to
-      // the index page here would be a redundant, less useful duplicate).
+      // the index page here would be a redundant, less useful duplicate) and
+      // legal utility pages, which aren't the kind of thing worth an
+      // assistant recommending.
       pages
-        .filter((p) => !['home', 'contact', 'services', 'case-studies', 'insights'].includes(p.slug) && !p.meta?.noindex)
+        .filter(
+          (p) =>
+            !['home', 'contact', 'services', 'case-studies', 'insights', 'privacy-policy', 'terms-conditions'].includes(
+              p.slug,
+            ) && !p.meta?.noindex,
+        )
         .map((p) => `- [${p.title}](${url}/${p.slug})${p.meta?.description ? `: ${p.meta.description}` : ''}`),
     ),
     section(
