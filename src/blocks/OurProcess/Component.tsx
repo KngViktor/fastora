@@ -14,7 +14,7 @@ export const OurProcessBlock: React.FC<Props> = ({ eyebrow, heading, intro, step
   if (!steps?.length) return null
 
   return (
-    <section className="container py-20 md:py-28">
+    <section className="container py-12 md:py-16">
       <SectionHeading eyebrow={eyebrow} heading={heading} />
       {intro && (
         <p data-reveal="up" className="mt-4 max-w-2xl text-muted-foreground">

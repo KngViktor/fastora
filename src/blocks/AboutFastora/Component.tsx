@@ -31,7 +31,7 @@ export const AboutFastoraBlock: React.FC<Props> = ({
   if (!heading && !richText) return null
 
   return (
-    <section className="container py-20 md:py-28">
+    <section className="container py-12 md:py-16">
       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] lg:gap-20">
         {image && typeof image === 'object' && (
           <div data-reveal="scale" className="relative order-last lg:order-first">

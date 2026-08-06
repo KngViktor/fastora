@@ -110,7 +110,7 @@ export default async function InsightsPage() {
       </section>
 
       <section className="border-t border-border bg-muted/40">
-        <div className="container grid grid-cols-1 gap-10 py-20 md:grid-cols-2 md:py-28">
+        <div className="container grid grid-cols-1 gap-10 py-12 md:grid-cols-2 md:py-16">
           <h2 className="text-2xl font-semibold md:text-3xl" data-reveal="up">
             Why we write
           </h2>
@@ -126,7 +126,7 @@ export default async function InsightsPage() {
         </div>
       </section>
 
-      <section className="container py-20 md:py-28">
+      <section className="container py-12 md:py-16">
         <div
           data-reveal="up"
           className="rounded-3xl border border-border bg-card p-8 text-center md:p-14"

@@ -38,7 +38,7 @@ export const TeamBlock: React.FC<Props> = ({ eyebrow, heading, description, memb
   if (!members?.length) return null
 
   return (
-    <section className="container py-20 md:py-28">
+    <section className="container py-12 md:py-16">
       <SectionHeading eyebrow={eyebrow} heading={heading} />
       {description && (
         <p data-reveal="up" className="mt-4 max-w-2xl text-muted-foreground">

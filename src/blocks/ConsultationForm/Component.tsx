@@ -33,7 +33,7 @@ export const ConsultationFormBlock: React.FC<Props> = ({
   service = null,
 }) => {
   return (
-    <section id={id} className="container scroll-mt-24 py-20 md:py-28">
+    <section id={id} className="container scroll-mt-24 py-12 md:py-16">
       <div className="max-w-2xl">
         <SectionHeading eyebrow={eyebrow} heading={heading} />
         {description && (

@@ -25,7 +25,7 @@ export const LatestInsightsBlockComponent: React.FC<Props> = async ({
   if (!posts?.length) return null
 
   return (
-    <section className="container py-20 md:py-28">
+    <section className="container py-12 md:py-16">
       <SectionHeading
         eyebrow={eyebrow}
         heading={heading}

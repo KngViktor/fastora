@@ -109,7 +109,7 @@ export default async function ServicePage({ params }: Args) {
         </div>
       )}
 
-      <div className="container grid grid-cols-1 gap-16 py-20 md:py-28 lg:grid-cols-[1fr_20rem]">
+      <div className="container grid grid-cols-1 gap-16 py-12 md:py-16 lg:grid-cols-[1fr_20rem]">
         <div className="flex flex-col gap-14">
           {(service.overviewHeading || service.overviewCopy) && (
             <section data-reveal="up">

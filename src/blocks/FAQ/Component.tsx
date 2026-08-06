@@ -22,7 +22,7 @@ export const FAQBlockComponent: React.FC<Props> = ({ heading, items }) => {
   }
 
   return (
-    <section className="container py-20 md:py-28">
+    <section className="container py-12 md:py-16">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {heading && (
         <div className="mx-auto max-w-2xl text-center">
