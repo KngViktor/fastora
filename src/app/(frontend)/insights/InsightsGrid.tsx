@@ -1,7 +1,8 @@
 'use client'
 
+import { Search } from 'lucide-react'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import type { Post } from '@/lib/api'
 import { Media } from '@/components/Media'
@@ -71,20 +72,37 @@ const PostCard: React.FC<{ post: Post }> = ({ post }) => (
   </Link>
 )
 
+/** True if any word in the query appears in the title, summary, or category names. */
+function matchesSearch(post: Post, query: string): boolean {
+  const haystack = [post.title, post.meta?.description, ...post.categories.map((c) => c.title)]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase()
+
+  return query
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean)
+    .every((word) => haystack.includes(word))
+}
+
 /**
- * "Browse by topic" pills over the article grid.
+ * A search box plus "browse by topic" pills over the article grid.
  *
- * Filters client-side against the posts already fetched by the server
- * component, rather than a fresh request per click — with a couple of dozen
- * posts at most, that's simpler and faster than round-tripping to the API.
+ * Both filter client-side against the posts already fetched by the server
+ * component, rather than a fresh request per keystroke or click — with a
+ * couple of dozen posts at most, that's simpler and faster than
+ * round-tripping to the API.
  */
 export const InsightsGrid: React.FC<Props> = ({ posts }) => {
   const [activeTopic, setActiveTopic] = useState(ALL_TOPIC)
+  const [query, setQuery] = useState('')
 
-  const filtered =
-    activeTopic === ALL_TOPIC
-      ? posts
-      : posts.filter((post) => post.categories.some((c) => c.title === activeTopic))
+  const filtered = useMemo(() => {
+    return posts
+      .filter((post) => activeTopic === ALL_TOPIC || post.categories.some((c) => c.title === activeTopic))
+      .filter((post) => matchesSearch(post, query))
+  }, [posts, activeTopic, query])
 
   if (posts.length === 0) {
     return <p className="text-muted-foreground">No insights published yet.</p>
@@ -92,25 +110,40 @@ export const InsightsGrid: React.FC<Props> = ({ posts }) => {
 
   return (
     <div>
-      {posts.length > 0 && (
-        <div className="flex flex-wrap gap-2 pb-10" data-reveal="up">
-          {TOPICS.map((topic) => (
-            <button
-              key={topic}
-              type="button"
-              onClick={() => setActiveTopic(topic)}
-              aria-pressed={activeTopic === topic}
-              className={
-                activeTopic === topic
-                  ? 'rounded-full bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground'
-                  : 'rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-secondary hover:text-secondary'
-              }
-            >
-              {topic}
-            </button>
-          ))}
+      <div className="pb-6" data-reveal="up">
+        <div className="relative max-w-md">
+          <Search
+            aria-hidden="true"
+            className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+          />
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search our posts…"
+            aria-label="Search insights"
+            className="w-full rounded-full border border-border bg-card py-3 pl-11 pr-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-secondary focus-visible:ring-2 focus-visible:ring-secondary/40"
+          />
         </div>
-      )}
+      </div>
+
+      <div className="flex flex-wrap gap-2 pb-10" data-reveal="up">
+        {TOPICS.map((topic) => (
+          <button
+            key={topic}
+            type="button"
+            onClick={() => setActiveTopic(topic)}
+            aria-pressed={activeTopic === topic}
+            className={
+              activeTopic === topic
+                ? 'rounded-full bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground'
+                : 'rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-secondary hover:text-secondary'
+            }
+          >
+            {topic}
+          </button>
+        ))}
+      </div>
 
       {filtered.length > 0 ? (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3" data-reveal-group="110">
@@ -119,7 +152,9 @@ export const InsightsGrid: React.FC<Props> = ({ posts }) => {
           ))}
         </div>
       ) : (
-        <p className="text-muted-foreground">Nothing under {activeTopic} yet.</p>
+        <p className="text-muted-foreground">
+          {query ? `No posts match "${query}".` : `Nothing under ${activeTopic} yet.`}
+        </p>
       )}
     </div>
   )
