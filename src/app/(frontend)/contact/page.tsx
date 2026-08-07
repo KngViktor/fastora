@@ -52,6 +52,10 @@ export default async function ContactPage() {
 
       <section className="container grid grid-cols-1 gap-12 py-20 md:py-24 lg:grid-cols-[1fr_18rem]">
         <div data-reveal="up" className="rounded-3xl border border-border bg-card p-6 md:p-10">
+          <p className="mb-8 text-lg text-muted-foreground">
+            Every good partnership starts with a conversation. We&apos;re looking forward to
+            hearing about your business and learning how we can help.
+          </p>
           <ContactForm />
         </div>
 
@@ -113,13 +117,6 @@ export default async function ContactPage() {
       </section>
 
       <FAQBlockComponent heading="Frequently Asked Questions" items={page?.faqs} />
-
-      <section className="container pb-24 text-center">
-        <p className="mx-auto max-w-xl text-lg text-muted-foreground" data-reveal="up">
-          Every good partnership starts with a conversation. We&apos;re looking forward to hearing
-          about your business and learning how we can help.
-        </p>
-      </section>
     </div>
   )
 }
