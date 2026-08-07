@@ -133,19 +133,46 @@ export interface Service {
 
 export interface CaseStudy {
   id: number
+  /** The headline. The client's name is `clientName`, not this. */
   title: string
   slug: string
+  /** One line, for the grid card. */
   summary: string
+  /** The paragraphs under the headline at the top of the page. */
+  heroIntro: string | null
   clientName: string | null
   industry: string | null
+  location: string | null
+  /** Engagement dates as written, e.g. "August 2022 to Present". */
+  engagement: string | null
+  /** Everything delivered, as plain text — some of it has no service page. */
+  serviceLabels: string[]
   coverImage: Media | null
-  gallery: Media[]
+  gallery: { image: Media; caption: string | null }[]
   order: number
   featuredOnHome: boolean
+  /** The single service this study is filed under, used for filtering. */
   relatedService: { id: number; title: string; slug: string } | null
-  challenge: string | null
-  approach: string | null
+  /** The "Related services" block, already resolved and filtered to published. */
+  relatedServices: { id: number; title: string; slug: string }[]
+  theBusiness: string | null
+  whatWeNoticed: string | null
+  ourThinking: string | null
+  whatWeDid: string | null
+  resultsHeading: string | null
+  resultsIntro: string | null
   results: { metric: string; label: string }[]
+  resultsNote: string | null
+  /** 'after_thinking' shows the numbers before "What we did"; else after. */
+  resultsPlacement: string | null
+  testimonial: { quote: string; author: string | null; role: string | null } | null
+  standoutHeading: string | null
+  standoutCopy: string | null
+  takeawayHeading: string | null
+  takeawayCopy: string | null
+  ctaHeading: string | null
+  ctaCopy: string | null
+  ctaLabel: string | null
   status: string
   publishedAt: string | null
   updatedAt: string | null

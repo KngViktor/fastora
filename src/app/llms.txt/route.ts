@@ -90,6 +90,7 @@ export async function GET(): Promise<Response> {
               'privacy-policy',
               'terms-of-use',
               'cookie-policy',
+              'accessibility',
             ].includes(p.slug) && !p.meta?.noindex,
         )
         .map((p) => `- [${p.title}](${url}/${p.slug})${p.meta?.description ? `: ${p.meta.description}` : ''}`),

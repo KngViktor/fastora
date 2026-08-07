@@ -144,6 +144,9 @@ export async function Footer() {
             <Link href="/cookie-policy" className="hover:text-primary-foreground">
               Cookie Policy
             </Link>
+            <Link href="/accessibility" className="hover:text-primary-foreground">
+              Accessibility
+            </Link>
           </nav>
         </div>
       </div>
