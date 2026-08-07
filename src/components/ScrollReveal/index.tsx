@@ -27,8 +27,7 @@ export const ScrollReveal = () => {
     if (reduce) return
 
     // ---- stagger: assign incremental delays inside a group ------------
-    const groups = document.querySelectorAll<HTMLElement>('[data-reveal-group]')
-    groups.forEach((group) => {
+    const applyStagger = (group: HTMLElement) => {
       const step = Number(group.dataset.revealGroup) || 90
       const items = group.querySelectorAll<HTMLElement>('[data-reveal]')
       items.forEach((item, i) => {
@@ -36,10 +35,9 @@ export const ScrollReveal = () => {
           item.style.setProperty('--reveal-delay', `${i * step}ms`)
         }
       })
-    })
+    }
 
     // ---- reveal observer ---------------------------------------------
-    const revealTargets = document.querySelectorAll<HTMLElement>('[data-reveal]')
     const revealObserver = new IntersectionObserver(
       (entries, observer) => {
         entries.forEach((entry) => {
@@ -51,11 +49,9 @@ export const ScrollReveal = () => {
       },
       { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
     )
-    revealTargets.forEach((el) => revealObserver.observe(el))
 
     // ---- count-up observer -------------------------------------------
     const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
-    const countTargets = document.querySelectorAll<HTMLElement>('[data-count]')
     const countObserver = new IntersectionObserver(
       (entries, observer) => {
         entries.forEach((entry) => {
@@ -78,11 +74,43 @@ export const ScrollReveal = () => {
       },
       { threshold: 0.4 },
     )
-    countTargets.forEach((el) => countObserver.observe(el))
+
+    // Scans a subtree for the three data-attributes and wires each one up.
+    // Called once for the whole document on mount/navigation, then again for
+    // every node a client component adds afterwards (a filter, a "load more",
+    // a tab switch) — otherwise those elements would stay at opacity:0
+    // forever, since nothing would ever tell the reveal observer they exist.
+    const wireUp = (root: ParentNode) => {
+      root.querySelectorAll<HTMLElement>('[data-reveal-group]').forEach(applyStagger)
+      root.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
+        if (!el.classList.contains('reveal-in')) revealObserver.observe(el)
+      })
+      root.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => countObserver.observe(el))
+    }
+
+    wireUp(document)
+
+    const mutationObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (!(node instanceof HTMLElement)) return
+
+          if (node.matches('[data-reveal-group]')) applyStagger(node)
+          if (node.matches('[data-reveal]') && !node.classList.contains('reveal-in')) {
+            revealObserver.observe(node)
+          }
+          if (node.matches('[data-count]')) countObserver.observe(node)
+
+          wireUp(node)
+        })
+      })
+    })
+    mutationObserver.observe(document.body, { childList: true, subtree: true })
 
     return () => {
       revealObserver.disconnect()
       countObserver.disconnect()
+      mutationObserver.disconnect()
     }
   }, [pathname])
 
