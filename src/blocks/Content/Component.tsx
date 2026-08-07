@@ -36,7 +36,7 @@ export const ContentBlock: React.FC<Props> = ({ richText, image, imagePosition }
             className={imageOnLeft ? 'order-first' : 'order-first lg:order-last'}
           >
             <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-border bg-muted">
-              <Media resource={image} fill imgClassName="object-cover" />
+              <Media resource={image} fill imgClassName="object-cover object-top" />
             </div>
           </div>
           <div
