@@ -13,7 +13,7 @@ const defaultOpenGraph: Metadata['openGraph'] = {
   description: 'Communications and digital strategy for businesses that want to be understood.',
   images: [
     {
-      url: `${getServerSideURL()}/brand/logo-color.png`,
+      url: `${getServerSideURL()}/brand/og-image.png`,
     },
   ],
   siteName: 'Fastora',
