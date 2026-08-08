@@ -135,7 +135,7 @@ export default async function InsightsPage() {
             Stay connected with the Fastora Journal.
           </h2>
           <p className="mx-auto mt-3 max-w-md text-muted-foreground">
-            Receive new articles, practical insights, and occasional updates from our team.
+            Receive new insights, practical insights, and occasional updates from our team.
           </p>
           <NewsletterForm variant="light" source="insights" className="mt-6" />
         </div>
