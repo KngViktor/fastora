@@ -304,7 +304,7 @@ export default async function ServicePage({ params }: Args) {
             href="#book"
             className="rounded-full bg-secondary px-6 py-3 text-center text-sm font-semibold text-secondary-foreground transition-opacity hover:opacity-90"
           >
-            Book a Consultation
+            Book a Conversation
           </a>
         </aside>
       </div>

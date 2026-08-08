@@ -6,6 +6,7 @@ import React, { cache } from 'react'
 import { getPostBySlug, getPosts, safely } from '@/lib/api'
 import RichText from '@/components/RichText'
 import { Media } from '@/components/Media'
+import { NewsletterForm } from '@/components/NewsletterForm'
 import { buildBreadcrumbs } from '@/utilities/breadcrumbs'
 import { generateMeta } from '@/utilities/generateMeta'
 import { formatAuthors } from '@/utilities/formatAuthors'
@@ -106,7 +107,15 @@ export default async function PostPage({ params }: Args) {
         </div>
       )}
 
-      <div className="container mt-16 text-center">
+      <div className="container mt-16" data-reveal="up">
+        <div className="mx-auto max-w-xl rounded-3xl border border-border bg-card p-8 text-center md:p-10">
+          <h2 className="text-xl font-semibold md:text-2xl">Enjoyed this article?</h2>
+          <p className="mt-2 text-sm text-muted-foreground">Receive the next one in your inbox.</p>
+          <NewsletterForm variant="light" source="insights-article" />
+        </div>
+      </div>
+
+      <div className="container mt-10 text-center">
         <Link
           href="/insights"
           className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
