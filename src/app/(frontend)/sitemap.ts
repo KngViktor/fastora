@@ -44,19 +44,67 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     );
   }
 
+  // These six are hardcoded rather than read from the CMS so they survive the
+  // outage described above, but each still has a CMS record carrying its
+  // editable page-header copy. Take `lastModified` from that record where it
+  // exists, so listing them here costs nothing compared with the CMS sweep.
+  const lastModifiedFor = (slug: string) =>
+    pages.find((page) => page.slug === slug)?.updatedAt ?? undefined;
+
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: `${url}/`, changeFrequency: "weekly", priority: 1 },
-    { url: `${url}/services`, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${url}/case-studies`, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${url}/insights`, changeFrequency: "daily", priority: 0.8 },
-    { url: `${url}/about`, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${url}/contact`, changeFrequency: "monthly", priority: 0.7 },
+    {
+      url: `${url}/`,
+      lastModified: lastModifiedFor("home"),
+      changeFrequency: "weekly",
+      priority: 1,
+    },
+    {
+      url: `${url}/services`,
+      lastModified: lastModifiedFor("services"),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${url}/case-studies`,
+      lastModified: lastModifiedFor("case-studies"),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${url}/insights`,
+      lastModified: lastModifiedFor("insights"),
+      changeFrequency: "daily",
+      priority: 0.8,
+    },
+    {
+      url: `${url}/about`,
+      lastModified: lastModifiedFor("about"),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${url}/contact`,
+      lastModified: lastModifiedFor("contact"),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
   ];
 
+  // "home" is the site root, already listed above as "/". The other five
+  // static routes are also CMS records — they carry the editable page-header
+  // copy for those routes — so without excluding them here each was emitted
+  // twice, once hardcoded and once from the CMS sweep.
+  const staticSlugs = new Set([
+    "home",
+    "services",
+    "case-studies",
+    "insights",
+    "about",
+    "contact",
+  ]);
+
   const pageRoutes: MetadataRoute.Sitemap = pages
-    .filter(
-      (page) => !["home"].includes(page.slug || "") && !page.meta?.noindex,
-    )
+    .filter((page) => !staticSlugs.has(page.slug || "") && !page.meta?.noindex)
     .map((page) => ({
       url: `${url}/${page.slug}`,
       lastModified: page.updatedAt ?? undefined,

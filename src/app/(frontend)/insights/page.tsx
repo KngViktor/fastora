@@ -7,7 +7,7 @@ import { Media } from '@/components/Media'
 import { NewsletterForm } from '@/components/NewsletterForm'
 import { PageHeader } from '@/components/PageHeader'
 import { formatDateTime } from '@/utilities/formatDateTime'
-import { generateMeta } from '@/utilities/generateMeta'
+import { generateUtilityPageMeta } from '@/utilities/generateMeta'
 import { queryUtilityPage } from '@/utilities/queryUtilityPage'
 import { InsightsGrid } from './InsightsGrid'
 
@@ -19,17 +19,9 @@ const FALLBACK = {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const page = await queryUtilityPage('insights')
-  return generateMeta({
-    doc: page || {
-      meta: {
-        title: 'Insights',
-        description: FALLBACK.description,
-        image: null,
-        canonicalUrl: null,
-        noindex: false,
-      },
-    },
+  return generateUtilityPageMeta({
+    page: await queryUtilityPage('insights'),
+    fallback: { title: 'Insights', description: FALLBACK.description },
     path: '/insights',
   })
 }

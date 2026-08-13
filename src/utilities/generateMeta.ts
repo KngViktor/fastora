@@ -13,6 +13,39 @@ const getImageURL = (image?: Media | null) => {
   return image.url.startsWith('/') ? getServerSideURL() + image.url : image.url
 }
 
+/**
+ * Meta for the hand-built index routes: Services, Case Studies, Insights.
+ *
+ * Each has a CMS record supplying its SEO fields plus a hardcoded fallback for
+ * when that record is missing. The fallback has to apply field by field rather
+ * than only when the whole record is absent — the records do exist, but were
+ * created without a meta description, so keying off the record alone emitted no
+ * description tag at all and search engines reported the pages as missing one.
+ *
+ * An editor-supplied value always wins; the fallback fills only what is blank.
+ */
+export const generateUtilityPageMeta = async (args: {
+  page: Partial<Page> | null
+  fallback: { title: string; description: string }
+  path: string
+}): Promise<Metadata> => {
+  const { page, fallback, path } = args
+
+  return generateMeta({
+    doc: {
+      ...page,
+      meta: {
+        title: page?.meta?.title || fallback.title,
+        description: page?.meta?.description || fallback.description,
+        image: page?.meta?.image ?? null,
+        canonicalUrl: page?.meta?.canonicalUrl ?? null,
+        noindex: page?.meta?.noindex ?? false,
+      },
+    },
+    path,
+  })
+}
+
 export const generateMeta = async (args: {
   doc: Partial<Page> | Partial<Post> | Partial<Service> | Partial<CaseStudy> | null
   /**
