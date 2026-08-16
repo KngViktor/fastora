@@ -15,9 +15,15 @@ import {
  *   1. If the visitor has manually chosen a currency (cookie), that wins.
  *   2. Otherwise map their country (from the host's geo-IP header) to a currency.
  *
- * The result is forwarded to the app via the `x-fastora-currency` request
- * header so the layout can render the correct currency on the first paint
- * (no client-side flash). See src/config/currencies.ts.
+ * The result is written to the cookie rather than only forwarded as a request
+ * header. The layout used to read that header, but doing so meant calling
+ * headers() there, which opts every page out of static rendering — every
+ * visitor then waited on a fresh server render, and on the API behind it, for a
+ * currency nothing on the site displays. The cookie reaches the client
+ * directly, so geo detection still works and the pages can be prerendered.
+ *
+ * The header is still forwarded for any route that does want to render a price
+ * on the server and is willing to be dynamic to do it.
  */
 export function proxy(request: NextRequest) {
   // Geo-IP country header, set by the hosting platform.
@@ -35,7 +41,19 @@ export function proxy(request: NextRequest) {
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set(CURRENCY_HEADER, currency)
 
-  return NextResponse.next({ request: { headers: requestHeaders } })
+  const response = NextResponse.next({ request: { headers: requestHeaders } })
+
+  // Only when it is not already the stored value, so a visitor's own choice is
+  // never overwritten and repeat requests do not keep rewriting the same cookie.
+  if (manualChoice !== currency) {
+    response.cookies.set(CURRENCY_COOKIE, currency, {
+      path: '/',
+      maxAge: 31536000,
+      sameSite: 'lax',
+    })
+  }
+
+  return response
 }
 
 export const config = {

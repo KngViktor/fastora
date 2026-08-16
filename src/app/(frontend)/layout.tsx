@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Poppins, Inter, Geist_Mono } from 'next/font/google'
 import React from 'react'
-import { cookies, headers } from 'next/headers'
 
 import { cn } from '@/utilities/ui'
 import { Footer } from '@/Footer/Component'
@@ -11,7 +10,6 @@ import { Analytics } from '@/components/Analytics'
 import { CookieConsent } from '@/components/CookieConsent'
 import { ConsentProvider } from '@/providers/Consent'
 import { CurrencyProvider } from '@/providers/Currency'
-import { CURRENCY_COOKIE, CURRENCY_HEADER, DEFAULT_CURRENCY } from '@/config/currencies'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { getServerSideURL } from '@/utilities/getURL'
 import { DEFAULT_SITE_SETTINGS, getSiteSettings, safely } from '@/lib/api'
@@ -43,14 +41,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const siteSettings = await safely(() => getSiteSettings(), DEFAULT_SITE_SETTINGS)
   const brandStyle = buildBrandStyle(siteSettings.colors)
   const url = getServerSideURL()
-
-  // Currency resolved by the proxy (geo or manual choice), forwarded via header;
-  // fall back to the cookie, then the default, so the first paint is correct.
-  const [headerList, cookieStore] = await Promise.all([headers(), cookies()])
-  const initialCurrency =
-    headerList.get(CURRENCY_HEADER) ||
-    cookieStore.get(CURRENCY_COOKIE)?.value ||
-    DEFAULT_CURRENCY
 
   const organizationJsonLd = {
     '@context': 'https://schema.org',
@@ -137,7 +127,10 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
       </head>
       <body className="min-h-full flex flex-col">
         <ConsentProvider>
-          <CurrencyProvider initialCurrency={initialCurrency}>
+          {/* No initialCurrency: resolving it from the request would need
+              headers()/cookies() here, which opts every page in the app out of
+              static rendering. The provider reads the cookie itself. */}
+          <CurrencyProvider>
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
