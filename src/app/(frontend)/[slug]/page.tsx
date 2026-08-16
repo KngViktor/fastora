@@ -55,6 +55,20 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   return generateMeta({ doc: page, path: `/${slug}` })
 }
 
-const queryPageBySlug = cache(async ({ slug }: { slug: string }) =>
-  safely(() => getPageBySlug(slug), null),
-)
+/**
+ * Deliberately not wrapped in safely().
+ *
+ * safely() returns null when the request fails, and null here means notFound().
+ * That made an unreachable API indistinguishable from a page that does not
+ * exist, so a momentary blip on the API host turned into a 404 — which Next
+ * then cached for the revalidate window. Live pages disappeared this way:
+ * /about, /terms-of-use and /cookie-policy all 404ed and recovered on their own
+ * minutes later.
+ *
+ * apiFetchOrNull already draws the distinction, returning null only when the
+ * API genuinely answers 404 and throwing for anything else. Letting it throw
+ * keeps "missing" and "unreachable" apart: the first 404s as it should, the
+ * second surfaces as an error and is retried on the next request instead of
+ * being cached as a permanent absence.
+ */
+const queryPageBySlug = cache(async ({ slug }: { slug: string }) => getPageBySlug(slug))

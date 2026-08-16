@@ -281,6 +281,9 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   return generateMeta({ doc: study, path: `/case-studies/${slug}` })
 }
 
+// Not wrapped in safely(), for the reason set out in app/(frontend)/[slug]:
+// null here means notFound(), so swallowing a failed request turned a brief API
+// outage into a cached 404 on a page that exists.
 const queryCaseStudyBySlug = cache(async ({ slug }: { slug: string }) =>
-  safely(() => getCaseStudyBySlug(slug), null),
+  getCaseStudyBySlug(slug),
 )
