@@ -32,6 +32,12 @@
     "sharp": "^0.35.3",
     "tailwind-merge": "^3.6.0"
   },
+  "comments": {
+    "overrides": "brace-expansion 1.1.18 is the last of the 1.x line and carries CVE-2026-14257 (denial of service through unbounded expansion) with no 1.x patch. It reaches this project only through eslint's minimatch@3, so it is a devDependency that is never bundled into the site, and npm's own advisory database does not flag it. Pinned forward anyway so a dependency scan of the lockfile comes back clean. minimatch@3 only calls expand(), which 2.x keeps."
+  },
+  "overrides": {
+    "brace-expansion": "^2.0.2"
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.20",

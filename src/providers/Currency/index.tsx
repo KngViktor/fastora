@@ -4,9 +4,8 @@ import React, {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useState,
+  useSyncExternalStore,
 } from 'react'
 
 import type { Currency } from '@/config/currencies'
@@ -35,6 +34,57 @@ interface CurrencyContextValue {
 const CurrencyContext = createContext<CurrencyContextValue | null>(null)
 
 /**
+ * The cookie, exposed as an external store.
+ *
+ * The currency has to be read on the client: the pages are prerendered, so
+ * there is no request to resolve it from at build time. Reading it in an effect
+ * and calling setState would work, but it schedules a second render on every
+ * mount for a value that is almost always the default. useSyncExternalStore is
+ * built for exactly this — a client-only value with a separate server snapshot
+ * — and React handles the hydration difference itself.
+ */
+const listeners = new Set<() => void>()
+
+/** Cached so getSnapshot returns a stable value; React calls it on every render. */
+let snapshot: string | null = null
+
+function readCurrencyCookie(): string {
+  const match = document.cookie.match(new RegExp('(?:^|; )' + CURRENCY_COOKIE + '=([^;]*)'))
+  const value = match ? decodeURIComponent(match[1]) : undefined
+
+  return isSupportedCurrency(value) ? value : DEFAULT_CURRENCY
+}
+
+function getSnapshot(): string {
+  if (snapshot === null) {
+    snapshot = readCurrencyCookie()
+  }
+
+  return snapshot
+}
+
+/** Prerendered HTML has no cookie, so it always renders the default. */
+function getServerSnapshot(): string {
+  return DEFAULT_CURRENCY
+}
+
+function subscribe(listener: () => void): () => void {
+  listeners.add(listener)
+
+  return () => {
+    listeners.delete(listener)
+  }
+}
+
+function writeCurrencyCookie(next: string): void {
+  // Persist for a year; the proxy reads this cookie and lets it win over geo
+  // detection on subsequent requests.
+  document.cookie = `${CURRENCY_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`
+  snapshot = next
+  listeners.forEach((listener) => listener())
+}
+
+/**
  * `initialCurrency` is optional and normally omitted.
  *
  * The layout used to resolve it from the request, which meant calling headers()
@@ -54,34 +104,14 @@ export function CurrencyProvider({
   initialCurrency?: string
   children: React.ReactNode
 }) {
-  const [code, setCode] = useState<string>(() =>
-    isSupportedCurrency(initialCurrency) ? initialCurrency : DEFAULT_CURRENCY,
-  )
+  const fromCookie = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
-  // Read after mount rather than during the first render: the server has no
-  // cookie to read from on a prerendered page, so resolving it synchronously
-  // would make the client's first render disagree with the HTML it hydrates.
-  // Nothing renders a price today, so there is nothing to flash; when something
-  // does, it settles on the visitor's currency immediately after mount.
-  useEffect(() => {
-    if (isSupportedCurrency(initialCurrency)) return
-
-    const match = document.cookie.match(
-      new RegExp('(?:^|; )' + CURRENCY_COOKIE + '=([^;]*)'),
-    )
-    const fromCookie = match ? decodeURIComponent(match[1]) : undefined
-
-    if (isSupportedCurrency(fromCookie)) {
-      setCode(fromCookie)
-    }
-  }, [initialCurrency])
+  // A server-resolved value, where a route passes one, outranks the cookie.
+  const code = isSupportedCurrency(initialCurrency) ? initialCurrency : fromCookie
 
   const setCurrency = useCallback((next: string) => {
     if (!isSupportedCurrency(next)) return
-    setCode(next)
-    // Persist for a year; the proxy reads this cookie and lets it win over
-    // geo detection on subsequent requests.
-    document.cookie = `${CURRENCY_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`
+    writeCurrencyCookie(next)
   }, [])
 
   const value = useMemo<CurrencyContextValue>(
