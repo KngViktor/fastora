@@ -93,6 +93,18 @@ export default async function PostPage({ params }: Args) {
 
       <div className="py-16">
         <RichText data={post.content} enableGutter />
+        {/* `!== false` rather than truthy, so it still shows if the API
+            predates the toggle and leaves the field out. */}
+        {post.showJournalNote !== false && (
+          <div className="cms-richtext container mx-auto prose md:prose-md">
+            <p>
+              <em>
+                This article is part of Fastora&apos;s Journal on branding, communication and the
+                way people make decisions.
+              </em>
+            </p>
+          </div>
+        )}
       </div>
 
       {Array.isArray(post.tags) && post.tags.length > 0 && (

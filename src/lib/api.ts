@@ -187,6 +187,8 @@ export interface Post {
   content: string | null
   readingTimeMinutes: number
   featured: boolean
+  /** Whether to print the Journal note under the article. On by default. */
+  showJournalNote: boolean
   tags: string[]
   categories: { id: number; title: string; slug: string }[]
   authors: { id: number; name: string }[]
