@@ -10,6 +10,7 @@ import { Media } from '@/components/Media'
 import { PageHeader } from '@/components/PageHeader'
 import { buildBreadcrumbs } from '@/utilities/breadcrumbs'
 import { generateMeta } from '@/utilities/generateMeta'
+import { hasRichTextContent } from '@/utilities/hasRichTextContent'
 import { resolveOrDefer } from '@/utilities/resolveOrDefer'
 
 export async function generateStaticParams() {
@@ -24,7 +25,7 @@ const Section: React.FC<{ heading: string; body: string | null | undefined }> = 
   heading,
   body,
 }) =>
-  body ? (
+  hasRichTextContent(body) ? (
     <section data-reveal="up">
       <h2 className="text-sm font-medium uppercase tracking-wide text-secondary">{heading}</h2>
       <div className="mt-4">
