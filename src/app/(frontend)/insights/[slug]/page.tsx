@@ -96,14 +96,42 @@ export default async function PostPage({ params }: Args) {
         {/* `!== false` rather than truthy, so it still shows if the API
             predates the toggle and leaves the field out. */}
         {post.showJournalNote !== false && (
-          <div className="cms-richtext container mx-auto prose md:prose-md">
-            <p>
-              <em>
-                This article is part of Fastora&apos;s Journal on branding, communication and the
-                way people make decisions.
-              </em>
-            </p>
-          </div>
+          <aside
+            aria-label="About Fastora's Journal"
+            className="container mt-16"
+            data-reveal="up"
+          >
+            <div className="mx-auto max-w-3xl rounded-3xl bg-primary px-6 py-12 text-primary-foreground md:px-14 md:py-16">
+              <p
+                aria-hidden="true"
+                className="font-display text-5xl font-semibold leading-[0.95] tracking-tight md:text-7xl"
+              >
+                <span className="block text-primary-foreground/60">From</span>
+                <span className="block pl-[22%] text-secondary">Fastora&apos;s</span>
+                <span className="block text-primary-foreground/80">Journal:</span>
+              </p>
+              <p className="mt-8 text-base leading-relaxed text-primary-foreground/70 md:text-lg">
+                This article is part of Fastora&apos;s Journal on{' '}
+                <strong className="font-semibold text-primary-foreground">
+                  branding, communication and the way people make decisions.
+                </strong>
+              </p>
+              <div className="mt-10 flex flex-col gap-4">
+                <Link
+                  href="/insights"
+                  className="rounded-full bg-white px-6 py-4 text-center text-base font-semibold text-primary transition-colors hover:bg-white/90"
+                >
+                  Read more from the Journal
+                </Link>
+                <Link
+                  href="/contact"
+                  className="rounded-full bg-black px-6 py-4 text-center text-base font-semibold text-white transition-colors hover:bg-black/80"
+                >
+                  Work with Fastora
+                </Link>
+              </div>
+            </div>
+          </aside>
         )}
       </div>
 
