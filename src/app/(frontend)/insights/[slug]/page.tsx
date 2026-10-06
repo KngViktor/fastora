@@ -102,15 +102,7 @@ export default async function PostPage({ params }: Args) {
             data-reveal="up"
           >
             <div className="mx-auto max-w-3xl rounded-3xl bg-primary px-6 py-12 text-primary-foreground md:px-14 md:py-16">
-              <p
-                aria-hidden="true"
-                className="font-display text-5xl font-semibold leading-[0.95] tracking-tight md:text-7xl"
-              >
-                <span className="block text-primary-foreground/60">From</span>
-                <span className="block pl-[22%] text-secondary">Fastora&apos;s</span>
-                <span className="block text-primary-foreground/80">Journal:</span>
-              </p>
-              <p className="mt-8 text-base leading-relaxed text-primary-foreground/70 md:text-lg">
+              <p className="text-lg leading-relaxed text-primary-foreground/70 md:text-2xl">
                 This article is part of Fastora&apos;s Journal on{' '}
                 <strong className="font-semibold text-primary-foreground">
                   branding, communication and the way people make decisions.
