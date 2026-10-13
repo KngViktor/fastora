@@ -11,6 +11,12 @@ type Member = {
   role?: string | null
   bio?: string | null
   photo?: MediaType | null
+  /**
+   * Where "View profile" goes, when it should not be worked out from the name.
+   * Emmanuel is introduced here by his full name and his page is /genesis, so
+   * there is nothing for the name match below to find.
+   */
+  profilePath?: string | null
 }
 
 type Props = {
@@ -50,8 +56,13 @@ export const TeamBlock: React.FC<Props> = async ({ eyebrow, heading, description
   const nameKey = (name: string): string =>
     name.trim().toLowerCase().split(/\s+/).filter(Boolean).sort().join(' ')
 
-  const pathForName = (name: string): string | null => {
-    const match = profiles.find((profile) => nameKey(profile.name) === nameKey(name))
+  const pathForMember = (member: Member): string | null => {
+    // An explicit link wins: it is the only way to say "this card and that page
+    // are the same person" when the two call them different things.
+    const explicit = member.profilePath?.trim()
+    if (explicit) return explicit
+
+    const match = profiles.find((profile) => nameKey(profile.name) === nameKey(member.name))
     return match ? `/${match.slug}` : null
   }
 
@@ -68,7 +79,7 @@ export const TeamBlock: React.FC<Props> = async ({ eyebrow, heading, description
         {members.map((member, i) => {
           // Members with a page of their own get a linked card; the rest stay
           // static, so the grid works whether or not a profile exists.
-          const href = pathForName(member.name)
+          const href = pathForMember(member)
 
           const content = (
             <>
