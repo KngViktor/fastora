@@ -205,6 +205,60 @@
 }
 
 /* ------------------------------------------------------------------ */
+/*  Article body — HTML written in the CMS rich editor                 */
+/* ------------------------------------------------------------------ */
+/* Typography's `prose` handles the text. What it cannot know about is
+   the editor: images arrive carrying whatever intrinsic width and inline
+   dimensions the upload had, and headings arrive as anchor targets under
+   a sticky site header. Both are settled here so an editor can drop an
+   image between two paragraphs and have it sit correctly without
+   touching any markup. */
+@layer components {
+  /* Clears the sticky header when a contents link jumps to a section.
+     Kept in step with SCROLL_OFFSET in components/ArticleToc. */
+  .cms-richtext :is(h2, h3, h4) {
+    scroll-margin-top: 7rem;
+  }
+
+  /* The editor writes `width`/`height` attributes from the file's own
+     pixel size, which overflow the column on anything shot at full
+     resolution. Overridden rather than removed: the attributes still give
+     the browser an aspect ratio to reserve space with, so the text below
+     does not jump once the image loads. */
+  .cms-richtext :is(img, video) {
+    width: 100%;
+    height: auto;
+    margin-block: 2.5rem;
+    border-radius: 1rem;
+    border: 1px solid var(--color-border);
+  }
+
+  /* An image the editor wrapped in a figure owns its own spacing, so the
+     margin belongs to the figure and not to the image inside it. */
+  .cms-richtext figure {
+    margin-block: 2.5rem;
+  }
+
+  .cms-richtext figure :is(img, video) {
+    margin-block: 0;
+  }
+
+  .cms-richtext figcaption {
+    margin-top: 0.75rem;
+    color: var(--color-muted-foreground);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  /* A linked image is still an image: the underline and link colour prose
+     gives it would draw a rule across the picture. */
+  .cms-richtext a:has(> img) {
+    text-decoration: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /*  Scroll-driven motion — Mivon-inspired reveal / mask / marquee      */
 /* ------------------------------------------------------------------ */
 @layer utilities {
