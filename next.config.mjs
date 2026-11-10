@@ -88,6 +88,13 @@ const contentSecurityPolicy = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   /**
+   * Next.js advertises itself in `X-Powered-By` on every response. It tells an
+   * attacker which framework's vulnerabilities are worth trying before they
+   * send a second request, and tells a visitor nothing at all.
+   */
+  poweredByHeader: false,
+
+  /**
    * How hard the build leans on the API while generating pages.
    *
    * Next defaults to one worker per CPU, which on the deploy machine meant 19
